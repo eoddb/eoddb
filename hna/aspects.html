@@ -29,7 +29,7 @@
     --accent-stripe: 3px;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   body {
     background: var(--bg);
@@ -298,6 +298,7 @@
 
   .detail-inner {
     padding: 14px 20px;
+    max-width: 500px;
   }
 
   .detail-desc {
