@@ -1,0 +1,236 @@
+[
+  {
+    "Aspect": "Reality",
+    "Description": "Marks a certain number of enemy units as Daydreamers. Reality Anima deal bonus DMG to Daydreamers. After a Daydreamer is defeated, Reality Anima gain 1 stack of Aloof.",
+    "Units Required": 2,
+    "Effect": "1 Daydreamer; 10% bonus DMG"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "1 Daydreamer; 20% bonus DMG"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "2 Daydreamers; 26% bonus DMG"
+  },
+  {
+    "Aspect": "Change",
+    "Description": "When units from either side are defeated, they change into small animals, helping you and disrupting your opponent. Phantasmagoria - Pigeon: Fly at the nearest opponent, dealing (30+5% HP) Physical DMG. Phantasmagoria - Rabbit: Hop towards allied units, providing the target 6% (HP) Shield.",
+    "Units Required": 2,
+    "Effect": "100% Effect Strength"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 3,
+    "Effect": "125% Effect Strength"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "150% Effect Strength"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 5,
+    "Effect": "175% Effect Strength"
+  },
+  {
+    "Aspect": "Light",
+    "Description": "A short time after the start of battle, applies Shining Light to Light Anima, granting a Shield based on Max Health (HP).",
+    "Units Required": 2,
+    "Effect": "Triggers after 16s; 18% Shield (HP)"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "Triggers after 12s; 38% Shield (HP)"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "Triggers after 12s; 60% Shield (HP)"
+  },
+  {
+    "Aspect": "Dark",
+    "Description": "Based on the number of Dark Anima on your side of the battlefield, create Umbral Shrouds, and grant allied Anima inside Umbral Shrouds an Attack SPD bonus.",
+    "Units Required": 3,
+    "Effect": "20% Attack SPD (ASPD)"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "45% Attack SPD (ASPD)"
+  },
+  {
+    "Aspect": "Oblivion",
+    "Description": "When the total missing Health of the allied side of the field reaches 20%, all allied Anima enter the Oblivion state, removing all abnormal states and gaining immunity to them.",
+    "Units Required": 2,
+    "Effect": "Oblivion state for 3s"
+  },
+  {
+    "Aspect": "Memory",
+    "Description": "After a Memory Anima uses an Active Skill, it Echoes that Skill once. \nEcho: Recast the Active Skill once, with no Energy Cost, with converted stats. Each Active Skill cast can trigger Echo once at most, and Echo itself does not count as an Active Skill.",
+    "Units Required": 3,
+    "Effect": "45% Echo Intensity"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "65% Echo Intensity"
+  },
+  {
+    "Aspect": "Strength",
+    "Description": "During the Preparation Phase, a special hex appears on the battlefield. The Strength Anima deployed on that hex becomes the Dominator, while the remaining Strength Anima become Followers. All Strength Anima gain Light of the Strong based on their own Trait, and the bonus gained by the Dominator is additionally increased by 50%.\nLight of the Strong:\nBlasters, Explorers: 12% ASPD\nMasterminds: 12% MP\nProtectors, Mascots: 15% HP",
+    "Units Required": 1,
+    "Effect": "100% Light of the Strong Bonus"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 3,
+    "Effect": "160% Light of the Strong Bonus"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 5,
+    "Effect": "250% Light of the Strong Bonus"
+  },
+  {
+    "Aspect": "Beauty",
+    "Description": "After the start of battle, an Ethereal Butterfly will appear every 8s, supporting the Beauty Anima with the highest MP who is not in the Butterfly Dance state and causing it to enter the Butterfly Dance state, increasing its MP.",
+    "Units Required": 2,
+    "Effect": "15% MP increase"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "35% MP increase"
+  },
+  {
+    "Aspect": "Ugliness",
+    "Description": "Ugliness Anima each gain a unique stat bonus after the start of battle, and will share this bonus with allied Anima within 1 hex on the same row. Hamburgoof: 10% Attack SPD. Ugglewing: 10% ATK. Mr. Avocado: 12% Max Health.",
+    "Units Required": 2,
+    "Effect": "100% bonus"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 3,
+    "Effect": "130% bonus"
+  },
+  {
+    "Aspect": "Pride",
+    "Description": "Reduce DMG dealt by all opponents. When allied Anima attack Anima of the same or higher level, deal bonus DMG.",
+    "Units Required": 2,
+    "Effect": "DMG reduced by 3%; 4% DMG increase"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 3,
+    "Effect": "DMG reduced by 5%; 6% DMG increase"
+  },
+  {
+    "Aspect": "Love",
+    "Description": "Healing and Shield effects applied by allied Anima are increased by 15%. At the start of battle, the Love Anima with the highest Health becomes the Admirer and develops Infatuation toward specific allied unit(s).\nInfatuation: Healing and Shield effects applied to the object of infatuation by the Admirer increase by 15%. This effect can stack",
+    "Units Required": 2,
+    "Effect": "Infatuation toward the allied unit with the highest MP"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 3,
+    "Effect": "Also toward the allied unit with the lowest Max Health"
+  },
+  {
+    "Aspect": "Hate",
+    "Description": "When an allied Anima is defeated, Hate Anima will accumulate Rancor. Rancor: Each point of Rancor grants Hate Anima 3% ATK.",
+    "Units Required": 3,
+    "Effect": "4 Rancor"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 5,
+    "Effect": "6 Rancor"
+  },
+  {
+    "Aspect": "Competition",
+    "Description": "Competition Anima gain Attack SPD, and they generate points for the Competition Marker after dealing or receiving DMG. Receive additional Rewards at 100, 200, 400, and 999 Points. Competition Scorekeeper (Summon): \n100-Point Reward: Competition Anima gain 10% ATK and MP. \n200-Point Reward: Fire 6 Piston Jabs that randomly attack opponents, each dealing 200 Magic DMG. \n400-Point Reward: Fire 6 sets of Left Hooks and Right Hooks, randomly attacking opponents. Left and Right Hooks deal 350 Physical DMG and 350 Magic DMG respectively. \n999-Point Reward: Fire a Knockout Blow in the direction of a random opponent every 3s that deals 333+10% Max Health True DMG to all opponents in the AoE of its path.",
+    "Units Required": 2,
+    "Effect": "8% Attack SPD"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "18% Attack SPD"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 7,
+    "Effect": "40% Attack SPD"
+  },
+  {
+    "Aspect": "Joy",
+    "Description": "Joy Anima enter the Ecstasy state after the first time they use their Skill. When Joy Anima participate in defeating an opponent, they can cause one of the nearest Joy Anima to enter Ecstasy. Ecstasy: Regenerate 3 Energy/s. Gain an Attack SPD bonus that does not stack based on the number of Joy Anima deployed during the Preparation Phase.",
+    "Units Required": 2,
+    "Effect": "Ecstasy 5s, 25% Attack SPD"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "Ecstasy 6s, 55% Attack SPD"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "Ecstasy 7s, 85% Attack SPD"
+  },
+  {
+    "Aspect": "Satiation",
+    "Description": "Satiation Anima periodically perform healing based on their missing Health.",
+    "Units Required": 2,
+    "Effect": "Restore 7% missing Health every 7s"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "Restore 10% missing Health every 5s"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 6,
+    "Effect": "Restore 14% missing Health every 5s"
+  },
+  {
+    "Aspect": "Insatiability",
+    "Description": "Every 5s, each Insatiability Anima Predates their current target, dealing Magic DMG and providing a stat bonus based on the Insatiability Anima's role. Max 10 stacks. Explorer/Protector/Mascot: 2% Max Health. Blaster: 2% ATK. Mastermind: 2% MP.",
+    "Units Required": 2,
+    "Effect": "30 Magic DMG; 100% bonus"
+  },
+  {
+    "Aspect": null,
+    "Description": null,
+    "Units Required": 4,
+    "Effect": "40 Magic DMG; 200% bonus"
+  }
+]

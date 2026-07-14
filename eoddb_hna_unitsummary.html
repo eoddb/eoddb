@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honkai: Nexus Anima — All Nexus Anima by Aspect & Type | EODdb.com</title>
+<meta name="description" content="Complete Honkai: Nexus Anima database — all Nexus Anima organized by Aspect and Type. Browse every 3-star, 4-star, and 5-star Nexus Anima with rarity distribution, aspect coverage, and statistical analysis.">
+<meta name="keywords" content="Honkai Nexus Anima, Nexus Anima tier list, 5 star Nexus Anima, Nexus Anima database, Nexus Anima guide, Blaster, Mastermind, Explorer, Protector, Mascot, Nexus Anima aspects">
+<meta property="og:title" content="Honkai: Nexus Anima — Complete Nexus Anima Breakdown">
+<meta property="og:description" content="All Honkai: Nexus Anima mapped by Aspect and Type. Rarity breakdown, aspect coverage gaps, and statistical analysis for every 3-star, 4-star, and 5-star Nexus Anima.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Honkai: Nexus Anima — Complete Nexus Anima Breakdown">
+<meta name="twitter:description" content="Browse all Honkai: Nexus Anima by Aspect and Type. Full 3/4/5-star rarity breakdown and statistical analysis.">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --r3: #8ac4e0;
+    --r4: #b89adb;
+    --r5: #dfc86a;
+    --header-bg: #111821;
+    --header-text: #e6edf3;
+    --accent-stripe: 3px;
+    --accent1: #6366f1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 1400px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .stat-row {
+    max-width: 1400px;
+    margin: 0 auto 1.4rem;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    min-width: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .stat-box .num {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  .stat-box .pct {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-box .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .legend {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.r3 { background: var(--r3); }
+  .legend-dot.r4 { background: var(--r4); }
+  .legend-dot.r5 { background: var(--r5); }
+
+  .table-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+    min-width: 900px;
+  }
+
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 140px;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.8rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    min-width: 150px;
+  }
+
+  tbody td:last-child { border-right: none; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--header-bg);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    padding-left: 0.7rem;
+  }
+
+  tbody tr:hover td { background: var(--surface-hover); }
+  tbody tr:hover td:first-child { background: #192030; }
+
+  .unit { display: block; }
+  .unit.r3 { color: var(--r3); }
+  .unit.r4 { color: var(--r4); }
+  .unit.r5 { color: var(--r5); }
+
+  tbody td.multi-col {
+    columns: 2;
+    column-gap: 0.6rem;
+  }
+
+  .table-credit {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 400;
+    color: #8b95a5;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-top: 3px;
+  }
+
+  .empty-cell {
+    color: var(--text-muted);
+    opacity: 0.3;
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .analysis {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .analysis h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .analysis p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .analysis p:last-child { margin-bottom: 0; }
+  .analysis strong { color: var(--header-text); }
+  .analysis .hl-r3 { color: var(--r3); font-weight: 600; }
+  .analysis .hl-r4 { color: var(--r4); font-weight: 600; }
+  .analysis .hl-r5 { color: var(--r5); font-weight: 600; }
+
+  .error-msg {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 20px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    color: #f87171;
+    text-align: center;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .stat-box { min-width: calc(50% - 8px); }
+    .stat-box .num { font-size: 22px; }
+    .analysis { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<script src="eoddb_hna_nav.js"></script>
+<div class="page-header">
+  <h1>Honkai: Nexus Anima &mdash; All Nexus Anima by Aspect &amp; Type</h1>
+  <span class="subtitle">Complete 3-star, 4-star &amp; 5-star Nexus Anima database with rarity breakdown and team-building reference. Data based on closed beta &mdash; will be updated if there are any changes.</span>
+</div>
+
+<div class="stat-row" id="stats"></div>
+
+<div class="legend">
+  <span style="color:var(--text-muted);">Rarity:</span>
+  <span class="legend-item"><span class="legend-dot r3"></span> <span style="color:var(--r3)">&#9733;&#9733;&#9733; 3-Star</span></span>
+  <span class="legend-item"><span class="legend-dot r4"></span> <span style="color:var(--r4)">&#9733;&#9733;&#9733;&#9733; 4-Star</span></span>
+  <span class="legend-item"><span class="legend-dot r5"></span> <span style="color:var(--r5)">&#9733;&#9733;&#9733;&#9733;&#9733; 5-Star</span></span>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead id="thead"></thead>
+    <tbody id="grid"></tbody>
+  </table>
+</div>
+
+<div class="analysis" id="analysis"></div>
+
+<div class="error-msg" id="error"></div>
+
+<script>
+const ASPECT_COLORS = {
+  "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
+  "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
+  "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
+  "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
+};
+
+const ASPECT_ORDER = [
+  "Light","Dark","Reality","Oblivion","Love","Hate",
+  "Beauty","Ugliness","Joy","Pride","Strength","Competition",
+  "Satiation","Insatiability","Change","Memory"
+];
+
+const TYPE_ORDER = ["Blaster","Mastermind","Explorer","Protector","Mascot"];
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function pct(n, total) {
+  return (n / total * 100).toFixed(1) + '%';
+}
+
+async function loadJSON(filename) {
+  const resp = await fetch('./' + filename);
+  if (!resp.ok) throw new Error('Failed to load ' + filename);
+  return resp.json();
+}
+
+async function init() {
+  let units, typesData;
+  try {
+    [units, typesData] = await Promise.all([
+      loadJSON('eoddb_hna_nexus_anima_units.json'),
+      loadJSON('eoddb_hna_types.json')
+    ]);
+  } catch (e) {
+    showError('Could not load data files. Make sure eoddb_hna_nexus_anima_units.json and eoddb_hna_types.json are in the same folder as this HTML file.');
+    return;
+  }
+
+  const allTypes = typesData.map(t => t.Type);
+  const orderedTypes = TYPE_ORDER.filter(t => allTypes.includes(t));
+  const extraTypes = allTypes.filter(t => !TYPE_ORDER.includes(t));
+  const types = [...orderedTypes, ...extraTypes];
+
+  const aspectSet = [...new Set(units.map(u => u.Aspect).filter(Boolean))];
+  const orderedAspects = ASPECT_ORDER.filter(a => aspectSet.includes(a));
+  const extraAspects = aspectSet.filter(a => !ASPECT_ORDER.includes(a));
+  const aspects = [...orderedAspects, ...extraAspects];
+
+  const total = units.length;
+  const r3 = units.filter(u => u.Rarity === 3);
+  const r4 = units.filter(u => u.Rarity === 4);
+  const r5 = units.filter(u => u.Rarity === 5);
+
+  // ── Stat boxes ──
+  const statsEl = document.getElementById('stats');
+  const boxes = [
+    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)' },
+    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total) },
+    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total) },
+    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total) },
+    { num: aspects.length, label: 'Aspect Types', color: 'var(--accent1)' },
+  ];
+  boxes.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'stat-box';
+    div.innerHTML =
+      `<div class="num" style="color:${b.color}">${b.num}</div>` +
+      (b.p ? `<div class="pct" style="color:${b.color};opacity:0.7">${b.p}</div>` : '') +
+      `<div class="label">${b.label}</div>`;
+    statsEl.appendChild(div);
+  });
+
+  // ── Table header ──
+  const thead = document.getElementById('thead');
+  const headRow = document.createElement('tr');
+  headRow.innerHTML = '<th style="color:#8b95a5">EODdb.com</th>' + types.map(t => `<th>${t}</th>`).join('');
+  thead.appendChild(headRow);
+
+  // ── Build grid ──
+  const grid = {};
+  aspects.forEach(a => { grid[a] = {}; types.forEach(t => { grid[a][t] = []; }); });
+  units.forEach(u => {
+    if (u.Aspect && u.Type && grid[u.Aspect] && grid[u.Aspect][u.Type]) {
+      grid[u.Aspect][u.Type].push({ name: u.Name, rarity: u.Rarity });
+    }
+  });
+  Object.values(grid).forEach(row =>
+    Object.values(row).forEach(arr => arr.sort((a, b) => b.rarity - a.rarity))
+  );
+
+  const tbody = document.getElementById('grid');
+  aspects.forEach(aspect => {
+    const tr = document.createElement('tr');
+    const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
+    tr.style.setProperty('--aspect-color', acColor);
+
+    const th = document.createElement('td');
+    th.style.setProperty('--aspect-color', acColor);
+    th.textContent = aspect;
+    tr.appendChild(th);
+
+    types.forEach(type => {
+      const td = document.createElement('td');
+      const cell = grid[aspect][type];
+      if (!cell || cell.length === 0) {
+        td.innerHTML = '<span class="empty-cell">—</span>';
+      } else {
+        if (cell.length > 2) td.classList.add('multi-col');
+        cell.forEach(u => {
+          const span = document.createElement('span');
+          span.className = 'unit r' + u.rarity;
+          span.textContent = u.name;
+          td.appendChild(span);
+        });
+      }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  // ── Analysis ──
+  const typeCounts = {};
+  types.forEach(t => { typeCounts[t] = units.filter(u => u.Type === t).length; });
+  const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+  const topType = sortedTypes[0];
+  const bottomType = sortedTypes[sortedTypes.length - 1];
+
+  const aspectCounts = {};
+  aspects.forEach(a => { aspectCounts[a] = units.filter(u => u.Aspect === a).length; });
+  const sortedAspects = Object.entries(aspectCounts).sort((a, b) => b[1] - a[1]);
+  const topAspects = sortedAspects.slice(0, 2);
+  const bottomVal = sortedAspects[sortedAspects.length - 1][1];
+  const bottomAspects = sortedAspects.filter(a => a[1] === bottomVal);
+
+  const r5Types = {};
+  types.forEach(t => { r5Types[t] = r5.filter(u => u.Type === t).length; });
+  const r5Sorted = Object.entries(r5Types).sort((a, b) => b[1] - a[1]);
+
+  const r5Aspects = {};
+  aspects.forEach(a => { r5Aspects[a] = r5.filter(u => u.Aspect === a).length; });
+  const noR5 = aspects.filter(a => r5Aspects[a] === 0);
+
+  let emptyCells = 0;
+  aspects.forEach(a => types.forEach(t => { if (!grid[a][t] || grid[a][t].length === 0) emptyCells++; }));
+  const totalCells = aspects.length * types.length;
+  const coverage = ((totalCells - emptyCells) / totalCells * 100).toFixed(1);
+  const avgPerAspect = (total / aspects.length).toFixed(1);
+
+  const analysisEl = document.getElementById('analysis');
+  analysisEl.innerHTML = `
+    <h2>Statistical Summary</h2>
+    <p>
+      Across <strong>${total} Nexus Anima</strong> spanning <strong>${aspects.length} aspects</strong> and <strong>${types.length} types</strong>,
+      the roster skews toward mid-rarity: <span class="hl-r4">4-star Nexus Anima</span> make up the largest share at <strong>${r4.length} (${pct(r4.length, total)})</strong>,
+      followed by <span class="hl-r3">3-star Nexus Anima</span> at <strong>${r3.length} (${pct(r3.length, total)})</strong>,
+      with <span class="hl-r5">5-star Nexus Anima</span> being the most exclusive at <strong>${r5.length} (${pct(r5.length, total)})</strong>.
+      On average each aspect contains <strong>${avgPerAspect} Nexus Anima</strong>.
+    </p>
+    <p>
+      <strong>Type distribution</strong> is uneven — <strong>${topType[0]}</strong> leads with <strong>${topType[1]} Nexus Anima</strong>,
+      while <strong>${bottomType[0]}</strong> trails at just <strong>${bottomType[1]}</strong>.
+      Among 5-star Nexus Anima specifically, <strong>${r5Sorted[0][0]}</strong> dominates with <strong>${r5Sorted[0][1]}</strong>,
+      and <strong>${r5Sorted[r5Sorted.length - 1][0]}</strong> is the rarest 5-star type with only <strong>${r5Sorted[r5Sorted.length - 1][1]}</strong>.
+      ${noR5.length > 0
+        ? `Notably, <strong>${noR5.join(', ')}</strong> ${noR5.length === 1 ? 'has' : 'have'} no 5-star representation at all — a gap that may indicate upcoming releases.`
+        : 'Every aspect has at least one 5-star Nexus Anima.'}
+    </p>
+    <p>
+      <strong>Aspect density</strong> ranges from <strong>${topAspects[0][0]}</strong> and <strong>${topAspects[1][0]}</strong> (${topAspects[0][1]} Nexus Anima each, the most populated)
+      down to <strong>${bottomAspects.map(a => a[0]).join(', ')}</strong> with just <strong>${bottomVal}</strong> each.
+      Grid coverage sits at <strong>${coverage}%</strong> — <strong>${emptyCells}</strong> of ${totalCells} aspect×type slots are currently empty,
+      representing potential niches for future Nexus Anima additions. The pairing of aspects into thematic opposites
+      (Light/Dark, Love/Hate, Reality/Oblivion) is reflected in the roster, though coverage within each pair is not always symmetric.
+    </p>
+  `;
+}
+
+init();
+</script>
+</body>
+</html>

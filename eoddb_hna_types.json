@@ -1,0 +1,22 @@
+[
+  {
+    "Type": "Blaster",
+    "Description": "Blasters can use Basic Attacks to deal DMG and regenerate more Energy"
+  },
+  {
+    "Type": "Mastermind",
+    "Description": "Masterminds regenerate Energy every second and excel at dealing DMG with their Skill."
+  },
+  {
+    "Type": "Explorer",
+    "Description": "Explorers have Omnileech, balancing DMG dealing and survivability"
+  },
+  {
+    "Type": "Protector",
+    "Description": "Protectors can regnerate Energy when hit. Opponenets will prioritize attacking them"
+  },
+  {
+    "Type": "Mascot",
+    "Description": "Mascots regenerate Energy every second. They can weaken opponents or buff allied Anima."
+  }
+]

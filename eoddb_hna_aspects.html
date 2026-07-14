@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honkai: Nexus Anima — Aspect Guide & Synergy Breakdowns | EODdb.com</title>
+<meta name="description" content="Complete Honkai: Nexus Anima aspect guide — all 16 aspect types with synergy descriptions, Nexus Anima thresholds, and scaling effects. Learn how Reality, Dark, Competition, and every other aspect works at each breakpoint.">
+<meta name="keywords" content="Honkai Nexus Anima, Nexus Anima aspects, Nexus Anima synergies, aspect guide, Reality, Dark, Light, Competition, Love, Hate, aspect effects, team building guide">
+<meta property="og:title" content="Honkai: Nexus Anima — Aspect Guide & Synergy Breakdowns">
+<meta property="og:description" content="All 16 Honkai: Nexus Anima aspects explained — descriptions, Nexus Anima thresholds, and scaling effects at every breakpoint.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Honkai: Nexus Anima — Aspect Guide & Synergy Breakdowns">
+<meta name="twitter:description" content="Complete aspect synergy guide for Honkai: Nexus Anima. Every breakpoint, every effect.">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --r3: #8ac4e0;
+    --r4: #b89adb;
+    --r5: #dfc86a;
+    --header-bg: #111821;
+    --header-text: #e6edf3;
+    --accent1: #6366f1;
+    --accent-stripe: 3px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 1400px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Stat Boxes ── */
+  .stat-row {
+    max-width: 1400px;
+    margin: 0 auto 1.4rem;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    min-width: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .stat-box .num {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  .stat-box .pct {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-box .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Section headers ── */
+  .section-header {
+    max-width: 1400px;
+    margin: 0 auto 1rem;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  /* ── Rarity × Aspect Table ── */
+  .table-wrap {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 140px;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.8rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  tbody td:last-child { border-right: none; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--header-bg);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    padding-left: 0.7rem;
+  }
+
+  tbody tr:hover td { background: var(--surface-hover); }
+  tbody tr:hover td:first-child { background: #192030; }
+
+  .unit { display: block; }
+  .unit.r3 { color: var(--r3); }
+  .unit.r4 { color: var(--r4); }
+  .unit.r5 { color: var(--r5); }
+
+  .empty-cell {
+    color: var(--text-muted);
+    opacity: 0.3;
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .count-cell {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .table-credit {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 400;
+    color: #8b95a5;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-top: 3px;
+  }
+
+  /* ── Aspect Synergy Cards ── */
+  .synergy-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .synergy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    overflow: hidden;
+  }
+
+  .synergy-top {
+    display: flex;
+    gap: 1rem;
+    padding: 16px 20px;
+    align-items: flex-start;
+  }
+
+  .synergy-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--header-text);
+    white-space: nowrap;
+    min-width: 110px;
+  }
+
+  .synergy-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .synergy-tiers {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+
+  .synergy-tier {
+    flex: 1;
+    padding: 10px 16px;
+    border-right: 1px solid var(--border);
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  .synergy-tier:last-child { border-right: none; }
+
+  .tier-label {
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    color: var(--text-muted);
+  }
+
+  .tier-label .tier-num {
+    color: var(--header-text);
+    font-size: 0.85rem;
+  }
+
+  .tier-effect {
+    color: var(--text);
+  }
+
+  /* ── Analysis Section ── */
+  .analysis {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .analysis h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .analysis p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .analysis p:last-child { margin-bottom: 0; }
+  .analysis strong { color: var(--header-text); }
+
+  .error-msg {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 20px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    color: #f87171;
+    text-align: center;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .stat-box { min-width: calc(50% - 8px); }
+    .stat-box .num { font-size: 22px; }
+    .synergy-top { flex-direction: column; gap: 0.5rem; }
+    .synergy-tiers { flex-direction: column; }
+    .synergy-tier { border-right: none; border-bottom: 1px solid var(--border); }
+    .synergy-tier:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<script src="eoddb_hna_nav.js"></script>
+<div class="page-header">
+  <h1>Honkai: Nexus Anima &mdash; Aspect Synergy Guide &amp; Breakpoints</h1>
+  <span class="subtitle">All 16 aspect types explained &mdash; descriptions, Nexus Anima thresholds, and scaling effects for every synergy tier. Data based on closed beta &mdash; will be updated if there are any changes.</span>
+</div>
+
+<div class="stat-row" id="stats"></div>
+
+<h2 class="section-header">Nexus Anima by Aspect &times; Rarity</h2>
+<div class="table-wrap">
+  <table>
+    <thead id="thead-rarity"></thead>
+    <tbody id="grid-rarity"></tbody>
+  </table>
+</div>
+
+<h2 class="section-header">Aspect Synergies &amp; Breakpoints</h2>
+<div class="synergy-grid" id="synergy-grid"></div>
+
+<div class="analysis" id="analysis"></div>
+
+<div class="error-msg" id="error"></div>
+
+<script>
+const ASPECT_COLORS = {
+  "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
+  "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
+  "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
+  "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
+};
+
+const ASPECT_ORDER = [
+  "Light","Dark","Reality","Oblivion","Love","Hate",
+  "Beauty","Ugliness","Joy","Pride","Strength","Competition",
+  "Satiation","Insatiability","Change","Memory"
+];
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function pct(n, total) {
+  return (n / total * 100).toFixed(1) + '%';
+}
+
+async function loadJSON(filename) {
+  const resp = await fetch('./' + filename);
+  if (!resp.ok) throw new Error('Failed to load ' + filename);
+  return resp.json();
+}
+
+async function init() {
+  let units, aspectsRaw;
+  try {
+    [units, aspectsRaw] = await Promise.all([
+      loadJSON('eoddb_hna_nexus_anima_units.json'),
+      loadJSON('eoddb_hna_aspects.json')
+    ]);
+  } catch (e) {
+    showError('Could not load data files. Make sure eoddb_hna_nexus_anima_units.json and eoddb_hna_aspects.json are in the same folder as this HTML file.');
+    return;
+  }
+
+  // ── Parse aspects into structured data ──
+  const aspectData = [];
+  let current = null;
+  for (const row of aspectsRaw) {
+    if (row.Aspect) {
+      current = { name: row.Aspect, description: row.Description || '', tiers: [] };
+      aspectData.push(current);
+    }
+    if (current && row["Units Required"] != null) {
+      current.tiers.push({ units: row["Units Required"], effect: row.Effect || '' });
+    }
+  }
+
+  const aspectNames = aspectData.map(a => a.name);
+  const orderedAspects = ASPECT_ORDER.filter(a => aspectNames.includes(a));
+  const extraAspects = aspectNames.filter(a => !ASPECT_ORDER.includes(a));
+  const aspects = [...orderedAspects, ...extraAspects];
+
+  const aspectMap = {};
+  aspectData.forEach(a => { aspectMap[a.name] = a; });
+
+  // ── Compute stats ──
+  const total = units.length;
+  const r3 = units.filter(u => u.Rarity === 3);
+  const r4 = units.filter(u => u.Rarity === 4);
+  const r5 = units.filter(u => u.Rarity === 5);
+
+  // ── Stat boxes ──
+  const statsEl = document.getElementById('stats');
+  const boxes = [
+    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)' },
+    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total) },
+    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total) },
+    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total) },
+    { num: aspects.length, label: 'Aspect Types', color: 'var(--accent1)' },
+  ];
+  boxes.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'stat-box';
+    div.innerHTML =
+      `<div class="num" style="color:${b.color}">${b.num}</div>` +
+      (b.p ? `<div class="pct" style="color:${b.color};opacity:0.7">${b.p}</div>` : '') +
+      `<div class="label">${b.label}</div>`;
+    statsEl.appendChild(div);
+  });
+
+  // ── Rarity × Aspect table ──
+  const rarities = [3, 4, 5];
+  const rarityColors = { 3: 'var(--r3)', 4: 'var(--r4)', 5: 'var(--r5)' };
+  const rarityLabels = { 3: '3-Star', 4: '4-Star', 5: '5-Star' };
+
+  const thead = document.getElementById('thead-rarity');
+  const headRow = document.createElement('tr');
+  headRow.innerHTML = '<th style="color:#8b95a5">EODdb.com</th>' +
+    rarities.map(r => `<th style="color:${rarityColors[r]}">${rarityLabels[r]}</th>`).join('') +
+    '<th>Total</th>';
+  thead.appendChild(headRow);
+
+  const tbody = document.getElementById('grid-rarity');
+  aspects.forEach(aspect => {
+    const tr = document.createElement('tr');
+    const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
+    tr.style.setProperty('--aspect-color', acColor);
+
+    const tdName = document.createElement('td');
+    tdName.style.setProperty('--aspect-color', acColor);
+    tdName.textContent = aspect;
+    tr.appendChild(tdName);
+
+    const aspectUnits = units.filter(u => u.Aspect === aspect);
+    let rowTotal = 0;
+
+    rarities.forEach(r => {
+      const td = document.createElement('td');
+      const matched = aspectUnits.filter(u => u.Rarity === r);
+      rowTotal += matched.length;
+      if (matched.length === 0) {
+        td.innerHTML = '<span class="empty-cell">—</span>';
+      } else {
+        matched.sort((a, b) => a.Name.localeCompare(b.Name));
+        matched.forEach(u => {
+          const span = document.createElement('span');
+          span.className = 'unit r' + r;
+          span.textContent = u.Name;
+          td.appendChild(span);
+        });
+      }
+      tr.appendChild(td);
+    });
+
+    const tdTotal = document.createElement('td');
+    tdTotal.className = 'count-cell';
+    tdTotal.textContent = rowTotal;
+    tr.appendChild(tdTotal);
+
+    tbody.appendChild(tr);
+  });
+
+  // ── Aspect synergy cards ──
+  const synergyGrid = document.getElementById('synergy-grid');
+  aspects.forEach(aspectName => {
+    const data = aspectMap[aspectName];
+    if (!data) return;
+
+    const card = document.createElement('div');
+    card.className = 'synergy-card';
+    card.style.setProperty('--aspect-color', ASPECT_COLORS[aspectName] || 'var(--border)');
+
+    const descText = (data.description || '').replace(/\n/g, '<br>');
+
+    let tiersHTML = '';
+    data.tiers.forEach(t => {
+      tiersHTML += `
+        <div class="synergy-tier">
+          <div class="tier-label"><span class="tier-num">${t.units}</span> Nexus Anima</div>
+          <div class="tier-effect">${t.effect}</div>
+        </div>`;
+    });
+
+    card.innerHTML = `
+      <div class="synergy-top">
+        <div class="synergy-name">${aspectName}</div>
+        <div class="synergy-desc">${descText}</div>
+      </div>
+      <div class="synergy-tiers">${tiersHTML}</div>`;
+
+    synergyGrid.appendChild(card);
+  });
+
+  function ac(name) {
+    const c = ASPECT_COLORS[name] || 'var(--header-text)';
+    return `<strong style="color:${c}">${name}</strong>`;
+  }
+  function acList(names) { return names.map(n => ac(n)).join(', '); }
+  function acPair(pair) { return pair.split('/').map(n => ac(n)).join('/'); }
+
+  // ── Statistical Summary ──
+  const aspectCounts = {};
+  aspects.forEach(a => { aspectCounts[a] = units.filter(u => u.Aspect === a).length; });
+  const sortedByCount = Object.entries(aspectCounts).sort((a, b) => b[1] - a[1]);
+  const largest = sortedByCount[0];
+  const smallestVal = sortedByCount[sortedByCount.length - 1][1];
+  const smallest = sortedByCount.filter(a => a[1] === smallestVal);
+  const avgUnits = (total / aspects.length).toFixed(1);
+
+  const tierCounts = aspectData.map(a => a.tiers.length);
+  const maxTiers = Math.max(...tierCounts);
+  const minTiers = Math.min(...tierCounts);
+  const mostTiers = aspectData.filter(a => a.tiers.length === maxTiers).map(a => a.name);
+  const fewestTiers = aspectData.filter(a => a.tiers.length === minTiers).map(a => a.name);
+
+  const lowestEntry = aspectData.reduce((min, a) => {
+    const first = a.tiers[0];
+    return first && first.units < min.units ? { name: a.name, units: first.units } : min;
+  }, { name: '', units: Infinity });
+  const highestEntry = aspectData.reduce((max, a) => {
+    const last = a.tiers[a.tiers.length - 1];
+    return last && last.units > max.units ? { name: a.name, units: last.units } : max;
+  }, { name: '', units: 0 });
+
+  const r5PerAspect = {};
+  aspects.forEach(a => { r5PerAspect[a] = r5.filter(u => u.Aspect === a).length; });
+  const noR5 = aspects.filter(a => r5PerAspect[a] === 0);
+  const multiR5 = Object.entries(r5PerAspect).filter(e => e[1] >= 2).sort((a, b) => b[1] - a[1]);
+
+  const pairsWithR5 = [];
+  for (let i = 0; i < ASPECT_ORDER.length; i += 2) {
+    const a = ASPECT_ORDER[i], b = ASPECT_ORDER[i + 1];
+    if (a && b && r5PerAspect[a] > 0 && r5PerAspect[b] > 0) pairsWithR5.push(`${a}/${b}`);
+  }
+
+  const analysisEl = document.getElementById('analysis');
+  analysisEl.innerHTML = `
+    <h2>Statistical Summary</h2>
+    <p>
+      The game features <strong>${aspects.length} distinct aspects</strong> across <strong>${total} Nexus Anima</strong>,
+      averaging <strong>${avgUnits} Nexus Anima per aspect</strong>.
+      ${ac(largest[0])} is the most populated aspect with <strong>${largest[1]} Nexus Anima</strong>,
+      while ${acList(smallest.map(s => s[0]))} ${smallest.length === 1 ? 'has' : 'each have'} the fewest at just <strong>${smallestVal}</strong>.
+      ${noR5.length > 0
+        ? `${acList(noR5)} ${noR5.length === 1 ? 'has' : 'have'} no 5-star representation — a notable gap for team-building at those aspects.`
+        : 'Every aspect has at least one 5-star Nexus Anima.'}
+      ${multiR5.length > 0
+        ? ` Meanwhile, ${acList(multiR5.map(e => e[0]))} ${multiR5.length === 1 ? 'offers' : 'offer'} multiple 5-star options, giving players more flexibility.`
+        : ''}
+    </p>
+    <p>
+      <strong>Synergy scaling</strong> varies significantly across aspects.
+      ${acList(mostTiers)} ${mostTiers.length === 1 ? 'has' : 'have'} the deepest scaling with <strong>${maxTiers} breakpoints</strong>,
+      while ${acList(fewestTiers)} ${fewestTiers.length === 1 ? 'has' : 'have'} the fewest at <strong>${minTiers}</strong>.
+      The earliest synergy activates at just <strong>${lowestEntry.units} Nexus Anima</strong> (${ac(lowestEntry.name)}),
+      while ${ac(highestEntry.name)} requires up to <strong>${highestEntry.units}</strong> for its final tier — demanding heavy commitment to a single aspect.
+    </p>
+    <p>
+      Aspects are thematically paired into opposites (${acPair('Light/Dark')}, ${acPair('Love/Hate')}, ${acPair('Reality/Oblivion')}, etc.),
+      but roster depth within each pair is not always symmetric.
+      ${pairsWithR5.length > 0
+        ? `The ${pairsWithR5.map(p => acPair(p)).join(', ')} ${pairsWithR5.length === 1 ? 'pair has' : 'pairs have'} 5-star coverage on both sides, offering balanced high-rarity options across opposing playstyles.`
+        : ''}
+      Players looking to activate higher-tier synergies should note the spread of 3-star Nexus Anima across aspects,
+      as they serve as accessible roster fillers to reach breakpoint thresholds.
+    </p>
+  `;
+}
+
+init();
+</script>
+</body>
+</html>
