@@ -298,7 +298,6 @@
 
   .detail-inner {
     padding: 14px 20px;
-    max-width: 500px;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
@@ -310,18 +309,20 @@
     margin-bottom: 10px;
     white-space: normal;
     word-wrap: break-word;
+    max-width: 600px;
   }
 
   .detail-tiers {
-    display: flex;
+    display: inline-flex;
     gap: 0;
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
+    width: fit-content;
   }
 
   .detail-tier {
-    flex: 1;
+    min-width: 140px;
     padding: 8px 12px;
     border-right: 1px solid var(--border);
     font-size: 0.75rem;
