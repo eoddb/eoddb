@@ -101,6 +101,19 @@
     letter-spacing: 0.03em;
   }
 
+  .stat-box.clickable {
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .stat-box.clickable:hover {
+    border-color: var(--text-muted);
+  }
+
+  .stat-box.active-r3 { border-color: var(--r3); }
+  .stat-box.active-r4 { border-color: var(--r4); }
+  .stat-box.active-r5 { border-color: var(--r5); }
+
   /* ── Section headers ── */
   .section-header {
     max-width: 1400px;
@@ -145,7 +158,8 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    min-width: 140px;
+    min-width: 90px;
+    max-width: 120px;
   }
 
   tbody td {
@@ -182,6 +196,55 @@
   .unit.r4 { color: var(--r4); }
   .unit.r5 { color: var(--r5); }
 
+  .legend {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .legend-item.active {
+    background: var(--surface);
+    border-color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.r3 { background: var(--r3); }
+  .legend-dot.r4 { background: var(--r4); }
+  .legend-dot.r5 { background: var(--r5); }
+
+  .table-wrap.filter-r3 .unit.r4,
+  .table-wrap.filter-r3 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r4 .unit.r3,
+  .table-wrap.filter-r4 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r5 .unit.r3,
+  .table-wrap.filter-r5 .unit.r4 { opacity: 0.12; }
+
   .empty-cell {
     color: var(--text-muted);
     opacity: 0.3;
@@ -205,59 +268,62 @@
     margin-top: 3px;
   }
 
-  /* ── Aspect Synergy Cards ── */
-  .synergy-grid {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  /* ── Expandable aspect detail rows ── */
+  tbody tr.aspect-row {
+    cursor: pointer;
   }
 
-  .synergy-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  tbody tr.aspect-row td:first-child::after {
+    content: '▸';
+    margin-left: 6px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    transition: transform 0.15s;
+    display: inline-block;
+  }
+
+  tbody tr.aspect-row.expanded td:first-child::after {
+    transform: rotate(90deg);
+  }
+
+  tr.detail-row { display: none; }
+  tr.detail-row.visible { display: table-row; }
+
+  tr.detail-row td {
+    padding: 0 !important;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
-    overflow: hidden;
+    background: var(--bg) !important;
   }
 
-  .synergy-top {
-    display: flex;
-    gap: 1rem;
-    padding: 16px 20px;
-    align-items: flex-start;
+  .detail-inner {
+    padding: 14px 20px;
   }
 
-  .synergy-name {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--header-text);
-    white-space: nowrap;
-    min-width: 110px;
-  }
-
-  .synergy-desc {
+  .detail-desc {
     font-size: 0.82rem;
     line-height: 1.65;
     color: var(--text);
-    flex: 1;
+    margin-bottom: 10px;
   }
 
-  .synergy-tiers {
+  .detail-tiers {
     display: flex;
-    border-top: 1px solid var(--border);
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
   }
 
-  .synergy-tier {
+  .detail-tier {
     flex: 1;
     padding: 10px 16px;
     border-right: 1px solid var(--border);
     font-size: 0.78rem;
     line-height: 1.55;
+    background: var(--surface);
   }
 
-  .synergy-tier:last-child { border-right: none; }
+  .detail-tier:last-child { border-right: none; }
 
   .tier-label {
     font-weight: 700;
@@ -321,16 +387,15 @@
   @media (max-width: 640px) {
     .stat-box { min-width: calc(50% - 8px); }
     .stat-box .num { font-size: 22px; }
-    .synergy-top { flex-direction: column; gap: 0.5rem; }
-    .synergy-tiers { flex-direction: column; }
-    .synergy-tier { border-right: none; border-bottom: 1px solid var(--border); }
-    .synergy-tier:last-child { border-bottom: none; }
+    .detail-tiers { flex-direction: column; }
+    .detail-tier { border-right: none; border-bottom: 1px solid var(--border); }
+    .detail-tier:last-child { border-bottom: none; }
   }
 </style>
 </head>
 <body>
 
-<script src="eoddb_hna_nav.js"></script>
+<script src="/hna/eoddb_hna_nav.js"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima &mdash; Aspect Synergy Guide &amp; Breakpoints</h1>
   <span class="subtitle">All 16 aspect types explained &mdash; descriptions, Nexus Anima thresholds, and scaling effects for every synergy tier. Data based on closed beta &mdash; will be updated if there are any changes.</span>
@@ -339,15 +404,18 @@
 <div class="stat-row" id="stats"></div>
 
 <h2 class="section-header">Nexus Anima by Aspect &times; Rarity</h2>
+<div class="legend">
+  <span style="color:var(--text-muted);">Rarity:</span>
+  <span class="legend-item" data-rarity="3"><span class="legend-dot r3"></span> <span style="color:var(--r3)">3-Star</span></span>
+  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
+  <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
+</div>
 <div class="table-wrap">
   <table>
     <thead id="thead-rarity"></thead>
     <tbody id="grid-rarity"></tbody>
   </table>
 </div>
-
-<h2 class="section-header">Aspect Synergies &amp; Breakpoints</h2>
-<div class="synergy-grid" id="synergy-grid"></div>
 
 <div class="analysis" id="analysis"></div>
 
@@ -378,7 +446,7 @@ function pct(n, total) {
 }
 
 async function loadJSON(filename) {
-  const resp = await fetch('./' + filename);
+  const resp = await fetch('/hna/' + filename);
   if (!resp.ok) throw new Error('Failed to load ' + filename);
   return resp.json();
 }
@@ -425,15 +493,19 @@ async function init() {
   // ── Stat boxes ──
   const statsEl = document.getElementById('stats');
   const boxes = [
-    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)' },
-    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total) },
-    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total) },
-    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total) },
+    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)', rarity: 'all' },
+    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total), rarity: '3' },
+    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total), rarity: '4' },
+    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total), rarity: '5' },
     { num: aspects.length, label: 'Aspect Types', color: 'var(--accent1)' },
   ];
   boxes.forEach(b => {
     const div = document.createElement('div');
     div.className = 'stat-box';
+    if (b.rarity) {
+      div.classList.add('clickable');
+      div.dataset.rarity = b.rarity;
+    }
     div.innerHTML =
       `<div class="num" style="color:${b.color}">${b.num}</div>` +
       (b.p ? `<div class="pct" style="color:${b.color};opacity:0.7">${b.p}</div>` : '') +
@@ -448,7 +520,7 @@ async function init() {
 
   const thead = document.getElementById('thead-rarity');
   const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th style="color:#8b95a5">EODdb.com</th>' +
+  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com</th>' +
     rarities.map(r => `<th style="color:${rarityColors[r]}">${rarityLabels[r]}</th>`).join('') +
     '<th>Total</th>';
   thead.appendChild(headRow);
@@ -490,38 +562,47 @@ async function init() {
     tdTotal.textContent = rowTotal;
     tr.appendChild(tdTotal);
 
+    tr.className = 'aspect-row';
     tbody.appendChild(tr);
-  });
 
-  // ── Aspect synergy cards ──
-  const synergyGrid = document.getElementById('synergy-grid');
-  aspects.forEach(aspectName => {
-    const data = aspectMap[aspectName];
-    if (!data) return;
+    // ── Detail row (hidden by default) ──
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.style.setProperty('--aspect-color', acColor);
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = rarities.length + 2;
 
-    const card = document.createElement('div');
-    card.className = 'synergy-card';
-    card.style.setProperty('--aspect-color', ASPECT_COLORS[aspectName] || 'var(--border)');
+    const data = aspectMap[aspect];
+    if (data) {
+      const descText = (data.description || '').replace(/\n/g, '<br>');
+      let tiersHTML = '';
+      data.tiers.forEach(t => {
+        tiersHTML += `
+          <div class="detail-tier">
+            <div class="tier-label"><span class="tier-num">${t.units}</span> Nexus Anima</div>
+            <div class="tier-effect">${t.effect}</div>
+          </div>`;
+      });
+      detailTd.innerHTML = `<div class="detail-inner">
+        <div class="detail-desc">${descText}</div>
+        <div class="detail-tiers">${tiersHTML}</div>
+      </div>`;
+    }
 
-    const descText = (data.description || '').replace(/\n/g, '<br>');
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
 
-    let tiersHTML = '';
-    data.tiers.forEach(t => {
-      tiersHTML += `
-        <div class="synergy-tier">
-          <div class="tier-label"><span class="tier-num">${t.units}</span> Nexus Anima</div>
-          <div class="tier-effect">${t.effect}</div>
-        </div>`;
+    tr.addEventListener('click', () => {
+      const wasExpanded = tr.classList.contains('expanded');
+      document.querySelectorAll('.aspect-row.expanded').forEach(r => {
+        r.classList.remove('expanded');
+        r.nextElementSibling.classList.remove('visible');
+      });
+      if (!wasExpanded) {
+        tr.classList.add('expanded');
+        detailTr.classList.add('visible');
+      }
     });
-
-    card.innerHTML = `
-      <div class="synergy-top">
-        <div class="synergy-name">${aspectName}</div>
-        <div class="synergy-desc">${descText}</div>
-      </div>
-      <div class="synergy-tiers">${tiersHTML}</div>`;
-
-    synergyGrid.appendChild(card);
   });
 
   function ac(name) {
@@ -598,6 +679,35 @@ async function init() {
       as they serve as accessible roster fillers to reach breakpoint thresholds.
     </p>
   `;
+
+  // ── Rarity filter ──
+  const tableWrap = document.querySelector('.table-wrap');
+  const legendItems = document.querySelectorAll('.legend-item');
+  const statBoxes = document.querySelectorAll('.stat-box.clickable');
+
+  function clearFilter() {
+    tableWrap.classList.remove('filter-r3', 'filter-r4', 'filter-r5');
+    legendItems.forEach(li => li.classList.remove('active'));
+    statBoxes.forEach(sb => sb.classList.remove('active-r3', 'active-r4', 'active-r5'));
+  }
+  function applyFilter(rarity) {
+    if (rarity === 'all') { clearFilter(); return; }
+    const filterClass = 'filter-r' + rarity;
+    if (tableWrap.classList.contains(filterClass)) { clearFilter(); }
+    else {
+      clearFilter();
+      tableWrap.classList.add(filterClass);
+      legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
+      statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
+    }
+  }
+
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => applyFilter(item.dataset.rarity));
+  });
+  statBoxes.forEach(box => {
+    box.addEventListener('click', () => applyFilter(box.dataset.rarity));
+  });
 }
 
 init();

@@ -100,6 +100,19 @@
     letter-spacing: 0.03em;
   }
 
+  .stat-box.clickable {
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .stat-box.clickable:hover {
+    border-color: var(--text-muted);
+  }
+
+  .stat-box.active-r3 { border-color: var(--r3); }
+  .stat-box.active-r4 { border-color: var(--r4); }
+  .stat-box.active-r5 { border-color: var(--r5); }
+
   .legend {
     max-width: 1400px;
     margin: 0 auto 1.2rem;
@@ -114,6 +127,22 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .legend-item.active {
+    background: var(--surface);
+    border-color: var(--text-muted);
   }
 
   .legend-dot {
@@ -125,6 +154,13 @@
   .legend-dot.r3 { background: var(--r3); }
   .legend-dot.r4 { background: var(--r4); }
   .legend-dot.r5 { background: var(--r5); }
+
+  .table-wrap.filter-r3 .unit.r4,
+  .table-wrap.filter-r3 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r4 .unit.r3,
+  .table-wrap.filter-r4 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r5 .unit.r3,
+  .table-wrap.filter-r5 .unit.r4 { opacity: 0.12; }
 
   .table-wrap {
     max-width: 1400px;
@@ -160,7 +196,8 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    min-width: 140px;
+    min-width: 90px;
+    max-width: 120px;
   }
 
   tbody td {
@@ -220,6 +257,55 @@
     font-style: italic;
   }
 
+  /* ── Expandable type description row ── */
+  thead th {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  thead th:first-child {
+    cursor: default;
+  }
+
+  thead.expandable th:not(:first-child)::after {
+    content: ' ▾';
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    vertical-align: middle;
+  }
+
+  tr.type-desc-row { display: none; }
+  tr.type-desc-row.visible { display: table-row; }
+
+  tr.type-desc-row td {
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 14px !important;
+    vertical-align: top;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text);
+    min-width: 150px;
+  }
+
+  tr.type-desc-row td:first-child {
+    background: var(--bg) !important;
+    border-left: none;
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .type-desc-count {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent1);
+    margin-bottom: 4px;
+  }
+
   .analysis {
     max-width: 1400px;
     margin: 1.4rem auto 0;
@@ -272,7 +358,7 @@
 </head>
 <body>
 
-<script src="eoddb_hna_nav.js"></script>
+<script src="/hna/eoddb_hna_nav.js"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima &mdash; All Nexus Anima by Aspect &amp; Type</h1>
   <span class="subtitle">Complete 3-star, 4-star &amp; 5-star Nexus Anima database with rarity breakdown and team-building reference. Data based on closed beta &mdash; will be updated if there are any changes.</span>
@@ -282,9 +368,9 @@
 
 <div class="legend">
   <span style="color:var(--text-muted);">Rarity:</span>
-  <span class="legend-item"><span class="legend-dot r3"></span> <span style="color:var(--r3)">&#9733;&#9733;&#9733; 3-Star</span></span>
-  <span class="legend-item"><span class="legend-dot r4"></span> <span style="color:var(--r4)">&#9733;&#9733;&#9733;&#9733; 4-Star</span></span>
-  <span class="legend-item"><span class="legend-dot r5"></span> <span style="color:var(--r5)">&#9733;&#9733;&#9733;&#9733;&#9733; 5-Star</span></span>
+  <span class="legend-item" data-rarity="3"><span class="legend-dot r3"></span> <span style="color:var(--r3)">3-Star</span></span>
+  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
+  <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
 </div>
 
 <div class="table-wrap">
@@ -325,7 +411,7 @@ function pct(n, total) {
 }
 
 async function loadJSON(filename) {
-  const resp = await fetch('./' + filename);
+  const resp = await fetch('/hna/' + filename);
   if (!resp.ok) throw new Error('Failed to load ' + filename);
   return resp.json();
 }
@@ -360,15 +446,19 @@ async function init() {
   // ── Stat boxes ──
   const statsEl = document.getElementById('stats');
   const boxes = [
-    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)' },
-    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total) },
-    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total) },
-    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total) },
+    { num: total, label: 'Total Nexus Anima', color: 'var(--header-text)', rarity: 'all' },
+    { num: r3.length, label: '3-Star Nexus Anima', color: 'var(--r3)', p: pct(r3.length, total), rarity: '3' },
+    { num: r4.length, label: '4-Star Nexus Anima', color: 'var(--r4)', p: pct(r4.length, total), rarity: '4' },
+    { num: r5.length, label: '5-Star Nexus Anima', color: 'var(--r5)', p: pct(r5.length, total), rarity: '5' },
     { num: aspects.length, label: 'Aspect Types', color: 'var(--accent1)' },
   ];
   boxes.forEach(b => {
     const div = document.createElement('div');
     div.className = 'stat-box';
+    if (b.rarity) {
+      div.classList.add('clickable');
+      div.dataset.rarity = b.rarity;
+    }
     div.innerHTML =
       `<div class="num" style="color:${b.color}">${b.num}</div>` +
       (b.p ? `<div class="pct" style="color:${b.color};opacity:0.7">${b.p}</div>` : '') +
@@ -377,10 +467,32 @@ async function init() {
   });
 
   // ── Table header ──
+  const typeMap = {};
+  typesData.forEach(t => { typeMap[t.Type] = t.Description; });
+
   const thead = document.getElementById('thead');
+  thead.classList.add('expandable');
   const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th style="color:#8b95a5">EODdb.com</th>' + types.map(t => `<th>${t}</th>`).join('');
+  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com</th>' + types.map(t => `<th>${t}</th>`).join('');
   thead.appendChild(headRow);
+
+  // ── Type description row (hidden by default) ──
+  const descRow = document.createElement('tr');
+  descRow.className = 'type-desc-row';
+  const labelTd = document.createElement('td');
+  labelTd.textContent = 'Info';
+  descRow.appendChild(labelTd);
+  types.forEach(type => {
+    const td = document.createElement('td');
+    const count = units.filter(u => u.Type === type).length;
+    td.innerHTML = `<span class="type-desc-count">${count} Nexus Anima</span>${typeMap[type] || ''}`;
+    descRow.appendChild(td);
+  });
+  thead.appendChild(descRow);
+
+  headRow.addEventListener('click', () => {
+    descRow.classList.toggle('visible');
+  });
 
   // ── Build grid ──
   const grid = {};
@@ -424,6 +536,12 @@ async function init() {
 
     tbody.appendChild(tr);
   });
+
+  function ac(name) {
+    const c = ASPECT_COLORS[name] || 'var(--header-text)';
+    return `<strong style="color:${c}">${name}</strong>`;
+  }
+  function acList(names) { return names.map(n => ac(n)).join(', '); }
 
   // ── Analysis ──
   const typeCounts = {};
@@ -469,17 +587,48 @@ async function init() {
       Among 5-star Nexus Anima specifically, <strong>${r5Sorted[0][0]}</strong> dominates with <strong>${r5Sorted[0][1]}</strong>,
       and <strong>${r5Sorted[r5Sorted.length - 1][0]}</strong> is the rarest 5-star type with only <strong>${r5Sorted[r5Sorted.length - 1][1]}</strong>.
       ${noR5.length > 0
-        ? `Notably, <strong>${noR5.join(', ')}</strong> ${noR5.length === 1 ? 'has' : 'have'} no 5-star representation at all — a gap that may indicate upcoming releases.`
+        ? `Notably, ${acList(noR5)} ${noR5.length === 1 ? 'has' : 'have'} no 5-star representation at all — a gap that may indicate upcoming releases.`
         : 'Every aspect has at least one 5-star Nexus Anima.'}
     </p>
     <p>
-      <strong>Aspect density</strong> ranges from <strong>${topAspects[0][0]}</strong> and <strong>${topAspects[1][0]}</strong> (${topAspects[0][1]} Nexus Anima each, the most populated)
-      down to <strong>${bottomAspects.map(a => a[0]).join(', ')}</strong> with just <strong>${bottomVal}</strong> each.
+      <strong>Aspect density</strong> ranges from ${ac(topAspects[0][0])} and ${ac(topAspects[1][0])} (${topAspects[0][1]} Nexus Anima each, the most populated)
+      down to ${acList(bottomAspects.map(a => a[0]))} with just <strong>${bottomVal}</strong> each.
       Grid coverage sits at <strong>${coverage}%</strong> — <strong>${emptyCells}</strong> of ${totalCells} aspect×type slots are currently empty,
       representing potential niches for future Nexus Anima additions. The pairing of aspects into thematic opposites
-      (Light/Dark, Love/Hate, Reality/Oblivion) is reflected in the roster, though coverage within each pair is not always symmetric.
+      (${ac('Light')}/${ac('Dark')}, ${ac('Love')}/${ac('Hate')}, ${ac('Reality')}/${ac('Oblivion')}) is reflected in the roster, though coverage within each pair is not always symmetric.
     </p>
   `;
+
+  // ── Rarity filter ──
+  const tableWrap = document.querySelector('.table-wrap');
+  const legendItems = document.querySelectorAll('.legend-item');
+  const statBoxes = document.querySelectorAll('.stat-box.clickable');
+
+  function clearFilter() {
+    tableWrap.classList.remove('filter-r3', 'filter-r4', 'filter-r5');
+    legendItems.forEach(li => li.classList.remove('active'));
+    statBoxes.forEach(sb => sb.classList.remove('active-r3', 'active-r4', 'active-r5'));
+  }
+
+  function applyFilter(rarity) {
+    if (rarity === 'all') { clearFilter(); return; }
+    const filterClass = 'filter-r' + rarity;
+    if (tableWrap.classList.contains(filterClass)) {
+      clearFilter();
+    } else {
+      clearFilter();
+      tableWrap.classList.add(filterClass);
+      legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
+      statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
+    }
+  }
+
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => applyFilter(item.dataset.rarity));
+  });
+  statBoxes.forEach(box => {
+    box.addEventListener('click', () => applyFilter(box.dataset.rarity));
+  });
 }
 
 init();
