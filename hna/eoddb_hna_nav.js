@@ -1,11 +1,11 @@
 const EODDB_NAV_PAGES = [
-  { label: 'Honkai: Nexus Anima', href: 'eoddb_hna_unitsummary.html', isHome: true },
-  { label: 'Aspects', href: 'eoddb_hna_aspects.html' },
-  { label: 'Tier List', href: 'eoddb_hna_tierlist.html' },
+  { label: 'Honkai: Nexus Anima', href: '/hna/nexusanima', isHome: true },
+  { label: 'Aspects', href: '/hna/aspects' },
+  { label: 'Tier List', href: '/hna/tierlist' },
 ];
 
 (function() {
-  const currentFile = location.pathname.split('/').pop();
+  const currentPath = location.pathname.replace(/\.html$/, '').replace(/\/$/, '');
 
   const nav = document.createElement('nav');
   nav.className = 'eoddb-nav';
@@ -14,7 +14,7 @@ const EODDB_NAV_PAGES = [
   inner.className = 'eoddb-nav-inner';
 
   const brand = document.createElement('a');
-  brand.href = 'index.html';
+  brand.href = '/';
   brand.className = 'eoddb-nav-brand';
   brand.innerHTML = 'EOD<span style="text-transform:none">db.com</span>';
   inner.appendChild(brand);
@@ -29,7 +29,7 @@ const EODDB_NAV_PAGES = [
     a.textContent = page.label;
     a.className = 'eoddb-nav-link';
     if (page.isHome) a.classList.add('eoddb-nav-home');
-    if (currentFile === page.href) a.classList.add('eoddb-nav-active');
+    if (currentPath === page.href) a.classList.add('eoddb-nav-active');
     inner.appendChild(a);
   });
 

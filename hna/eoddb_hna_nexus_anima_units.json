@@ -1,0 +1,576 @@
+[
+  {
+    "No.": "001",
+    "Name": "Puddlipup",
+    "Rarity": 4,
+    "Aspect": "Satiation",
+    "Type": "Protector"
+  },
+  {
+    "No.": "002",
+    "Name": "Taileep",
+    "Rarity": 4,
+    "Aspect": "Hate",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "003",
+    "Name": "Batnyss",
+    "Rarity": 4,
+    "Aspect": "Hate",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "004",
+    "Name": "Bunmareen",
+    "Rarity": 3,
+    "Aspect": "Light",
+    "Type": "Protector"
+  },
+  {
+    "No.": "005",
+    "Name": "Inkifoal",
+    "Rarity": 3,
+    "Aspect": "Reality",
+    "Type": "Protector"
+  },
+  {
+    "No.": "006",
+    "Name": "Cumulon",
+    "Rarity": 5,
+    "Aspect": "Pride",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "007",
+    "Name": "Apollinis",
+    "Rarity": 4,
+    "Aspect": "Light",
+    "Type": "Protector"
+  },
+  {
+    "No.": "008",
+    "Name": "Felinoxie",
+    "Rarity": 4,
+    "Aspect": "Dark",
+    "Type": "Protector"
+  },
+  {
+    "No.": "009",
+    "Name": "Lumeridon",
+    "Rarity": 4,
+    "Aspect": "Dark",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "010",
+    "Name": "Inkicorn",
+    "Rarity": 4,
+    "Aspect": "Oblivion",
+    "Type": "Protector"
+  },
+  {
+    "No.": "011",
+    "Name": "Heartcease",
+    "Rarity": 4,
+    "Aspect": "Love",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "012",
+    "Name": "Dragamour",
+    "Rarity": 5,
+    "Aspect": "Love",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "013",
+    "Name": "Corvariatio",
+    "Rarity": 5,
+    "Aspect": "Change",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "014",
+    "Name": "Vulberry",
+    "Rarity": 4,
+    "Aspect": "Satiation",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "015",
+    "Name": "Noctumbra",
+    "Rarity": 5,
+    "Aspect": "Dark",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "017",
+    "Name": "Mushgloomini",
+    "Rarity": 3,
+    "Aspect": "Dark",
+    "Type": "Protector"
+  },
+  {
+    "No.": "018",
+    "Name": "Faeflux",
+    "Rarity": 4,
+    "Aspect": "Change",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "019",
+    "Name": "Lepinamel",
+    "Rarity": 3,
+    "Aspect": "Beauty",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "020",
+    "Name": "Donubi",
+    "Rarity": 3,
+    "Aspect": "Hate",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "021",
+    "Name": "Olivesper",
+    "Rarity": 3,
+    "Aspect": "Strength",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "022",
+    "Name": "Squarel",
+    "Rarity": 3,
+    "Aspect": "Competition",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "023",
+    "Name": "Furrari",
+    "Rarity": 4,
+    "Aspect": "Competition",
+    "Type": "Protector"
+  },
+  {
+    "No.": "024",
+    "Name": "Magisdrake",
+    "Rarity": 3,
+    "Aspect": "Pride",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "025",
+    "Name": "Nomnom",
+    "Rarity": 4,
+    "Aspect": "Satiation",
+    "Type": "Protector"
+  },
+  {
+    "No.": "026",
+    "Name": "Pupanoo",
+    "Rarity": 3,
+    "Aspect": "Satiation",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "027",
+    "Name": "Bobabirb",
+    "Rarity": 3,
+    "Aspect": "Insatiability",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "028",
+    "Name": "Eggnok",
+    "Rarity": 4,
+    "Aspect": "Competition",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "029",
+    "Name": "Rosfurcate",
+    "Rarity": 4,
+    "Aspect": "Hate",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "030",
+    "Name": "Glampa",
+    "Rarity": 5,
+    "Aspect": "Light",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "031",
+    "Name": "Chowpownd",
+    "Rarity": 5,
+    "Aspect": "Insatiability",
+    "Type": "Protector"
+  },
+  {
+    "No.": "032",
+    "Name": "Damasque",
+    "Rarity": 4,
+    "Aspect": "Change",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "033",
+    "Name": "Cublade",
+    "Rarity": 3,
+    "Aspect": "Strength",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "034",
+    "Name": "Marshalbird",
+    "Rarity": 4,
+    "Aspect": "Competition",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "035",
+    "Name": "Plumelune",
+    "Rarity": 4,
+    "Aspect": "Beauty",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "036",
+    "Name": "Mimoo",
+    "Rarity": 4,
+    "Aspect": "Reality",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "037",
+    "Name": "Rimechime",
+    "Rarity": 3,
+    "Aspect": "Love",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "038",
+    "Name": "Vixemourne",
+    "Rarity": 4,
+    "Aspect": "Dark",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "039",
+    "Name": "Bladehound",
+    "Rarity": 5,
+    "Aspect": "Strength",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "040",
+    "Name": "Eggluvs",
+    "Rarity": 3,
+    "Aspect": "Competition",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "041",
+    "Name": "Chimaura",
+    "Rarity": 4,
+    "Aspect": "Light",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "043",
+    "Name": "Donnatallow",
+    "Rarity": 3,
+    "Aspect": "Dark",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "044",
+    "Name": "Frigull",
+    "Rarity": 3,
+    "Aspect": "Satiation",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "045",
+    "Name": "Starspine",
+    "Rarity": 4,
+    "Aspect": "Light",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "046",
+    "Name": "Camcorgi",
+    "Rarity": 5,
+    "Aspect": "Memory",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "047",
+    "Name": "Kaffiend",
+    "Rarity": 3,
+    "Aspect": "Insatiability",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "048",
+    "Name": "Foalhardy",
+    "Rarity": 4,
+    "Aspect": "Pride",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "049",
+    "Name": "Octopourri",
+    "Rarity": 4,
+    "Aspect": "Love",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "050",
+    "Name": "Hoppelon",
+    "Rarity": 5,
+    "Aspect": "Competition",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "051",
+    "Name": "Mr. Avocado",
+    "Rarity": 3,
+    "Aspect": "Ugliness",
+    "Type": "Protector"
+  },
+  {
+    "No.": "052",
+    "Name": "Cinechel",
+    "Rarity": 5,
+    "Aspect": "Memory",
+    "Type": "Protector"
+  },
+  {
+    "No.": "053",
+    "Name": "C'locked",
+    "Rarity": 3,
+    "Aspect": "Memory",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "054",
+    "Name": "Catnapir",
+    "Rarity": 4,
+    "Aspect": "Memory",
+    "Type": "Protector"
+  },
+  {
+    "No.": "055",
+    "Name": "Framamba",
+    "Rarity": 4,
+    "Aspect": "Memory",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "056",
+    "Name": "Chocllamour",
+    "Rarity": 3,
+    "Aspect": "Love",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "057",
+    "Name": "Capybunner",
+    "Rarity": 3,
+    "Aspect": "Light",
+    "Type": "Protector"
+  },
+  {
+    "No.": "058",
+    "Name": "Waxula",
+    "Rarity": 5,
+    "Aspect": "Dark",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "059",
+    "Name": "Pomparrot",
+    "Rarity": 5,
+    "Aspect": "Competition",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "060",
+    "Name": "Hamburgoof",
+    "Rarity": 5,
+    "Aspect": "Ugliness",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "061",
+    "Name": "Magisaki",
+    "Rarity": 3,
+    "Aspect": "Change",
+    "Type": "Protector"
+  },
+  {
+    "No.": "062",
+    "Name": "Beaubeanie",
+    "Rarity": 4,
+    "Aspect": "Beauty",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "063",
+    "Name": "Lumehart",
+    "Rarity": 5,
+    "Aspect": "Light",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "064",
+    "Name": "Hugglebeary",
+    "Rarity": 4,
+    "Aspect": "Strength",
+    "Type": "Protector"
+  },
+  {
+    "No.": "065",
+    "Name": "Derpydile",
+    "Rarity": 3,
+    "Aspect": "Competition",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "066",
+    "Name": "Umpurrella",
+    "Rarity": 5,
+    "Aspect": "Beauty",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "067",
+    "Name": "Sharkalaka",
+    "Rarity": 4,
+    "Aspect": "Reality",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "068",
+    "Name": "Ugglewing",
+    "Rarity": 3,
+    "Aspect": "Ugliness",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "069",
+    "Name": "Goldfogey",
+    "Rarity": 3,
+    "Aspect": "Oblivion",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "070",
+    "Name": "Mariminnow",
+    "Rarity": 3,
+    "Aspect": "Reality",
+    "Type": "Protector"
+  },
+  {
+    "No.": "071",
+    "Name": "Muscimmon",
+    "Rarity": 4,
+    "Aspect": "Strength",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "072",
+    "Name": "Sunspottie",
+    "Rarity": 4,
+    "Aspect": "Joy",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "073",
+    "Name": "Pumpkimp",
+    "Rarity": 4,
+    "Aspect": "Joy",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "074",
+    "Name": "Jerboranj",
+    "Rarity": 4,
+    "Aspect": "Insatiability",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "075",
+    "Name": "Sootsie",
+    "Rarity": 3,
+    "Aspect": "Joy",
+    "Type": "Mascot"
+  },
+  {
+    "No.": "076",
+    "Name": "Broomba",
+    "Rarity": 3,
+    "Aspect": "Reality",
+    "Type": "Protector"
+  },
+  {
+    "No.": "077",
+    "Name": "Famishade",
+    "Rarity": 4,
+    "Aspect": "Joy",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "079",
+    "Name": "Hoggit",
+    "Rarity": 5,
+    "Aspect": "Satiation",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "080",
+    "Name": "Fyrklor",
+    "Rarity": 4,
+    "Aspect": "Strength",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "081",
+    "Name": "Seroplumanth",
+    "Rarity": 5,
+    "Aspect": "Reality",
+    "Type": "Mastermind"
+  },
+  {
+    "No.": "082",
+    "Name": "Mesmerith",
+    "Rarity": 5,
+    "Aspect": "Hate",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "083",
+    "Name": "Atragasus",
+    "Rarity": 5,
+    "Aspect": "Oblivion",
+    "Type": "Explorer"
+  },
+  {
+    "No.": "084",
+    "Name": "Shampoco",
+    "Rarity": 4,
+    "Aspect": "Reality",
+    "Type": "Blaster"
+  },
+  {
+    "No.": "085",
+    "Name": "Baggle",
+    "Rarity": 3,
+    "Aspect": "Reality",
+    "Type": "Mascot"
+  }
+]
