@@ -180,8 +180,8 @@
   thead th {
     background: var(--header-bg);
     color: var(--header-text);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.75rem 1rem;
@@ -219,8 +219,8 @@
     left: 0;
     z-index: 1;
     background: var(--header-bg);
-    font-weight: 600;
-    font-size: 0.78rem;
+    font-weight: 700;
+    font-size: 0.85rem;
     letter-spacing: 0.03em;
     white-space: nowrap;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
@@ -490,7 +490,9 @@ async function init() {
   types.forEach(type => {
     const td = document.createElement('td');
     const count = units.filter(u => u.Type === type).length;
-    td.innerHTML = `<span class="type-desc-count">${count} Nexus Anima</span>${typeMap[type] || ''}`;
+    const desc = typeMap[type] || '';
+    const boldDesc = desc.replace(/^(\S+)/, '<strong>$1</strong>');
+    td.innerHTML = `<span class="type-desc-count">${count} Nexus Anima</span>${boldDesc}`;
     descRow.appendChild(td);
   });
   thead.appendChild(descRow);
