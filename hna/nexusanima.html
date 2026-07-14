@@ -267,11 +267,16 @@
     cursor: default;
   }
 
-  thead.expandable th:not(:first-child)::after {
-    content: ' ▾';
-    font-size: 0.55rem;
+  thead.expandable th:first-child::after {
+    content: '+';
+    margin-left: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--text-muted);
-    vertical-align: middle;
+  }
+
+  thead.expandable.expanded th:first-child::after {
+    content: '−';
   }
 
   tr.type-desc-row { display: none; }
@@ -492,6 +497,7 @@ async function init() {
 
   headRow.addEventListener('click', () => {
     descRow.classList.toggle('visible');
+    thead.classList.toggle('expanded');
   });
 
   // ── Build grid ──

@@ -158,8 +158,9 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    min-width: 90px;
-    max-width: 120px;
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
   }
 
   tbody td {
@@ -274,16 +275,16 @@
   }
 
   tbody tr.aspect-row td:first-child::after {
-    content: '▸';
-    margin-left: 6px;
-    font-size: 0.65rem;
+    content: '+';
+    margin-left: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--text-muted);
-    transition: transform 0.15s;
     display: inline-block;
   }
 
   tbody tr.aspect-row.expanded td:first-child::after {
-    transform: rotate(90deg);
+    content: '−';
   }
 
   tr.detail-row { display: none; }
@@ -316,9 +317,9 @@
 
   .detail-tier {
     flex: 1;
-    padding: 10px 16px;
+    padding: 8px 12px;
     border-right: 1px solid var(--border);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     line-height: 1.55;
     background: var(--surface);
   }
@@ -327,20 +328,21 @@
 
   .tier-label {
     font-weight: 700;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     color: var(--text-muted);
   }
 
   .tier-label .tier-num {
     color: var(--header-text);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
   }
 
   .tier-effect {
     color: var(--text);
+    font-size: 0.75rem;
   }
 
   /* ── Analysis Section ── */
@@ -387,9 +389,14 @@
   @media (max-width: 640px) {
     .stat-box { min-width: calc(50% - 8px); }
     .stat-box .num { font-size: 22px; }
+    .detail-inner { padding: 10px 14px; }
+    .detail-desc { font-size: 0.75rem; }
     .detail-tiers { flex-direction: column; }
-    .detail-tier { border-right: none; border-bottom: 1px solid var(--border); }
+    .detail-tier { border-right: none; border-bottom: 1px solid var(--border); padding: 6px 10px; font-size: 0.7rem; }
     .detail-tier:last-child { border-bottom: none; }
+    .tier-label { font-size: 0.63rem; }
+    .tier-label .tier-num { font-size: 0.7rem; }
+    .tier-effect { font-size: 0.7rem; }
   }
 </style>
 </head>
