@@ -405,53 +405,6 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .skill-blocks {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    width: 100%;
-  }
-
-  .skill-block {
-    flex: 1;
-    padding: 10px 12px;
-    border-right: 1px solid var(--border);
-    font-size: 0.75rem;
-    line-height: 1.55;
-    background: var(--surface);
-    min-width: 0;
-  }
-
-  .skill-block:last-child { border-right: none; }
-
-  .skill-block-label {
-    font-weight: 700;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 4px;
-    color: var(--text-muted);
-  }
-
-  .skill-block-name {
-    font-weight: 700;
-    font-size: 0.78rem;
-    color: var(--header-text);
-    margin-bottom: 4px;
-  }
-
-  .skill-block-desc {
-    color: var(--text);
-    font-size: 0.73rem;
-    white-space: normal;
-    word-wrap: break-word;
-  }
-
-  .skill-block-desc strong {
-    color: var(--header-text);
-  }
 
   /* ── Energy Timing Table ── */
   .energy-section-header {
@@ -583,10 +536,6 @@
     .eidos-energy-stats { flex-direction: column; }
     .energy-stat { border-right: none; border-bottom: 1px solid var(--border); }
     .energy-stat:last-child { border-bottom: none; }
-    .skill-blocks { flex-direction: column; }
-    .skill-block { border-right: none; border-bottom: 1px solid var(--border); padding: 8px 10px; }
-    .skill-block:last-child { border-bottom: none; }
-    .skill-block-desc { font-size: 0.7rem; }
     .analysis { padding: 16px; }
     .energy-table .eidos-name-cell { font-size: 0.78rem; }
     .energy-table tbody td { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
@@ -669,31 +618,14 @@ async function loadJSON(filename) {
   return resp.json();
 }
 
-function formatSkillText(text) {
-  if (!text) return '';
-  const lines = text.split('\n');
-  const name = lines[0];
-  const desc = lines.slice(1).join('\n').trim();
-  const formatted = desc
-    .replace(/\[([^\]]+)\]/g, '<strong>[$1]</strong>')
-    .replace(/\n/g, '<br>');
-  return { name, desc: formatted };
-}
-
 async function init() {
-  let eidos, skills;
+  let eidos;
   try {
-    [eidos, skills] = await Promise.all([
-      loadJSON('eoddb_hna_eidos.json'),
-      loadJSON('eoddb_hna_eidos_skills.json')
-    ]);
+    eidos = await loadJSON('eoddb_hna_eidos.json');
   } catch (e) {
-    showError('Could not load data files. Make sure eoddb_hna_eidos.json and eoddb_hna_eidos_skills.json are in the same folder.');
+    showError('Could not load data files. Make sure eoddb_hna_eidos.json is in the same folder.');
     return;
   }
-
-  const skillMap = {};
-  skills.forEach(s => { skillMap[s.Name] = s; });
 
   const total = eidos.length;
   const r4 = eidos.filter(e => e.Rarity === 4);
@@ -832,11 +764,6 @@ async function init() {
     let detailHTML = '<div class="detail-inner">';
     aspectEidos.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
     aspectEidos.forEach(e => {
-      const sk = skillMap[e.Name] || {};
-      const aspectSkill = formatSkillText(sk['Aspect Skill'] || '');
-      const eidosSkill = formatSkillText(sk['Eidos Skill'] || '');
-      const companionSkill = formatSkillText(sk['Companion Skill'] || '');
-
       detailHTML += `<div class="eidos-detail-block">
         <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
         <div class="eidos-energy-stats">
@@ -844,23 +771,6 @@ async function init() {
           <div class="energy-stat"><div class="energy-stat-label">Energy Regen</div><div class="energy-stat-value">${e['Energy Regen']}/s</div></div>
           <div class="energy-stat"><div class="energy-stat-label">Initial Energy</div><div class="energy-stat-value">${e['Initial Energy']}</div></div>
           <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
-        </div>
-        <div class="skill-blocks">
-          <div class="skill-block">
-            <div class="skill-block-label">Aspect Skill</div>
-            ${aspectSkill.name ? `<div class="skill-block-name">${aspectSkill.name}</div>` : ''}
-            <div class="skill-block-desc">${aspectSkill.desc || 'No data'}</div>
-          </div>
-          <div class="skill-block">
-            <div class="skill-block-label">Eidos Skill</div>
-            ${eidosSkill.name ? `<div class="skill-block-name">${eidosSkill.name}</div>` : ''}
-            <div class="skill-block-desc">${eidosSkill.desc || 'No data'}</div>
-          </div>
-          <div class="skill-block">
-            <div class="skill-block-label">Companion Skill</div>
-            ${companionSkill.name ? `<div class="skill-block-name">${companionSkill.name}</div>` : ''}
-            <div class="skill-block-desc">${companionSkill.desc || 'No data'}</div>
-          </div>
         </div>
       </div>`;
     });
