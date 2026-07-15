@@ -232,14 +232,45 @@
   tbody tr:hover td { background: var(--surface-hover); }
   tbody tr:hover td:first-child { background: #192030; }
 
-  .unit { display: block; }
+  .unit { display: inline-block; }
   .unit.r3 { color: var(--r3); }
   .unit.r4 { color: var(--r4); }
   .unit.r5 { color: var(--r5); }
+  .unit.has-img { display: inline-block; position: relative; margin: 2px; }
+  .unit.has-img img {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    border: 2px solid;
+    object-fit: cover;
+    transition: transform 0.15s;
+  }
+  .unit.has-img:hover img { transform: scale(1.15); z-index: 2; }
+  .unit.has-img .unit-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .unit.has-img:hover .unit-tip { display: block; }
+  .unit.r3 img { border-color: var(--r3); }
+  .unit.r4 img { border-color: var(--r4); }
+  .unit.r5 img { border-color: var(--r5); }
+  @media (max-width: 768px) {
+    .unit.has-img img { width: 32px; height: 32px; border-radius: 4px; }
+  }
 
   tbody td.multi-col {
-    columns: 2;
-    column-gap: 0.6rem;
+    columns: unset;
+    column-gap: unset;
   }
 
   .table-credit {
@@ -535,9 +566,22 @@ async function init() {
       } else {
         if (cell.length > 2) td.classList.add('multi-col');
         cell.forEach(u => {
+          const imgName = u.name.toLowerCase().replace(/[ .']/g, '');
           const span = document.createElement('span');
           span.className = 'unit r' + u.rarity;
-          span.textContent = u.name;
+          const img = new Image();
+          img.src = '/hna/img/nexusanima/' + imgName + '.webp';
+          img.alt = u.name;
+          img.onload = () => {
+            span.classList.add('has-img');
+            span.innerHTML = '';
+            span.appendChild(img);
+            const tip = document.createElement('span');
+            tip.className = 'unit-tip';
+            tip.textContent = u.name;
+            span.appendChild(tip);
+          };
+          img.onerror = () => { span.textContent = u.name; };
           td.appendChild(span);
         });
       }
