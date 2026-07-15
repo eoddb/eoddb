@@ -199,6 +199,8 @@
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     padding-left: 0.7rem;
   }
+  .aspect-badge { height: 28px; display: block; }
+  @media (max-width: 768px) { .aspect-badge { height: 22px; } }
 
   tbody tr:hover td { background: var(--surface-hover); }
   tbody tr:hover td:first-child { background: #192030; }
@@ -541,7 +543,12 @@ async function init() {
 
       const tdName = document.createElement('td');
       tdName.style.setProperty('--aspect-color', acColor);
-      tdName.textContent = aspect;
+      const badgeImg = document.createElement('img');
+      badgeImg.src = '/hna/img/aspects/' + aspect.toLowerCase() + '.webp';
+      badgeImg.alt = aspect;
+      badgeImg.className = 'aspect-badge';
+      badgeImg.onerror = () => { tdName.textContent = aspect; };
+      tdName.appendChild(badgeImg);
       tr.appendChild(tdName);
 
       const aspectUnits = units.filter(u => u.Aspect === aspect);
