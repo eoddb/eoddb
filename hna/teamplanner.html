@@ -546,106 +546,10 @@
 </div>
 
 <script>
-const UNITS = [
-  {name:"Puddlipup",aspect:"Satiation",type:"Protector",rarity:4},
-  {name:"Taileep",aspect:"Hate",type:"Explorer",rarity:4},
-  {name:"Batnyss",aspect:"Hate",type:"Mastermind",rarity:4},
-  {name:"Bunmareen",aspect:"Light",type:"Protector",rarity:3},
-  {name:"Inkifoal",aspect:"Reality",type:"Protector",rarity:3},
-  {name:"Cumulon",aspect:"Pride",type:"Blaster",rarity:5},
-  {name:"Apollinis",aspect:"Light",type:"Protector",rarity:4},
-  {name:"Felinoxie",aspect:"Dark",type:"Protector",rarity:4},
-  {name:"Lumeridon",aspect:"Dark",type:"Explorer",rarity:4},
-  {name:"Inkicorn",aspect:"Oblivion",type:"Protector",rarity:4},
-  {name:"Heartcease",aspect:"Love",type:"Blaster",rarity:4},
-  {name:"Dragamour",aspect:"Love",type:"Mascot",rarity:5},
-  {name:"Corvariatio",aspect:"Change",type:"Blaster",rarity:5},
-  {name:"Vulberry",aspect:"Satiation",type:"Mastermind",rarity:4},
-  {name:"Noctumbra",aspect:"Dark",type:"Explorer",rarity:5},
-  {name:"Mushgloomini",aspect:"Dark",type:"Protector",rarity:3},
-  {name:"Faeflux",aspect:"Change",type:"Mastermind",rarity:4},
-  {name:"Lepinamel",aspect:"Beauty",type:"Mastermind",rarity:3},
-  {name:"Donubi",aspect:"Hate",type:"Mastermind",rarity:3},
-  {name:"Olivesper",aspect:"Strength",type:"Mascot",rarity:3},
-  {name:"Squarel",aspect:"Competition",type:"Mascot",rarity:3},
-  {name:"Furrari",aspect:"Competition",type:"Protector",rarity:4},
-  {name:"Magisdrake",aspect:"Pride",type:"Explorer",rarity:3},
-  {name:"Nomnom",aspect:"Satiation",type:"Protector",rarity:4},
-  {name:"Pupanoo",aspect:"Satiation",type:"Blaster",rarity:3},
-  {name:"Bobabirb",aspect:"Insatiability",type:"Blaster",rarity:3},
-  {name:"Eggnok",aspect:"Competition",type:"Mastermind",rarity:4},
-  {name:"Rosfurcate",aspect:"Hate",type:"Explorer",rarity:4},
-  {name:"Glampa",aspect:"Light",type:"Explorer",rarity:5},
-  {name:"Chowpownd",aspect:"Insatiability",type:"Protector",rarity:5},
-  {name:"Damasque",aspect:"Change",type:"Mascot",rarity:4},
-  {name:"Cublade",aspect:"Strength",type:"Explorer",rarity:3},
-  {name:"Marshalbird",aspect:"Competition",type:"Explorer",rarity:4},
-  {name:"Plumelune",aspect:"Beauty",type:"Mascot",rarity:4},
-  {name:"Mimoo",aspect:"Reality",type:"Explorer",rarity:4},
-  {name:"Rimechime",aspect:"Love",type:"Mastermind",rarity:3},
-  {name:"Vixemourne",aspect:"Dark",type:"Mastermind",rarity:4},
-  {name:"Bladehound",aspect:"Strength",type:"Explorer",rarity:5},
-  {name:"Eggluvs",aspect:"Competition",type:"Explorer",rarity:3},
-  {name:"Chimaura",aspect:"Light",type:"Explorer",rarity:4},
-  {name:"Donnatallow",aspect:"Dark",type:"Mascot",rarity:3},
-  {name:"Frigull",aspect:"Satiation",type:"Mascot",rarity:3},
-  {name:"Starspine",aspect:"Light",type:"Mastermind",rarity:4},
-  {name:"Camcorgi",aspect:"Memory",type:"Blaster",rarity:5},
-  {name:"Kaffiend",aspect:"Insatiability",type:"Mascot",rarity:3},
-  {name:"Foalhardy",aspect:"Pride",type:"Explorer",rarity:4},
-  {name:"Octopourri",aspect:"Love",type:"Mascot",rarity:4},
-  {name:"Hoppelon",aspect:"Competition",type:"Explorer",rarity:5},
-  {name:"Mr. Avocado",aspect:"Ugliness",type:"Protector",rarity:3},
-  {name:"Cinechel",aspect:"Memory",type:"Protector",rarity:5},
-  {name:"C'locked",aspect:"Memory",type:"Mascot",rarity:3},
-  {name:"Catnapir",aspect:"Memory",type:"Protector",rarity:4},
-  {name:"Framamba",aspect:"Memory",type:"Blaster",rarity:4},
-  {name:"Chocllamour",aspect:"Love",type:"Explorer",rarity:3},
-  {name:"Capybunner",aspect:"Light",type:"Protector",rarity:3},
-  {name:"Waxula",aspect:"Dark",type:"Mastermind",rarity:5},
-  {name:"Pomparrot",aspect:"Competition",type:"Blaster",rarity:5},
-  {name:"Hamburgoof",aspect:"Ugliness",type:"Blaster",rarity:5},
-  {name:"Magisaki",aspect:"Change",type:"Protector",rarity:3},
-  {name:"Beaubeanie",aspect:"Beauty",type:"Mastermind",rarity:4},
-  {name:"Lumehart",aspect:"Light",type:"Mastermind",rarity:5},
-  {name:"Hugglebeary",aspect:"Strength",type:"Protector",rarity:4},
-  {name:"Derpydile",aspect:"Competition",type:"Explorer",rarity:3},
-  {name:"Umpurrella",aspect:"Beauty",type:"Mastermind",rarity:5},
-  {name:"Sharkalaka",aspect:"Reality",type:"Explorer",rarity:4},
-  {name:"Ugglewing",aspect:"Ugliness",type:"Blaster",rarity:3},
-  {name:"Goldfogey",aspect:"Oblivion",type:"Explorer",rarity:3},
-  {name:"Mariminnow",aspect:"Reality",type:"Protector",rarity:3},
-  {name:"Muscimmon",aspect:"Strength",type:"Explorer",rarity:4},
-  {name:"Sunspottie",aspect:"Joy",type:"Mascot",rarity:4},
-  {name:"Pumpkimp",aspect:"Joy",type:"Mastermind",rarity:4},
-  {name:"Jerboranj",aspect:"Insatiability",type:"Mastermind",rarity:4},
-  {name:"Sootsie",aspect:"Joy",type:"Mascot",rarity:3},
-  {name:"Broomba",aspect:"Reality",type:"Protector",rarity:3},
-  {name:"Famishade",aspect:"Joy",type:"Blaster",rarity:4},
-  {name:"Hoggit",aspect:"Satiation",type:"Explorer",rarity:5},
-  {name:"Fyrklor",aspect:"Strength",type:"Explorer",rarity:4},
-  {name:"Seroplumanth",aspect:"Reality",type:"Mastermind",rarity:5},
-  {name:"Mesmerith",aspect:"Hate",type:"Blaster",rarity:5},
-  {name:"Atragasus",aspect:"Oblivion",type:"Explorer",rarity:5},
-  {name:"Shampoco",aspect:"Reality",type:"Blaster",rarity:4},
-  {name:"Baggle",aspect:"Reality",type:"Mascot",rarity:3}
-];
-
+let UNITS = [];
 const UNIT_MAP = {};
-UNITS.forEach(u => { UNIT_MAP[u.name] = u; });
-
-const ASPECT_THRESHOLDS = {
-  Reality:[2,4,6], Change:[2,3,4,5], Light:[2,4,6], Dark:[3,6],
-  Oblivion:[2], Memory:[3,6], Strength:[1,3,5], Beauty:[2,4],
-  Ugliness:[2,3], Pride:[2,3], Love:[2,3], Hate:[3,5],
-  Competition:[2,4,7], Joy:[2,4,6], Satiation:[2,4,6],
-  Insatiability:[2,4]
-};
-
+const ASPECT_THRESHOLDS = {};
 const ASPECT_MAX = {};
-Object.keys(ASPECT_THRESHOLDS).forEach(a => {
-  ASPECT_MAX[a] = Math.max(...ASPECT_THRESHOLDS[a]);
-});
 
 const HEX_INTERACTIONS = [
   {aspect:"Strength", units:1, hexes:["1D"], color:"#e8e0a0", desc:"Hex applies Dominator"},
@@ -731,6 +635,26 @@ ROWS.forEach((rowDef, ri) => {
     wm.textContent = 'EODdb.com';
     hexGridEl.appendChild(wm);
   }
+});
+
+// Load data from JSON then build UI
+Promise.all([
+  fetch('/hna/eoddb_hna_nexus_anima_units.json').then(r => r.json()),
+  fetch('/hna/eoddb_hna_aspects.json').then(r => r.json())
+]).then(([unitsData, aspectsData]) => {
+
+UNITS = unitsData.map(u => ({name: u.Name, aspect: u.Aspect, type: u.Type, rarity: u.Rarity}));
+UNITS.forEach(u => { UNIT_MAP[u.name] = u; });
+
+let currentAspect = null;
+aspectsData.forEach(row => {
+  if (row.Aspect) currentAspect = row.Aspect;
+  if (!currentAspect) return;
+  if (!ASPECT_THRESHOLDS[currentAspect]) ASPECT_THRESHOLDS[currentAspect] = [];
+  ASPECT_THRESHOLDS[currentAspect].push(row['Units Required']);
+});
+Object.keys(ASPECT_THRESHOLDS).forEach(a => {
+  ASPECT_MAX[a] = Math.max(...ASPECT_THRESHOLDS[a]);
 });
 
 // Build synergy rows
@@ -1097,6 +1021,8 @@ document.getElementById('deselectBtn').addEventListener('click', () => {
 
 updateCount();
 updateSynergies();
+
+}); // end Promise.all
 </script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
