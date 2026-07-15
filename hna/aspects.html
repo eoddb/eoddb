@@ -28,7 +28,7 @@
     --header-bg: #111821;
     --header-text: #e6edf3;
     --accent1: #6366f1;
-    --accent-stripe: 3px;
+    --accent-stripe: 0px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -273,17 +273,13 @@
     cursor: pointer;
   }
 
-  tbody tr.aspect-row td:first-child::after {
-    content: '+';
-    margin-left: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
+  .aspect-hint {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 400;
     color: var(--text-muted);
-    display: inline-block;
-  }
-
-  tbody tr.aspect-row.expanded td:first-child::after {
-    content: '−';
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   tr.detail-row { display: none; }
@@ -531,7 +527,7 @@ async function init() {
     wrap.className = 'table-wrap';
     const table = document.createElement('table');
     const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th>Aspect</th><th>Nexus Anima</th></tr>';
+    thead.innerHTML = '<tr><th>Aspect<span class="aspect-hint">(click to expand)</span></th><th>Nexus Anima</th></tr>';
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
 
@@ -598,6 +594,21 @@ async function init() {
         if (!wasExpanded) {
           tr.classList.add('expanded');
           detailTr.classList.add('visible');
+        }
+      });
+    });
+
+    thead.style.cursor = 'pointer';
+    thead.addEventListener('click', () => {
+      const rows = tbody.querySelectorAll('.aspect-row');
+      const allExpanded = [...rows].every(r => r.classList.contains('expanded'));
+      rows.forEach(r => {
+        if (allExpanded) {
+          r.classList.remove('expanded');
+          r.nextElementSibling.classList.remove('visible');
+        } else {
+          r.classList.add('expanded');
+          r.nextElementSibling.classList.add('visible');
         }
       });
     });
