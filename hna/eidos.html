@@ -788,7 +788,7 @@ async function init() {
           const span = document.createElement('span');
           span.className = 'eidos-entry r' + r;
           const imgName = e.Name.toLowerCase().replace(/ /g, '_');
-          span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}" loading="lazy"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
+          span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
           td.appendChild(span);
         });
       }
