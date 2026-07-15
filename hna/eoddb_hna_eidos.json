@@ -31,8 +31,8 @@
     "Aspect": "Light",
     "Rarity": 4,
     "Energy Cost": 230,
-    "Energy Regen": 14,
-    "Initial Energy": 100,
+    "Energy Regen": 12,
+    "Initial Energy": 80,
     "Companion": "Chimaura"
   },
   {
@@ -40,8 +40,8 @@
     "Aspect": "Strength",
     "Rarity": 4,
     "Energy Cost": 240,
-    "Energy Regen": 14,
-    "Initial Energy": 70,
+    "Energy Regen": 12,
+    "Initial Energy": 50,
     "Companion": "Fyrklor"
   },
   {
@@ -49,8 +49,8 @@
     "Aspect": "Beauty",
     "Rarity": 4,
     "Energy Cost": 230,
-    "Energy Regen": 14,
-    "Initial Energy": 100,
+    "Energy Regen": 12,
+    "Initial Energy": 80,
     "Companion": "Beaubeanie"
   },
   {
@@ -58,8 +58,8 @@
     "Aspect": "Memory",
     "Rarity": 4,
     "Energy Cost": 230,
-    "Energy Regen": 14,
-    "Initial Energy": 140,
+    "Energy Regen": 12,
+    "Initial Energy": 120,
     "Companion": "Framamba"
   },
   {
