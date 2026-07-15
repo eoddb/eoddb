@@ -567,8 +567,8 @@
 <h2 class="section-header">Eidos by Aspect &times; Rarity</h2>
 <div class="legend">
   <span style="color:var(--text-muted);">Rarity:</span>
-  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
   <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
+  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
 </div>
 <div class="grid-pair" id="grid-pair"></div>
 
@@ -646,8 +646,8 @@ async function init() {
   const statsEl = document.getElementById('stats');
   const boxes = [
     { num: total, label: 'Total Eidos', color: 'var(--header-text)', rarity: 'all' },
-    { num: r4.length, label: '4-Star Eidos', color: 'var(--r4)', p: pct(r4.length, total), rarity: '4' },
     { num: r5.length, label: '5-Star Eidos', color: 'var(--r5)', p: pct(r5.length, total), rarity: '5' },
+    { num: r4.length, label: '4-Star Eidos', color: 'var(--r4)', p: pct(r4.length, total), rarity: '4' },
     { num: aspects.length, label: 'Aspects Covered', color: 'var(--accent1)' },
   ];
   boxes.forEach(b => {
