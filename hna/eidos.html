@@ -453,7 +453,19 @@
     padding: 0.75rem 1rem;
     text-align: left;
     border-bottom: 1px solid var(--border);
-    cursor: default;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+
+  .energy-table thead th:hover {
+    color: var(--accent1);
+  }
+
+  .sort-arrow {
+    font-size: 0.7rem;
+    margin-left: 4px;
+    color: var(--accent1);
   }
 
   .energy-table tbody td {
@@ -798,44 +810,92 @@ async function init() {
   }
   function acList(names) { return names.map(n => ac(n)).join(', '); }
 
-  // ── Energy Timing Table ──
+  // ── Energy Timing Table (sortable) ──
   const energyTbody = document.getElementById('energy-tbody');
-  const sorted = [...eidos].map(e => {
+  const eidosWithTime = [...eidos].map(e => {
     const time = (e['Energy Cost'] - e['Initial Energy']) / e['Energy Regen'];
     return { ...e, time };
-  }).sort((a, b) => a.time - b.time);
-
-  sorted.forEach(e => {
-    const acColor = ASPECT_COLORS[e.Aspect] || 'var(--text)';
-    const rarityColor = e.Rarity === 5 ? 'var(--r5)' : 'var(--r4)';
-    const tr = document.createElement('tr');
-    tr.className = 'energy-row r' + e.Rarity;
-    tr.innerHTML =
-      `<td class="eidos-name-cell">${e.Name}</td>` +
-      `<td style="color:${rarityColor}">${e.Rarity}-Star</td>` +
-      `<td class="aspect-cell" style="color:${acColor}">${e.Aspect}</td>` +
-      `<td>${e['Energy Cost']}</td>` +
-      `<td>${e['Initial Energy']}</td>` +
-      `<td>${e['Energy Regen']}/s</td>` +
-      `<td class="time-cell">${e.time.toFixed(1)}s</td>`;
-    energyTbody.appendChild(tr);
   });
 
   const avgCostE = (eidos.reduce((s, e) => s + e['Energy Cost'], 0) / total).toFixed(0);
   const avgInitE = (eidos.reduce((s, e) => s + e['Initial Energy'], 0) / total).toFixed(0);
   const avgRegenE = (eidos.reduce((s, e) => s + e['Energy Regen'], 0) / total).toFixed(1);
-  const avgTimeE = (sorted.reduce((s, e) => s + e.time, 0) / total).toFixed(1);
-  const avgTr = document.createElement('tr');
-  avgTr.className = 'energy-avg-row';
-  avgTr.innerHTML =
-    `<td class="eidos-name-cell">Average</td>` +
-    `<td></td>` +
-    `<td></td>` +
-    `<td>${avgCostE}</td>` +
-    `<td>${avgInitE}</td>` +
-    `<td>${avgRegenE}/s</td>` +
-    `<td class="time-cell">${avgTimeE}s</td>`;
-  energyTbody.appendChild(avgTr);
+  const avgTimeE = (eidosWithTime.reduce((s, e) => s + e.time, 0) / total).toFixed(1);
+
+  const sortKeys = ['Name', 'Rarity', 'Aspect', 'Energy Cost', 'Initial Energy', 'Energy Regen', 'time'];
+  let currentSortCol = 6;
+  let currentSortAsc = true;
+
+  function renderEnergyTable() {
+    energyTbody.innerHTML = '';
+    eidosWithTime.forEach(e => {
+      const acColor = ASPECT_COLORS[e.Aspect] || 'var(--text)';
+      const rarityColor = e.Rarity === 5 ? 'var(--r5)' : 'var(--r4)';
+      const tr = document.createElement('tr');
+      tr.className = 'energy-row r' + e.Rarity;
+      tr.innerHTML =
+        `<td class="eidos-name-cell">${e.Name}</td>` +
+        `<td style="color:${rarityColor}">${e.Rarity}-Star</td>` +
+        `<td class="aspect-cell" style="color:${acColor}">${e.Aspect}</td>` +
+        `<td>${e['Energy Cost']}</td>` +
+        `<td>${e['Initial Energy']}</td>` +
+        `<td>${e['Energy Regen']}/s</td>` +
+        `<td class="time-cell">${e.time.toFixed(1)}s</td>`;
+      energyTbody.appendChild(tr);
+    });
+    const avgTr = document.createElement('tr');
+    avgTr.className = 'energy-avg-row';
+    avgTr.innerHTML =
+      `<td class="eidos-name-cell">Average</td>` +
+      `<td></td><td></td>` +
+      `<td>${avgCostE}</td>` +
+      `<td>${avgInitE}</td>` +
+      `<td>${avgRegenE}/s</td>` +
+      `<td class="time-cell">${avgTimeE}s</td>`;
+    energyTbody.appendChild(avgTr);
+  }
+
+  function sortEnergyTable(colIndex) {
+    if (currentSortCol === colIndex) {
+      currentSortAsc = !currentSortAsc;
+    } else {
+      currentSortCol = colIndex;
+      currentSortAsc = true;
+    }
+    const key = sortKeys[colIndex];
+    eidosWithTime.sort((a, b) => {
+      const va = a[key], vb = b[key];
+      const cmp = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+      return currentSortAsc ? cmp : -cmp;
+    });
+    renderEnergyTable();
+    updateSortArrows();
+  }
+
+  function updateSortArrows() {
+    const ths = document.querySelectorAll('.energy-table thead th');
+    ths.forEach((th, i) => {
+      const existing = th.querySelector('.sort-arrow');
+      if (existing) existing.remove();
+      if (i === currentSortCol) {
+        const arrow = document.createElement('span');
+        arrow.className = 'sort-arrow';
+        arrow.textContent = currentSortAsc ? '▲' : '▼';
+        th.appendChild(arrow);
+      }
+    });
+  }
+
+  const energyHeaders = document.querySelectorAll('.energy-table thead th');
+  energyHeaders.forEach((th, i) => {
+    th.addEventListener('click', () => sortEnergyTable(i));
+  });
+
+  eidosWithTime.sort((a, b) => a.time - b.time);
+  renderEnergyTable();
+  updateSortArrows();
+
+  const sorted = eidosWithTime;
 
   // ── Statistical Summary ──
   const dualAspects = aspects.filter(a => eidos.filter(e => e.Aspect === a).length >= 2);
