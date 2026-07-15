@@ -751,6 +751,13 @@ async function init() {
   gridPair.appendChild(buildAspectTable(leftAspects));
   gridPair.appendChild(buildAspectTable(rightAspects));
 
+  // Sync first-column widths across both tables
+  const firstCols = gridPair.querySelectorAll('td:first-child, th:first-child');
+  let maxW = 0;
+  firstCols.forEach(c => { const w = c.getBoundingClientRect().width; if (w > maxW) maxW = w; });
+  gridPair.style.setProperty('--aspect-col-w', maxW + 'px');
+  firstCols.forEach(c => { c.style.minWidth = 'var(--aspect-col-w)'; });
+
   function ac(name) {
     const c = ASPECT_COLORS[name] || 'var(--header-text)';
     return `<strong style="color:${c}">${name}</strong>`;
