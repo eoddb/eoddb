@@ -1,0 +1,877 @@
+[
+  {
+    "Name": "Puddlipup",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Taileep",
+    "Tags": [
+      {
+        "tag": "Shield",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Batnyss",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Bunmareen",
+    "Tags": [
+      {
+        "tag": "Healing",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Inkifoal",
+    "Tags": [
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Cumulon",
+    "Tags": [
+      {
+        "tag": "Terminate"
+      },
+      {
+        "tag": "Pierce",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Apollinis",
+    "Tags": [
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Felinoxie",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Healing",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Lumeridon",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Inkicorn",
+    "Tags": [
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "Shield",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Heartcease",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Pierce",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Dragamour",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "Control",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Corvariatio",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Vulberry",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Noctumbra",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Mushgloomini",
+    "Tags": [
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Faeflux",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control"
+      }
+    ]
+  },
+  {
+    "Name": "Lepinamel",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Donubi",
+    "Tags": [
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Olivesper",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Squarel",
+    "Tags": [
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  },
+  {
+    "Name": "Furrari",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Magisdrake",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Healing",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Nomnom",
+    "Tags": [
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "AoE",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Pupanoo",
+    "Tags": [
+      {
+        "tag": "AoE",
+        "rank": 2
+      },
+      {
+        "tag": "Pierce",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Bobabirb",
+    "Tags": [
+      {
+        "tag": "AoE",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Eggnok",
+    "Tags": [
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "Shield",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Rosfurcate",
+    "Tags": []
+  },
+  {
+    "Name": "Glampa",
+    "Tags": [
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Chowpownd",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "Terminate",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Damasque",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  },
+  {
+    "Name": "Cublade",
+    "Tags": []
+  },
+  {
+    "Name": "Marshalbird",
+    "Tags": [
+      {
+        "tag": "Pierce",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Plumelune",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Support",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Mimoo",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Rimechime",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Vixemourne",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Terminate",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Bladehound",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control"
+      }
+    ]
+  },
+  {
+    "Name": "Eggluvs",
+    "Tags": [
+      {
+        "tag": "Control",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Chimaura",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Donnatallow",
+    "Tags": [
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      },
+      {
+        "tag": "Pierce",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Frigull",
+    "Tags": [
+      {
+        "tag": "Energy Jam"
+      },
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Starspine",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 6
+      },
+      {
+        "tag": "Pierce",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Camcorgi",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control"
+      }
+    ]
+  },
+  {
+    "Name": "Kaffiend",
+    "Tags": [
+      {
+        "tag": "Shield",
+        "rank": 2
+      },
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  },
+  {
+    "Name": "Foalhardy",
+    "Tags": [
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Octopourri",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  },
+  {
+    "Name": "Hoppelon",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Mr. Avocado",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Cinechel",
+    "Tags": [
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "Pierce"
+      }
+    ]
+  },
+  {
+    "Name": "C'locked",
+    "Tags": [
+      {
+        "tag": "Shield",
+        "rank": 2
+      },
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  },
+  {
+    "Name": "Catnapir",
+    "Tags": [
+      {
+        "tag": "Taunt"
+      },
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Framamba",
+    "Tags": []
+  },
+  {
+    "Name": "Chocllamour",
+    "Tags": [
+      {
+        "tag": "Shield"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Capybunner",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Waxula",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Pomparrot",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Hamburgoof",
+    "Tags": [
+      {
+        "tag": "Pierce"
+      }
+    ]
+  },
+  {
+    "Name": "Magisaki",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Beaubeanie",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Pierce",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Lumehart",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Pierce",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Hugglebeary",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Derpydile",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Umpurrella",
+    "Tags": [
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Sharkalaka",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Pierce",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Ugglewing",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Goldfogey",
+    "Tags": [
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Mariminnow",
+    "Tags": [
+      {
+        "tag": "Healing",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Muscimmon",
+    "Tags": [
+      {
+        "tag": "Healing"
+      },
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Sunspottie",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Pumpkimp",
+    "Tags": [
+      {
+        "tag": "Burning"
+      },
+      {
+        "tag": "Deep Wounds"
+      }
+    ]
+  },
+  {
+    "Name": "Jerboranj",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Pierce"
+      },
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Sootsie",
+    "Tags": [
+      {
+        "tag": "Healing"
+      }
+    ]
+  },
+  {
+    "Name": "Broomba",
+    "Tags": [
+      {
+        "tag": "Shield"
+      }
+    ]
+  },
+  {
+    "Name": "Famishade",
+    "Tags": []
+  },
+  {
+    "Name": "Hoggit",
+    "Tags": [
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Healing",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Fyrklor",
+    "Tags": [
+      {
+        "tag": "Control"
+      },
+      {
+        "tag": "Burning",
+        "rank": 2
+      },
+      {
+        "tag": "Deep Wounds",
+        "rank": 2
+      },
+      {
+        "tag": "Healing",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Seroplumanth",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Mesmerith",
+    "Tags": [
+      {
+        "tag": "AoE"
+      }
+    ]
+  },
+  {
+    "Name": "Atragasus",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "Name": "Shampoco",
+    "Tags": [
+      {
+        "tag": "AoE"
+      },
+      {
+        "tag": "Control",
+        "rank": 6
+      }
+    ]
+  },
+  {
+    "Name": "Baggle",
+    "Tags": [
+      {
+        "tag": "Support",
+        "rank": 0
+      }
+    ]
+  }
+]

@@ -147,6 +147,66 @@
     border-color: var(--text-muted);
   }
 
+  .tag-filters {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    align-items: center;
+  }
+
+  .tag-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 0.75rem;
+    font-family: inherit;
+  }
+
+  .tag-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .tag-btn.active {
+    background: var(--surface);
+    border-color: var(--accent1);
+    color: var(--header-text);
+  }
+
+  .tag-btn.undo {
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .tag-btn.undo:hover {
+    border-color: var(--text-muted);
+  }
+
+  .unit .tag-label {
+    display: none;
+    font-size: 0.5rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.2;
+    margin-top: 1px;
+  }
+
+  .tag-filtering .unit .tag-label {
+    display: block;
+  }
+
+  .tag-filtering .unit.tag-hidden {
+    opacity: 0.12;
+  }
+
   .legend-dot {
     width: 8px;
     height: 8px;
@@ -411,6 +471,8 @@
   <span class="legend-item" data-rarity="3"><span class="legend-dot r3"></span> <span style="color:var(--r3)">3-Star</span></span>
 </div>
 
+<div class="tag-filters" id="tagFilters"></div>
+
 <div class="table-wrap">
   <table>
     <thead id="thead"></thead>
@@ -455,16 +517,20 @@ async function loadJSON(filename) {
 }
 
 async function init() {
-  let units, typesData;
+  let units, typesData, tagsData;
   try {
-    [units, typesData] = await Promise.all([
+    [units, typesData, tagsData] = await Promise.all([
       loadJSON('eoddb_hna_nexus_anima_units.json'),
-      loadJSON('eoddb_hna_types.json')
+      loadJSON('eoddb_hna_types.json'),
+      loadJSON('eoddb_hna_tags.json')
     ]);
   } catch (e) {
-    showError('Could not load data files. Make sure eoddb_hna_nexus_anima_units.json and eoddb_hna_types.json are in the same folder as this HTML file.');
+    showError('Could not load data files.');
     return;
   }
+
+  const tagMap = {};
+  tagsData.forEach(t => { tagMap[t.Name] = t.Tags || []; });
 
   const allTypes = typesData.map(t => t.Type);
   const orderedTypes = TYPE_ORDER.filter(t => allTypes.includes(t));
@@ -567,8 +633,11 @@ async function init() {
         if (cell.length > 2) td.classList.add('multi-col');
         cell.forEach(u => {
           const imgName = u.name.toLowerCase().replace(/[ .']/g, '');
+          const unitTags = tagMap[u.name] || [];
           const span = document.createElement('span');
           span.className = 'unit r' + u.rarity;
+          span.dataset.tags = unitTags.map(t => t.tag).join(',');
+          span.dataset.tagsRaw = JSON.stringify(unitTags);
           const img = new Image();
           img.src = '/hna/img/nexusanima/' + imgName + '.webp';
           img.alt = u.name;
@@ -580,8 +649,16 @@ async function init() {
             tip.className = 'unit-tip';
             tip.textContent = u.name;
             span.appendChild(tip);
+            const tagLabel = document.createElement('span');
+            tagLabel.className = 'tag-label';
+            span.appendChild(tagLabel);
           };
-          img.onerror = () => { span.textContent = u.name; };
+          img.onerror = () => {
+            span.textContent = u.name;
+            const tagLabel = document.createElement('span');
+            tagLabel.className = 'tag-label';
+            span.appendChild(tagLabel);
+          };
           td.appendChild(span);
         });
       }
@@ -683,6 +760,91 @@ async function init() {
   statBoxes.forEach(box => {
     box.addEventListener('click', () => applyFilter(box.dataset.rarity));
   });
+
+  // ── Tag filters ──
+  const allTags = [];
+  tagsData.forEach(t => {
+    (t.Tags || []).forEach(entry => {
+      if (!allTags.includes(entry.tag)) allTags.push(entry.tag);
+    });
+  });
+  allTags.sort();
+
+  const tagFiltersEl = document.getElementById('tagFilters');
+  const tagLabel = document.createElement('span');
+  tagLabel.style.cssText = 'color:var(--text-muted);';
+  tagLabel.textContent = 'Tags:';
+  tagFiltersEl.appendChild(tagLabel);
+
+  const undoBtn = document.createElement('button');
+  undoBtn.className = 'tag-btn undo';
+  undoBtn.textContent = 'Undo Filter';
+  tagFiltersEl.appendChild(undoBtn);
+
+  const activeTags = new Set();
+  const tagBtns = [];
+
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.textContent = tag;
+    btn.dataset.tag = tag;
+    tagFiltersEl.appendChild(btn);
+    tagBtns.push(btn);
+
+    btn.addEventListener('click', () => {
+      if (activeTags.has(tag)) {
+        activeTags.delete(tag);
+        btn.classList.remove('active');
+      } else {
+        activeTags.add(tag);
+        btn.classList.add('active');
+      }
+      applyTagFilter();
+    });
+  });
+
+  undoBtn.addEventListener('click', () => {
+    activeTags.clear();
+    tagBtns.forEach(b => b.classList.remove('active'));
+    applyTagFilter();
+  });
+
+  function applyTagFilter() {
+    const allUnits = tableWrap.querySelectorAll('.unit');
+    if (activeTags.size === 0) {
+      tableWrap.classList.remove('tag-filtering');
+      allUnits.forEach(u => {
+        u.classList.remove('tag-hidden');
+        const lbl = u.querySelector('.tag-label');
+        if (lbl) lbl.textContent = '';
+      });
+      return;
+    }
+    tableWrap.classList.add('tag-filtering');
+    allUnits.forEach(u => {
+      const unitTagsStr = u.dataset.tags || '';
+      const unitTagNames = unitTagsStr ? unitTagsStr.split(',') : [];
+      const hasAll = [...activeTags].every(t => unitTagNames.includes(t));
+      u.classList.toggle('tag-hidden', !hasAll);
+
+      const lbl = u.querySelector('.tag-label');
+      if (lbl) {
+        if (hasAll) {
+          const rawTags = JSON.parse(u.dataset.tagsRaw || '[]');
+          const annotations = [];
+          rawTags.forEach(entry => {
+            if (activeTags.has(entry.tag) && entry.rank !== undefined) {
+              annotations.push(entry.tag + ' R' + entry.rank);
+            }
+          });
+          lbl.textContent = annotations.join(', ');
+        } else {
+          lbl.textContent = '';
+        }
+      }
+    });
+  }
 }
 
 init();
