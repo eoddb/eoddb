@@ -307,13 +307,11 @@
     cursor: pointer;
   }
 
-  .aspect-hint {
-    display: block;
-    font-size: 0.6rem;
+  .aspect-toggle {
+    margin-left: 6px;
+    font-size: 0.75rem;
     font-weight: 400;
     color: var(--text-muted);
-    letter-spacing: 0;
-    text-transform: none;
   }
 
   tr.detail-row { display: none; }
@@ -562,7 +560,7 @@ async function init() {
     wrap.className = 'table-wrap';
     const table = document.createElement('table');
     const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th>Aspect<span class="aspect-hint">(click to expand)</span></th><th>Nexus Anima</th><th>Eidos</th></tr>';
+    thead.innerHTML = '<tr><th>Aspect<span class="aspect-toggle">+</span></th><th>Nexus Anima</th><th>Eidos</th></tr>';
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
 
@@ -693,6 +691,7 @@ async function init() {
       });
     });
 
+    const toggleIcon = thead.querySelector('.aspect-toggle');
     thead.style.cursor = 'pointer';
     thead.addEventListener('click', () => {
       const rows = tbody.querySelectorAll('.aspect-row');
@@ -706,6 +705,7 @@ async function init() {
           r.nextElementSibling.classList.add('visible');
         }
       });
+      toggleIcon.textContent = allExpanded ? '+' : '−';
     });
 
     table.addEventListener('click', (ev) => {
