@@ -203,7 +203,8 @@
   tbody tr:hover td { background: var(--surface-hover); }
   tbody tr:hover td:first-child { background: #192030; }
 
-  .unit { display: block; }
+  .unit { display: inline; }
+  .unit + .unit::before { content: ' · '; color: var(--text-muted); }
   .unit.r3 { color: var(--r3); }
   .unit.r4 { color: var(--r4); }
   .unit.r5 { color: var(--r5); }
