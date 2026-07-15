@@ -275,15 +275,46 @@
   tbody tr.aspect-row:hover td { background: var(--surface-hover); }
   tbody tr.aspect-row:hover td:first-child { background: #192030; }
 
-  .eidos-entry { display: block; }
+  .eidos-entry { display: inline-block; text-align: center; margin: 4px 6px; vertical-align: top; }
   .eidos-entry.r4 { color: var(--r4); }
   .eidos-entry.r5 { color: var(--r5); }
 
-  .companion-name {
+  .eidos-portrait {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 3px;
+    border: 2px solid var(--border);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .eidos-entry.r4 .eidos-portrait { border-color: rgba(184,154,219,0.4); }
+  .eidos-entry.r5 .eidos-portrait { border-color: rgba(223,200,106,0.4); }
+  .eidos-entry:hover .eidos-portrait { transform: scale(1.08); }
+  .eidos-entry.r4:hover .eidos-portrait { border-color: var(--r4); }
+  .eidos-entry.r5:hover .eidos-portrait { border-color: var(--r5); }
+
+  .eidos-entry-name {
     font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.2;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .companion-name {
+    font-size: 0.6rem;
     color: var(--text-muted);
     font-weight: 400;
-    margin-left: 0.3rem;
+    display: block;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .empty-cell {
@@ -551,6 +582,10 @@
     .analysis { padding: 16px; }
     .energy-table .eidos-name-cell { font-size: 0.78rem; }
     .energy-table tbody td { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+    .eidos-portrait { width: 48px; height: 48px; }
+    .eidos-entry { margin: 3px 4px; }
+    .eidos-entry-name { font-size: 0.62rem; max-width: 56px; }
+    .companion-name { font-size: 0.55rem; max-width: 56px; }
   }
 </style>
 </head>
@@ -752,7 +787,8 @@ async function init() {
         matched.forEach(e => {
           const span = document.createElement('span');
           span.className = 'eidos-entry r' + r;
-          span.innerHTML = e.Name + `<span class="companion-name">&bull; ${e.Companion}</span>`;
+          const imgName = e.Name.toLowerCase().replace(/ /g, '_');
+          span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}" loading="lazy"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
           td.appendChild(span);
         });
       }
