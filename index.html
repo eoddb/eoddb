@@ -103,6 +103,13 @@
     background: var(--surface-hover);
   }
 
+  .game-card-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
   .game-card-title {
     font-size: 1.05rem;
     font-weight: 700;
@@ -209,7 +216,8 @@
 
   <div class="section-label">Games</div>
   <div class="game-grid">
-    <a href="/hna/nexusanima" class="game-card">
+    <a href="/hna" class="game-card">
+      <img src="/hna/img/eidos.webp" alt="Honkai: Nexus Anima" class="game-card-img" loading="lazy">
       <div class="game-card-title">Honkai: Nexus Anima</div>
       <div class="game-card-desc">Complete Nexus Anima database — all characters by Aspect and Type, aspect synergy breakdowns, rarity analysis, and team-building reference.</div>
       <div class="game-card-tags">
