@@ -175,8 +175,20 @@
     border: 1px solid var(--border);
   }
 
-  .table-wrap.filter-r4 .eidos-entry.r5 { opacity: 0.12; }
-  .table-wrap.filter-r5 .eidos-entry.r4 { opacity: 0.12; }
+  .grid-pair {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+    display: flex;
+    gap: 12px;
+  }
+
+  .grid-pair .table-wrap {
+    flex: 1;
+    margin: 0;
+  }
+
+  .grid-pair.filter-r4 .eidos-entry.r5 { opacity: 0.12; }
+  .grid-pair.filter-r5 .eidos-entry.r4 { opacity: 0.12; }
 
   table {
     width: 100%;
@@ -205,46 +217,9 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
     cursor: default;
   }
 
-  thead.expandable th:first-child::after {
-    content: '+';
-    margin-left: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-  }
-
-  thead.expandable.expanded th:first-child::after {
-    content: '\2212';
-  }
-
-  tr.info-desc-row { display: none; }
-  tr.info-desc-row.visible { display: table-row; }
-
-  tr.info-desc-row td {
-    background: var(--bg) !important;
-    border-bottom: 1px solid var(--border);
-    padding: 12px 14px !important;
-    vertical-align: top;
-    font-size: 0.78rem;
-    line-height: 1.6;
-    color: var(--text);
-  }
-
-  tr.info-desc-row td:first-child {
-    background: var(--bg) !important;
-    border-left: none;
-    font-weight: 400;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
 
   tbody td {
     padding: 0.6rem 0.8rem;
@@ -324,21 +299,6 @@
     font-style: italic;
   }
 
-  .count-cell {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-  }
-
-  .table-credit {
-    display: block;
-    font-size: 0.55rem;
-    font-weight: 400;
-    color: #8b95a5;
-    letter-spacing: 0.02em;
-    text-transform: none;
-    margin-top: 3px;
-  }
 
   /* ── Expandable detail rows ── */
   tbody tr.aspect-row {
@@ -582,6 +542,7 @@
     .analysis { padding: 16px; }
     .energy-table .eidos-name-cell { font-size: 0.78rem; }
     .energy-table tbody td { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+    .grid-pair { flex-direction: column; }
     .eidos-portrait { width: 48px; height: 48px; }
     .eidos-entry { margin: 3px 4px; }
     .eidos-entry-name { font-size: 0.62rem; max-width: 56px; }
@@ -605,12 +566,7 @@
   <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
   <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
 </div>
-<div class="table-wrap">
-  <table>
-    <thead id="thead"></thead>
-    <tbody id="grid"></tbody>
-  </table>
-</div>
+<div class="grid-pair" id="grid-pair"></div>
 
 <h2 class="energy-section-header">Eidos Skill Analysis</h2>
 <div class="energy-table-wrap" id="energy-table-wrap">
@@ -704,141 +660,92 @@ async function init() {
     statsEl.appendChild(div);
   });
 
-  // ── Table header ──
-  const rarities = [4, 5];
-  const rarityColors = { 4: 'var(--r4)', 5: 'var(--r5)' };
-  const rarityLabels = { 4: '4-Star', 5: '5-Star' };
+  // ── Build paired grid ──
+  const gridPair = document.getElementById('grid-pair');
 
-  const thead = document.getElementById('thead');
-  thead.classList.add('expandable');
-  const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com</th>' +
-    rarities.map(r => `<th style="color:${rarityColors[r]}">${rarityLabels[r]}</th>`).join('') +
-    '<th>Total</th>';
-  thead.appendChild(headRow);
+  function buildAspectTable(aspectList) {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = '<tr><th>Aspect</th><th>Eidos</th></tr>';
+    table.appendChild(thead);
+    const tbody = document.createElement('tbody');
 
-  // ── Info description row (hidden by default) ──
-  const infoRow = document.createElement('tr');
-  infoRow.className = 'info-desc-row';
-  const infoLabelTd = document.createElement('td');
-  infoLabelTd.textContent = 'Info';
-  infoRow.appendChild(infoLabelTd);
+    aspectList.forEach(aspect => {
+      if (!aspect) return;
+      const tr = document.createElement('tr');
+      tr.className = 'aspect-row';
+      const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
+      tr.style.setProperty('--aspect-color', acColor);
 
-  const energyStats = ['Energy Cost', 'Energy Regen', 'Initial Energy'];
-  const energyDescs = {
-    'Energy Cost': 'Total energy needed to activate the Eidos Skill. Higher cost means longer charge time between skill uses.',
-    'Energy Regen': 'Energy passively regenerated per second. Determines how quickly the Eidos builds toward their skill activation.',
-    'Initial Energy': 'Energy the Eidos starts with at the beginning of battle. Higher values mean a faster first skill use.'
-  };
+      const tdName = document.createElement('td');
+      tdName.style.setProperty('--aspect-color', acColor);
+      tdName.textContent = aspect;
+      tr.appendChild(tdName);
 
-  rarities.forEach(r => {
-    const td = document.createElement('td');
-    const rEidos = eidos.filter(e => e.Rarity === r);
-    const avgCost = (rEidos.reduce((s, e) => s + e['Energy Cost'], 0) / rEidos.length).toFixed(0);
-    const avgRegen = (rEidos.reduce((s, e) => s + e['Energy Regen'], 0) / rEidos.length).toFixed(1);
-    const avgInit = (rEidos.reduce((s, e) => s + e['Initial Energy'], 0) / rEidos.length).toFixed(0);
-    td.innerHTML = `<span style="display:block;font-size:0.7rem;font-weight:600;color:var(--accent1);margin-bottom:4px">${rEidos.length} Eidos</span>` +
-      `<strong>Avg Energy Cost:</strong> ${avgCost}<br>` +
-      `<strong>Avg Energy Regen:</strong> ${avgRegen}/s<br>` +
-      `<strong>Avg Initial Energy:</strong> ${avgInit}`;
-    infoRow.appendChild(td);
-  });
-
-  const infoTotalTd = document.createElement('td');
-  const avgCostAll = (eidos.reduce((s, e) => s + e['Energy Cost'], 0) / total).toFixed(0);
-  const avgRegenAll = (eidos.reduce((s, e) => s + e['Energy Regen'], 0) / total).toFixed(1);
-  const avgInitAll = (eidos.reduce((s, e) => s + e['Initial Energy'], 0) / total).toFixed(0);
-  infoTotalTd.innerHTML = `<span style="display:block;font-size:0.7rem;font-weight:600;color:var(--accent1);margin-bottom:4px">${total} Eidos</span>` +
-    `<strong>Avg Energy Cost:</strong> ${avgCostAll}<br>` +
-    `<strong>Avg Energy Regen:</strong> ${avgRegenAll}/s<br>` +
-    `<strong>Avg Initial Energy:</strong> ${avgInitAll}`;
-  infoRow.appendChild(infoTotalTd);
-  thead.appendChild(infoRow);
-
-  headRow.addEventListener('click', () => {
-    infoRow.classList.toggle('visible');
-    thead.classList.toggle('expanded');
-  });
-
-  // ── Build grid ──
-  const tbody = document.getElementById('grid');
-  aspects.forEach(aspect => {
-    const tr = document.createElement('tr');
-    tr.className = 'aspect-row';
-    const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
-    tr.style.setProperty('--aspect-color', acColor);
-
-    const tdName = document.createElement('td');
-    tdName.style.setProperty('--aspect-color', acColor);
-    tdName.textContent = aspect;
-    tr.appendChild(tdName);
-
-    const aspectEidos = eidos.filter(e => e.Aspect === aspect);
-    let rowTotal = 0;
-
-    rarities.forEach(r => {
+      const aspectEidos = eidos.filter(e => e.Aspect === aspect);
       const td = document.createElement('td');
-      const matched = aspectEidos.filter(e => e.Rarity === r);
-      rowTotal += matched.length;
-      if (matched.length === 0) {
-        td.innerHTML = '<span class="empty-cell">—</span>';
-      } else {
-        matched.sort((a, b) => a.Name.localeCompare(b.Name));
-        matched.forEach(e => {
-          const span = document.createElement('span');
-          span.className = 'eidos-entry r' + r;
-          const imgName = e.Name.toLowerCase().replace(/ /g, '');
-          span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
-          td.appendChild(span);
-        });
-      }
-      tr.appendChild(td);
-    });
-
-    const tdTotal = document.createElement('td');
-    tdTotal.className = 'count-cell';
-    tdTotal.textContent = rowTotal;
-    tr.appendChild(tdTotal);
-
-    tbody.appendChild(tr);
-
-    // ── Detail row ──
-    const detailTr = document.createElement('tr');
-    detailTr.className = 'detail-row';
-    detailTr.style.setProperty('--aspect-color', acColor);
-    const detailTd = document.createElement('td');
-    detailTd.colSpan = rarities.length + 2;
-
-    let detailHTML = '<div class="detail-inner">';
-    aspectEidos.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
-    aspectEidos.forEach(e => {
-      detailHTML += `<div class="eidos-detail-block">
-        <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
-        <div class="eidos-energy-stats">
-          <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
-          <div class="energy-stat"><div class="energy-stat-label">Energy Regen</div><div class="energy-stat-value">${e['Energy Regen']}/s</div></div>
-          <div class="energy-stat"><div class="energy-stat-label">Initial Energy</div><div class="energy-stat-value">${e['Initial Energy']}</div></div>
-          <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
-        </div>
-      </div>`;
-    });
-    detailHTML += '</div>';
-    detailTd.innerHTML = detailHTML;
-    detailTr.appendChild(detailTd);
-    tbody.appendChild(detailTr);
-
-    tr.addEventListener('click', () => {
-      const wasExpanded = tr.classList.contains('expanded');
-      document.querySelectorAll('.aspect-row.expanded').forEach(r => {
-        r.classList.remove('expanded');
-        r.nextElementSibling.classList.remove('visible');
+      aspectEidos.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
+      aspectEidos.forEach(e => {
+        const span = document.createElement('span');
+        span.className = 'eidos-entry r' + e.Rarity;
+        const imgName = e.Name.toLowerCase().replace(/ /g, '');
+        span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
+        td.appendChild(span);
       });
-      if (!wasExpanded) {
-        tr.classList.add('expanded');
-        detailTr.classList.add('visible');
-      }
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+
+      const detailTr = document.createElement('tr');
+      detailTr.className = 'detail-row';
+      detailTr.style.setProperty('--aspect-color', acColor);
+      const detailTd = document.createElement('td');
+      detailTd.colSpan = 2;
+      let detailHTML = '<div class="detail-inner">';
+      aspectEidos.forEach(e => {
+        detailHTML += `<div class="eidos-detail-block">
+          <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
+          <div class="eidos-energy-stats">
+            <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
+            <div class="energy-stat"><div class="energy-stat-label">Energy Regen</div><div class="energy-stat-value">${e['Energy Regen']}/s</div></div>
+            <div class="energy-stat"><div class="energy-stat-label">Initial Energy</div><div class="energy-stat-value">${e['Initial Energy']}</div></div>
+            <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
+          </div>
+        </div>`;
+      });
+      detailHTML += '</div>';
+      detailTd.innerHTML = detailHTML;
+      detailTr.appendChild(detailTd);
+      tbody.appendChild(detailTr);
+
+      tr.addEventListener('click', () => {
+        const wasExpanded = tr.classList.contains('expanded');
+        tbody.querySelectorAll('.aspect-row.expanded').forEach(r => {
+          r.classList.remove('expanded');
+          r.nextElementSibling.classList.remove('visible');
+        });
+        if (!wasExpanded) {
+          tr.classList.add('expanded');
+          detailTr.classList.add('visible');
+        }
+      });
     });
-  });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  const leftAspects = [];
+  const rightAspects = [];
+  for (let i = 0; i < aspects.length; i++) {
+    if (i % 2 === 0) leftAspects.push(aspects[i]);
+    else rightAspects.push(aspects[i]);
+  }
+
+  gridPair.appendChild(buildAspectTable(leftAspects));
+  gridPair.appendChild(buildAspectTable(rightAspects));
 
   function ac(name) {
     const c = ASPECT_COLORS[name] || 'var(--header-text)';
@@ -965,13 +872,13 @@ async function init() {
   `;
 
   // ── Rarity filter ──
-  const tableWrap = document.querySelector('.table-wrap');
+  const gridPairEl = document.getElementById('grid-pair');
   const energyTableWrap = document.getElementById('energy-table-wrap');
   const legendItems = document.querySelectorAll('.legend-item');
   const statBoxes = document.querySelectorAll('.stat-box.clickable');
 
   function clearFilter() {
-    tableWrap.classList.remove('filter-r4', 'filter-r5');
+    gridPairEl.classList.remove('filter-r4', 'filter-r5');
     energyTableWrap.classList.remove('filter-r4', 'filter-r5');
     legendItems.forEach(li => li.classList.remove('active'));
     statBoxes.forEach(sb => sb.classList.remove('active-r4', 'active-r5'));
@@ -979,10 +886,10 @@ async function init() {
   function applyFilter(rarity) {
     if (rarity === 'all') { clearFilter(); return; }
     const filterClass = 'filter-r' + rarity;
-    if (tableWrap.classList.contains(filterClass)) { clearFilter(); }
+    if (gridPairEl.classList.contains(filterClass)) { clearFilter(); }
     else {
       clearFilter();
-      tableWrap.classList.add(filterClass);
+      gridPairEl.classList.add(filterClass);
       energyTableWrap.classList.add(filterClass);
       legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
       statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
