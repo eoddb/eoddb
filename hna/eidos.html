@@ -565,7 +565,7 @@
   </table>
 </div>
 
-<h2 class="energy-section-header">Time To First Skill*</h2>
+<h2 class="energy-section-header">Eidos Skill Analysis</h2>
 <div class="energy-table-wrap" id="energy-table-wrap">
   <table class="energy-table">
     <thead>
@@ -838,20 +838,11 @@ async function init() {
   energyTbody.appendChild(avgTr);
 
   // ── Statistical Summary ──
-  const costRange = eidos.reduce((acc, e) => ({
-    min: Math.min(acc.min, e['Energy Cost']),
-    max: Math.max(acc.max, e['Energy Cost'])
-  }), { min: Infinity, max: 0 });
-  const cheapest = eidos.filter(e => e['Energy Cost'] === costRange.min);
-  const costliest = eidos.filter(e => e['Energy Cost'] === costRange.max);
-  const initRange = eidos.reduce((acc, e) => ({
-    min: Math.min(acc.min, e['Initial Energy']),
-    max: Math.max(acc.max, e['Initial Energy'])
-  }), { min: Infinity, max: 0 });
-  const fastStart = eidos.filter(e => e['Initial Energy'] === initRange.max);
-
   const dualAspects = aspects.filter(a => eidos.filter(e => e.Aspect === a).length >= 2);
   const uncoveredAspects = ASPECT_ORDER.filter(a => !aspectSet.includes(a));
+
+  const fastest = sorted[0];
+  const slowest = sorted[sorted.length - 1];
 
   const analysisEl = document.getElementById('analysis');
   analysisEl.innerHTML = `
@@ -868,12 +859,11 @@ async function init() {
         : ''}
     </p>
     <p>
-      <strong>Energy economy</strong> varies significantly across the roster.
-      Energy Cost ranges from <strong>${costRange.min}</strong> (${cheapest.map(e => e.Name).join(', ')})
-      to <strong>${costRange.max}</strong> (${costliest.map(e => e.Name).join(', ')}),
-      while Initial Energy spans <strong>${initRange.min}</strong> to <strong>${initRange.max}</strong>.
-      ${fastStart.map(e => e.Name).join(', ')} ${fastStart.length === 1 ? 'starts' : 'start'} with the most energy at <strong>${initRange.max}</strong>,
-      enabling the fastest first skill activation.
+      <strong>Skill activation timing</strong> varies significantly across the roster.
+      <strong>${fastest.Name}</strong> (${ac(fastest.Aspect)}) reaches their first skill the fastest at <strong>${fastest.time.toFixed(1)}s</strong>,
+      while <strong>${slowest.Name}</strong> (${ac(slowest.Aspect)}) takes the longest at <strong>${slowest.time.toFixed(1)}s</strong>.
+      On average, Eidos activate their first skill at <strong>${avgTimeE}s</strong> with a mean Energy Cost of <strong>${avgCostE}</strong>,
+      Initial Energy of <strong>${avgInitE}</strong>, and Energy Regen of <strong>${avgRegenE}/s</strong>.
       Every Eidos comes with a unique companion that gains exclusive effects when deployed alongside their Eidos.
     </p>
   `;
