@@ -126,7 +126,16 @@
     color: var(--text-muted);
   }
 
-  /* ── Rarity × Aspect Table ── */
+  /* ── Grid Pair ── */
+  .grid-pair {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+    display: flex;
+    gap: 12px;
+  }
+
+  .grid-pair .table-wrap { flex: 1; margin: 0; }
+
   .table-wrap {
     max-width: 1400px;
     margin: 0 auto 2rem;
@@ -160,9 +169,8 @@
     position: sticky;
     left: 0;
     z-index: 3;
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+    width: 1%;
+    white-space: nowrap;
   }
 
   tbody td {
@@ -187,6 +195,7 @@
     font-size: 0.85rem;
     letter-spacing: 0.03em;
     white-space: nowrap;
+    width: 1%;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     padding-left: 0.7rem;
   }
@@ -241,12 +250,12 @@
   .legend-dot.r4 { background: var(--r4); }
   .legend-dot.r5 { background: var(--r5); }
 
-  .table-wrap.filter-r3 .unit.r4,
-  .table-wrap.filter-r3 .unit.r5 { opacity: 0.12; }
-  .table-wrap.filter-r4 .unit.r3,
-  .table-wrap.filter-r4 .unit.r5 { opacity: 0.12; }
-  .table-wrap.filter-r5 .unit.r3,
-  .table-wrap.filter-r5 .unit.r4 { opacity: 0.12; }
+  .grid-pair.filter-r3 .unit.r4,
+  .grid-pair.filter-r3 .unit.r5 { opacity: 0.12; }
+  .grid-pair.filter-r4 .unit.r3,
+  .grid-pair.filter-r4 .unit.r5 { opacity: 0.12; }
+  .grid-pair.filter-r5 .unit.r3,
+  .grid-pair.filter-r5 .unit.r4 { opacity: 0.12; }
 
   .empty-cell {
     color: var(--text-muted);
@@ -255,21 +264,6 @@
     font-style: italic;
   }
 
-  .count-cell {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-  }
-
-  .table-credit {
-    display: block;
-    font-size: 0.55rem;
-    font-weight: 400;
-    color: #8b95a5;
-    letter-spacing: 0.02em;
-    text-transform: none;
-    margin-top: 3px;
-  }
 
   /* ── Expandable aspect detail rows ── */
   tbody tr.aspect-row {
@@ -397,6 +391,7 @@
   }
 
   @media (max-width: 640px) {
+    .grid-pair { flex-direction: column; }
     .stat-box { min-width: calc(50% - 8px); }
     .stat-box .num { font-size: 22px; }
     .detail-inner { padding: 10px 14px; }
@@ -427,12 +422,7 @@
   <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
   <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
 </div>
-<div class="table-wrap">
-  <table>
-    <thead id="thead-rarity"></thead>
-    <tbody id="grid-rarity"></tbody>
-  </table>
-</div>
+<div class="grid-pair" id="grid-pair"></div>
 
 <div class="analysis" id="analysis"></div>
 
@@ -530,97 +520,101 @@ async function init() {
     statsEl.appendChild(div);
   });
 
-  // ── Rarity × Aspect table ──
-  const rarities = [3, 4, 5];
-  const rarityColors = { 3: 'var(--r3)', 4: 'var(--r4)', 5: 'var(--r5)' };
-  const rarityLabels = { 3: '3-Star', 4: '4-Star', 5: '5-Star' };
+  // ── Build paired grid ──
+  const gridPair = document.getElementById('grid-pair');
 
-  const thead = document.getElementById('thead-rarity');
-  const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com</th>' +
-    rarities.map(r => `<th style="color:${rarityColors[r]}">${rarityLabels[r]}</th>`).join('') +
-    '<th>Total</th>';
-  thead.appendChild(headRow);
+  function buildAspectTable(aspectList) {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = '<tr><th>Aspect</th><th>Nexus Anima</th></tr>';
+    table.appendChild(thead);
+    const tbody = document.createElement('tbody');
 
-  const tbody = document.getElementById('grid-rarity');
-  aspects.forEach(aspect => {
-    const tr = document.createElement('tr');
-    const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
-    tr.style.setProperty('--aspect-color', acColor);
+    aspectList.forEach(aspect => {
+      const tr = document.createElement('tr');
+      tr.className = 'aspect-row';
+      const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
+      tr.style.setProperty('--aspect-color', acColor);
 
-    const tdName = document.createElement('td');
-    tdName.style.setProperty('--aspect-color', acColor);
-    tdName.textContent = aspect;
-    tr.appendChild(tdName);
+      const tdName = document.createElement('td');
+      tdName.style.setProperty('--aspect-color', acColor);
+      tdName.textContent = aspect;
+      tr.appendChild(tdName);
 
-    const aspectUnits = units.filter(u => u.Aspect === aspect);
-    let rowTotal = 0;
-
-    rarities.forEach(r => {
+      const aspectUnits = units.filter(u => u.Aspect === aspect);
       const td = document.createElement('td');
-      const matched = aspectUnits.filter(u => u.Rarity === r);
-      rowTotal += matched.length;
-      if (matched.length === 0) {
-        td.innerHTML = '<span class="empty-cell">—</span>';
-      } else {
-        matched.sort((a, b) => a.Name.localeCompare(b.Name));
-        matched.forEach(u => {
-          const span = document.createElement('span');
-          span.className = 'unit r' + r;
-          span.textContent = u.Name;
-          td.appendChild(span);
-        });
-      }
+      aspectUnits.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
+      aspectUnits.forEach(u => {
+        const span = document.createElement('span');
+        span.className = 'unit r' + u.Rarity;
+        span.textContent = u.Name;
+        td.appendChild(span);
+      });
       tr.appendChild(td);
-    });
+      tbody.appendChild(tr);
 
-    const tdTotal = document.createElement('td');
-    tdTotal.className = 'count-cell';
-    tdTotal.textContent = rowTotal;
-    tr.appendChild(tdTotal);
+      const detailTr = document.createElement('tr');
+      detailTr.className = 'detail-row';
+      detailTr.style.setProperty('--aspect-color', acColor);
+      const detailTd = document.createElement('td');
+      detailTd.colSpan = 2;
 
-    tr.className = 'aspect-row';
-    tbody.appendChild(tr);
-
-    // ── Detail row (hidden by default) ──
-    const detailTr = document.createElement('tr');
-    detailTr.className = 'detail-row';
-    detailTr.style.setProperty('--aspect-color', acColor);
-    const detailTd = document.createElement('td');
-    detailTd.colSpan = rarities.length + 2;
-
-    const data = aspectMap[aspect];
-    if (data) {
-      const descText = (data.description || '').replace(/\n/g, '<br>');
-      let tiersHTML = '';
-      data.tiers.forEach(t => {
-        tiersHTML += `
-          <div class="detail-tier">
-            <div class="tier-label"><span class="tier-num">${t.units}</span> Nexus Anima</div>
-            <div class="tier-effect">${t.effect}</div>
-          </div>`;
-      });
-      detailTd.innerHTML = `<div class="detail-inner">
-        <div class="detail-desc">${descText}</div>
-        <div class="detail-tiers">${tiersHTML}</div>
-      </div>`;
-    }
-
-    detailTr.appendChild(detailTd);
-    tbody.appendChild(detailTr);
-
-    tr.addEventListener('click', () => {
-      const wasExpanded = tr.classList.contains('expanded');
-      document.querySelectorAll('.aspect-row.expanded').forEach(r => {
-        r.classList.remove('expanded');
-        r.nextElementSibling.classList.remove('visible');
-      });
-      if (!wasExpanded) {
-        tr.classList.add('expanded');
-        detailTr.classList.add('visible');
+      const data = aspectMap[aspect];
+      if (data) {
+        const descText = (data.description || '').replace(/\n/g, '<br>');
+        let tiersHTML = '';
+        data.tiers.forEach(t => {
+          tiersHTML += `
+            <div class="detail-tier">
+              <div class="tier-label"><span class="tier-num">${t.units}</span> Nexus Anima</div>
+              <div class="tier-effect">${t.effect}</div>
+            </div>`;
+        });
+        detailTd.innerHTML = `<div class="detail-inner">
+          <div class="detail-desc">${descText}</div>
+          <div class="detail-tiers">${tiersHTML}</div>
+        </div>`;
       }
+
+      detailTr.appendChild(detailTd);
+      tbody.appendChild(detailTr);
+
+      tr.addEventListener('click', () => {
+        const wasExpanded = tr.classList.contains('expanded');
+        tbody.querySelectorAll('.aspect-row.expanded').forEach(r => {
+          r.classList.remove('expanded');
+          r.nextElementSibling.classList.remove('visible');
+        });
+        if (!wasExpanded) {
+          tr.classList.add('expanded');
+          detailTr.classList.add('visible');
+        }
+      });
     });
-  });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  const leftAspects = [];
+  const rightAspects = [];
+  for (let i = 0; i < aspects.length; i++) {
+    if (i % 2 === 0) leftAspects.push(aspects[i]);
+    else rightAspects.push(aspects[i]);
+  }
+
+  gridPair.appendChild(buildAspectTable(leftAspects));
+  gridPair.appendChild(buildAspectTable(rightAspects));
+
+  // Sync first-column widths across both tables
+  const firstCols = gridPair.querySelectorAll('td:first-child, th:first-child');
+  let maxW = 0;
+  firstCols.forEach(c => { const w = c.getBoundingClientRect().width; if (w > maxW) maxW = w; });
+  gridPair.style.setProperty('--aspect-col-w', maxW + 'px');
+  firstCols.forEach(c => { c.style.minWidth = 'var(--aspect-col-w)'; });
 
   function ac(name) {
     const c = ASPECT_COLORS[name] || 'var(--header-text)';
@@ -698,22 +692,22 @@ async function init() {
   `;
 
   // ── Rarity filter ──
-  const tableWrap = document.querySelector('.table-wrap');
+  const gridPairEl = document.getElementById('grid-pair');
   const legendItems = document.querySelectorAll('.legend-item');
   const statBoxes = document.querySelectorAll('.stat-box.clickable');
 
   function clearFilter() {
-    tableWrap.classList.remove('filter-r3', 'filter-r4', 'filter-r5');
+    gridPairEl.classList.remove('filter-r3', 'filter-r4', 'filter-r5');
     legendItems.forEach(li => li.classList.remove('active'));
     statBoxes.forEach(sb => sb.classList.remove('active-r3', 'active-r4', 'active-r5'));
   }
   function applyFilter(rarity) {
     if (rarity === 'all') { clearFilter(); return; }
     const filterClass = 'filter-r' + rarity;
-    if (tableWrap.classList.contains(filterClass)) { clearFilter(); }
+    if (gridPairEl.classList.contains(filterClass)) { clearFilter(); }
     else {
       clearFilter();
-      tableWrap.classList.add(filterClass);
+      gridPairEl.classList.add(filterClass);
       legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
       statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
     }
