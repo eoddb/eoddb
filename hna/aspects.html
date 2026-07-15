@@ -205,11 +205,45 @@
   tbody tr:hover td { background: var(--surface-hover); }
   tbody tr:hover td:first-child { background: #192030; }
 
-  .unit { display: inline; }
-  .unit + .unit::before { content: ' · '; color: var(--text-muted); }
+  .unit { display: inline-block; }
   .unit.r3 { color: var(--r3); }
   .unit.r4 { color: var(--r4); }
   .unit.r5 { color: var(--r5); }
+  .unit.has-img { position: relative; margin: 2px; }
+  .unit.has-img img {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    border: 2px solid;
+    object-fit: cover;
+    transition: transform 0.15s;
+  }
+  .unit.has-img:hover img { transform: scale(1.15); z-index: 2; }
+  .unit.has-img .unit-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .unit.has-img:hover .unit-tip { display: block; }
+  .unit.r3 img { border-color: var(--r3); }
+  .unit.r4 img { border-color: var(--r4); }
+  .unit.r5 img { border-color: var(--r5); }
+  .unit.has-img.eidos-unit { cursor: pointer; }
+  .unit.has-img.eidos-unit img { border-style: solid; }
+  tr.companion-active .unit.has-img { opacity: 0.15; transition: opacity 0.2s; }
+  tr.companion-active .unit.has-img.highlight { opacity: 1; }
+  @media (max-width: 768px) {
+    .unit.has-img img { width: 32px; height: 32px; border-radius: 4px; }
+  }
 
   .legend {
     max-width: 1400px;
@@ -458,14 +492,15 @@ async function loadJSON(filename) {
 }
 
 async function init() {
-  let units, aspectsRaw;
+  let units, aspectsRaw, eidosData;
   try {
-    [units, aspectsRaw] = await Promise.all([
+    [units, aspectsRaw, eidosData] = await Promise.all([
       loadJSON('eoddb_hna_nexus_anima_units.json'),
-      loadJSON('eoddb_hna_aspects.json')
+      loadJSON('eoddb_hna_aspects.json'),
+      loadJSON('eoddb_hna_eidos.json')
     ]);
   } catch (e) {
-    showError('Could not load data files. Make sure eoddb_hna_nexus_anima_units.json and eoddb_hna_aspects.json are in the same folder as this HTML file.');
+    showError('Could not load data files. Make sure JSON files are in the same folder as this HTML file.');
     return;
   }
 
@@ -527,7 +562,7 @@ async function init() {
     wrap.className = 'table-wrap';
     const table = document.createElement('table');
     const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th>Aspect<span class="aspect-hint">(click to expand)</span></th><th>Nexus Anima</th></tr>';
+    thead.innerHTML = '<tr><th>Aspect<span class="aspect-hint">(click to expand)</span></th><th>Nexus Anima</th><th>Eidos</th></tr>';
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
 
@@ -551,19 +586,78 @@ async function init() {
       const td = document.createElement('td');
       aspectUnits.sort((a, b) => b.Rarity - a.Rarity || a.Name.localeCompare(b.Name));
       aspectUnits.forEach(u => {
+        const imgName = u.Name.toLowerCase().replace(/[ .']/g, '');
         const span = document.createElement('span');
         span.className = 'unit r' + u.Rarity;
-        span.textContent = u.Name;
+        const img = new Image();
+        img.src = '/hna/img/nexusanima/' + imgName + '.webp';
+        img.alt = u.Name;
+        img.onload = () => {
+          span.classList.add('has-img');
+          span.innerHTML = '';
+          span.appendChild(img);
+          const tip = document.createElement('span');
+          tip.className = 'unit-tip';
+          tip.textContent = u.Name;
+          span.appendChild(tip);
+        };
+        img.onerror = () => { span.textContent = u.Name; };
         td.appendChild(span);
       });
       tr.appendChild(td);
+
+      const tdEidos = document.createElement('td');
+      const aspectEidos = eidosData.filter(e => e.Aspect === aspect);
+      aspectEidos.sort((a, b) => b.Rarity - a.Rarity || a.Name.localeCompare(b.Name));
+      aspectEidos.forEach(e => {
+        const imgName = e.Name.toLowerCase().replace(/[ .']/g, '');
+        const span = document.createElement('span');
+        span.className = 'unit r' + e.Rarity;
+        span.dataset.companion = e.Companion;
+        span.dataset.eidos = e.Name;
+        const img = new Image();
+        img.src = '/hna/img/eidos/' + imgName + '.webp';
+        img.alt = e.Name;
+        img.onload = () => {
+          span.classList.add('has-img', 'eidos-unit');
+          span.innerHTML = '';
+          span.appendChild(img);
+          const tip = document.createElement('span');
+          tip.className = 'unit-tip';
+          tip.textContent = e.Name;
+          span.appendChild(tip);
+        };
+        img.onerror = () => { span.textContent = e.Name; };
+        span.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          const wasActive = span.classList.contains('highlight');
+          tr.classList.remove('companion-active');
+          tr.querySelectorAll('.unit.highlight').forEach(u => u.classList.remove('highlight'));
+          if (!wasActive) {
+            tr.classList.add('companion-active');
+            span.classList.add('highlight');
+            const companion = e.Companion;
+            tr.querySelectorAll('.unit.has-img:not(.eidos-unit)').forEach(u => {
+              if (u.querySelector('img') && u.querySelector('img').alt === companion) {
+                u.classList.add('highlight');
+              }
+            });
+          }
+        });
+        tdEidos.appendChild(span);
+      });
+      if (aspectEidos.length === 0) {
+        tdEidos.innerHTML = '<span class="empty-cell">—</span>';
+      }
+      tr.appendChild(tdEidos);
+
       tbody.appendChild(tr);
 
       const detailTr = document.createElement('tr');
       detailTr.className = 'detail-row';
       detailTr.style.setProperty('--aspect-color', acColor);
       const detailTd = document.createElement('td');
-      detailTd.colSpan = 2;
+      detailTd.colSpan = 3;
 
       const data = aspectMap[aspect];
       if (data) {
@@ -585,7 +679,8 @@ async function init() {
       detailTr.appendChild(detailTd);
       tbody.appendChild(detailTr);
 
-      tr.addEventListener('click', () => {
+      tr.addEventListener('click', (ev) => {
+        if (ev.target.closest('.eidos-unit')) return;
         const wasExpanded = tr.classList.contains('expanded');
         tbody.querySelectorAll('.aspect-row.expanded').forEach(r => {
           r.classList.remove('expanded');
@@ -611,6 +706,15 @@ async function init() {
           r.nextElementSibling.classList.add('visible');
         }
       });
+    });
+
+    table.addEventListener('click', (ev) => {
+      if (!ev.target.closest('.eidos-unit')) {
+        table.querySelectorAll('tr.companion-active').forEach(r => {
+          r.classList.remove('companion-active');
+          r.querySelectorAll('.unit.highlight').forEach(u => u.classList.remove('highlight'));
+        });
+      }
     });
 
     table.appendChild(tbody);
