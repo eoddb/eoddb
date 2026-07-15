@@ -434,6 +434,59 @@
   .analysis .hl-r4 { color: var(--r4); font-weight: 600; }
   .analysis .hl-r5 { color: var(--r5); font-weight: 600; }
 
+  .tag-defs {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .tag-defs table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 0;
+  }
+
+  .tag-defs thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: static;
+  }
+
+  .tag-defs tbody td {
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    min-width: 0;
+    position: static;
+  }
+
+  .tag-defs tbody td:first-child {
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--header-text);
+    border-left: none;
+  }
+
+  .tag-defs tbody tr:last-child td { border-bottom: none; }
+  .tag-defs tbody tr:hover td { background: var(--surface-hover); }
+
+  .tag-defs-note {
+    max-width: 1400px;
+    margin: 8px auto 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
   .error-msg {
     max-width: 1400px;
     margin: 2rem auto;
@@ -479,6 +532,26 @@
     <tbody id="grid"></tbody>
   </table>
 </div>
+
+<div class="tag-defs">
+  <table>
+    <thead><tr><th colspan="2">EODdb Tags*</th></tr></thead>
+    <tbody>
+      <tr><td>AoE</td><td>Deals damage to multiple opponents in an area</td></tr>
+      <tr><td>Burning</td><td>Applies Burning, dealing True DMG based on Max Health per second</td></tr>
+      <tr><td>Control</td><td>Applies crowd control effects (Stun, Freeze, Imprison, Launch)</td></tr>
+      <tr><td>Deep Wounds</td><td>Reduces healing received by the target</td></tr>
+      <tr><td>Energy Jam</td><td>Increases the Energy cost of the opponent's next Skill</td></tr>
+      <tr><td>Healing</td><td>Restores Health to self or allies</td></tr>
+      <tr><td>Pierce</td><td>Attacks that penetrate through enemies or apply Armor/MR Shred</td></tr>
+      <tr><td>Shield</td><td>Grants a protective barrier that absorbs damage</td></tr>
+      <tr><td>Support</td><td>Buffs allied units (Attack SPD, ATK, MP)</td></tr>
+      <tr><td>Taunt</td><td>Forces nearby opponents to target this unit</td></tr>
+      <tr><td>Terminate</td><td>Targets or deals bonus damage to low-Health opponents</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="tag-defs-note">*Tags can be subjective and should act merely as a quick filter. (R1 — represents that the unit gains this tag at a particular additional copy)</p>
 
 <div class="analysis" id="analysis"></div>
 
