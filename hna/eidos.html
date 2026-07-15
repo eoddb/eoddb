@@ -690,7 +690,7 @@ async function init() {
 
       const aspectEidos = eidos.filter(e => e.Aspect === aspect);
       const td = document.createElement('td');
-      aspectEidos.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
+      aspectEidos.sort((a, b) => b.Rarity - a.Rarity || a.Name.localeCompare(b.Name));
       aspectEidos.forEach(e => {
         const span = document.createElement('span');
         span.className = 'eidos-entry r' + e.Rarity;

@@ -546,7 +546,7 @@ async function init() {
 
       const aspectUnits = units.filter(u => u.Aspect === aspect);
       const td = document.createElement('td');
-      aspectUnits.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
+      aspectUnits.sort((a, b) => b.Rarity - a.Rarity || a.Name.localeCompare(b.Name));
       aspectUnits.forEach(u => {
         const span = document.createElement('span');
         span.className = 'unit r' + u.Rarity;
