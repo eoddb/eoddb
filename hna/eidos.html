@@ -453,6 +453,88 @@
     color: var(--header-text);
   }
 
+  /* ── Energy Timing Table ── */
+  .energy-section-header {
+    max-width: 1400px;
+    margin: 0 auto 1rem;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .energy-footnote {
+    max-width: 1400px;
+    margin: 0.4rem auto 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .energy-table-wrap {
+    max-width: 1400px;
+    margin: 0 auto 0.4rem;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .energy-table-wrap.filter-r4 tr.energy-row.r5 { opacity: 0.12; }
+  .energy-table-wrap.filter-r5 tr.energy-row.r4 { opacity: 0.12; }
+  .energy-table-wrap.filter-r4 tr.energy-avg-row .avg-r5 { opacity: 0.12; }
+  .energy-table-wrap.filter-r5 tr.energy-avg-row .avg-r4 { opacity: 0.12; }
+
+  .energy-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .energy-table thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    cursor: default;
+  }
+
+  .energy-table tbody td {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .energy-table tbody tr:last-child td { border-bottom: none; }
+  .energy-table tbody tr.energy-row:hover td { background: var(--surface-hover); }
+
+  .energy-table .eidos-name-cell {
+    font-weight: 700;
+    color: var(--header-text);
+  }
+
+  .energy-table .aspect-cell {
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  .energy-table .time-cell {
+    font-weight: 700;
+    color: var(--header-text);
+  }
+
+  tr.energy-avg-row td {
+    background: var(--header-bg) !important;
+    font-weight: 700;
+    border-top: 2px solid var(--border);
+  }
+
   /* ── Analysis ── */
   .analysis {
     max-width: 1400px;
@@ -506,6 +588,8 @@
     .skill-block:last-child { border-bottom: none; }
     .skill-block-desc { font-size: 0.7rem; }
     .analysis { padding: 16px; }
+    .energy-table .eidos-name-cell { font-size: 0.78rem; }
+    .energy-table tbody td { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
   }
 </style>
 </head>
@@ -531,6 +615,25 @@
     <tbody id="grid"></tbody>
   </table>
 </div>
+
+<h2 class="energy-section-header">Time To First Skill*</h2>
+<div class="energy-table-wrap" id="energy-table-wrap">
+  <table class="energy-table">
+    <thead>
+      <tr>
+        <th>Eidos</th>
+        <th>Rarity</th>
+        <th>Aspect</th>
+        <th>Energy Cost</th>
+        <th>Initial Energy</th>
+        <th>Energy Regen</th>
+        <th>Time To First Skill*</th>
+      </tr>
+    </thead>
+    <tbody id="energy-tbody"></tbody>
+  </table>
+</div>
+<div class="energy-footnote">*Natural energy gain without interference.</div>
 
 <div class="analysis" id="analysis"></div>
 
@@ -785,6 +888,45 @@ async function init() {
   }
   function acList(names) { return names.map(n => ac(n)).join(', '); }
 
+  // ── Energy Timing Table ──
+  const energyTbody = document.getElementById('energy-tbody');
+  const sorted = [...eidos].map(e => {
+    const time = (e['Energy Cost'] - e['Initial Energy']) / e['Energy Regen'];
+    return { ...e, time };
+  }).sort((a, b) => a.time - b.time);
+
+  sorted.forEach(e => {
+    const acColor = ASPECT_COLORS[e.Aspect] || 'var(--text)';
+    const rarityColor = e.Rarity === 5 ? 'var(--r5)' : 'var(--r4)';
+    const tr = document.createElement('tr');
+    tr.className = 'energy-row r' + e.Rarity;
+    tr.innerHTML =
+      `<td class="eidos-name-cell">${e.Name}</td>` +
+      `<td style="color:${rarityColor}">${e.Rarity}-Star</td>` +
+      `<td class="aspect-cell" style="color:${acColor}">${e.Aspect}</td>` +
+      `<td>${e['Energy Cost']}</td>` +
+      `<td>${e['Initial Energy']}</td>` +
+      `<td>${e['Energy Regen']}/s</td>` +
+      `<td class="time-cell">${e.time.toFixed(1)}s</td>`;
+    energyTbody.appendChild(tr);
+  });
+
+  const avgCostE = (eidos.reduce((s, e) => s + e['Energy Cost'], 0) / total).toFixed(0);
+  const avgInitE = (eidos.reduce((s, e) => s + e['Initial Energy'], 0) / total).toFixed(0);
+  const avgRegenE = (eidos.reduce((s, e) => s + e['Energy Regen'], 0) / total).toFixed(1);
+  const avgTimeE = (sorted.reduce((s, e) => s + e.time, 0) / total).toFixed(1);
+  const avgTr = document.createElement('tr');
+  avgTr.className = 'energy-avg-row';
+  avgTr.innerHTML =
+    `<td class="eidos-name-cell">Average</td>` +
+    `<td></td>` +
+    `<td></td>` +
+    `<td>${avgCostE}</td>` +
+    `<td>${avgInitE}</td>` +
+    `<td>${avgRegenE}/s</td>` +
+    `<td class="time-cell">${avgTimeE}s</td>`;
+  energyTbody.appendChild(avgTr);
+
   // ── Statistical Summary ──
   const costRange = eidos.reduce((acc, e) => ({
     min: Math.min(acc.min, e['Energy Cost']),
@@ -828,11 +970,13 @@ async function init() {
 
   // ── Rarity filter ──
   const tableWrap = document.querySelector('.table-wrap');
+  const energyTableWrap = document.getElementById('energy-table-wrap');
   const legendItems = document.querySelectorAll('.legend-item');
   const statBoxes = document.querySelectorAll('.stat-box.clickable');
 
   function clearFilter() {
     tableWrap.classList.remove('filter-r4', 'filter-r5');
+    energyTableWrap.classList.remove('filter-r4', 'filter-r5');
     legendItems.forEach(li => li.classList.remove('active'));
     statBoxes.forEach(sb => sb.classList.remove('active-r4', 'active-r5'));
   }
@@ -843,6 +987,7 @@ async function init() {
     else {
       clearFilter();
       tableWrap.classList.add(filterClass);
+      energyTableWrap.classList.add(filterClass);
       legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
       statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
     }
