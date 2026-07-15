@@ -6,7 +6,9 @@
     "Energy Cost": 220,
     "Energy Regen": 12,
     "Initial Energy": 120,
-    "Companion": "Mimoo"
+    "Companion": "Mimoo",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 140
   },
   {
     "Name": "Hua",
@@ -15,7 +17,9 @@
     "Energy Cost": 250,
     "Energy Regen": 12,
     "Initial Energy": 90,
-    "Companion": "Marshalbird"
+    "Companion": "Marshalbird",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 110
   },
   {
     "Name": "Maple",
@@ -24,7 +28,9 @@
     "Energy Cost": 200,
     "Energy Regen": 12,
     "Initial Energy": 110,
-    "Companion": "Pumpkimp"
+    "Companion": "Pumpkimp",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 130
   },
   {
     "Name": "Otto",
@@ -33,7 +39,9 @@
     "Energy Cost": 230,
     "Energy Regen": 12,
     "Initial Energy": 80,
-    "Companion": "Chimaura"
+    "Companion": "Chimaura",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 100
   },
   {
     "Name": "Kiana",
@@ -42,7 +50,9 @@
     "Energy Cost": 240,
     "Energy Regen": 12,
     "Initial Energy": 50,
-    "Companion": "Fyrklor"
+    "Companion": "Fyrklor",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 70
   },
   {
     "Name": "Nanafey",
@@ -51,7 +61,9 @@
     "Energy Cost": 230,
     "Energy Regen": 12,
     "Initial Energy": 80,
-    "Companion": "Beaubeanie"
+    "Companion": "Beaubeanie",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 100
   },
   {
     "Name": "Shilian",
@@ -60,7 +72,9 @@
     "Energy Cost": 230,
     "Energy Regen": 12,
     "Initial Energy": 120,
-    "Companion": "Framamba"
+    "Companion": "Framamba",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 140
   },
   {
     "Name": "Herocrates",
@@ -69,7 +83,9 @@
     "Energy Cost": 210,
     "Energy Regen": 12,
     "Initial Energy": 60,
-    "Companion": "Camcorgi"
+    "Companion": "Camcorgi",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 80
   },
   {
     "Name": "Bai Mei",
@@ -78,7 +94,9 @@
     "Energy Cost": 260,
     "Energy Regen": 12,
     "Initial Energy": 90,
-    "Companion": "Seroplumanth"
+    "Companion": "Seroplumanth",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 110
   },
   {
     "Name": "Olympia",
@@ -87,7 +105,9 @@
     "Energy Cost": 250,
     "Energy Regen": 12,
     "Initial Energy": 100,
-    "Companion": "Noctumbra"
+    "Companion": "Noctumbra",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 120
   },
   {
     "Name": "Hungrille",
@@ -96,7 +116,9 @@
     "Energy Cost": 240,
     "Energy Regen": 12,
     "Initial Energy": 60,
-    "Companion": "Hoggit"
+    "Companion": "Hoggit",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 80
   },
   {
     "Name": "Parayaya",
@@ -105,7 +127,9 @@
     "Energy Cost": 310,
     "Energy Regen": 12,
     "Initial Energy": 200,
-    "Companion": "Mesmerith"
+    "Companion": "Mesmerith",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 230
   },
   {
     "Name": "Blade",
@@ -114,6 +138,8 @@
     "Energy Cost": 230,
     "Energy Regen": 12,
     "Initial Energy": 80,
-    "Companion": "Bladehound"
+    "Companion": "Bladehound",
+    "Energy Regen (Eidognosis)": 14,
+    "Initial Energy (Eidognosis)": 100
   }
 ]

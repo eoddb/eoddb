@@ -577,15 +577,15 @@
         <th>Rarity</th>
         <th>Aspect</th>
         <th>Energy Cost</th>
-        <th>Initial Energy</th>
-        <th>Energy Regen</th>
+        <th>Initial Energy^</th>
+        <th>Energy Regen^</th>
         <th>Time To First Skill*</th>
       </tr>
     </thead>
     <tbody id="energy-tbody"></tbody>
   </table>
 </div>
-<div class="energy-footnote">*Natural energy gain without interference.</div>
+<div class="energy-footnote">*Natural energy gain without interference.<br>^Maxed Eidos Level 30 and skill levels (Eidognosis 1 and 3) raised.</div>
 
 <div class="analysis" id="analysis"></div>
 
@@ -710,6 +710,8 @@ async function init() {
             <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
             <div class="energy-stat"><div class="energy-stat-label">Energy Regen</div><div class="energy-stat-value">${e['Energy Regen']}/s</div></div>
             <div class="energy-stat"><div class="energy-stat-label">Initial Energy</div><div class="energy-stat-value">${e['Initial Energy']}</div></div>
+            <div class="energy-stat"><div class="energy-stat-label">Energy Regen (Eidognosis)</div><div class="energy-stat-value">${e['Energy Regen (Eidognosis)']}/s</div></div>
+            <div class="energy-stat"><div class="energy-stat-label">Initial Energy (Eidognosis)</div><div class="energy-stat-value">${e['Initial Energy (Eidognosis)']}</div></div>
             <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
           </div>
         </div>`;
@@ -753,19 +755,21 @@ async function init() {
   }
   function acList(names) { return names.map(n => ac(n)).join(', '); }
 
-  // ── Energy Timing Table (sortable) ──
+  // ── Energy Timing Table (sortable, uses Eidognosis values) ──
   const energyTbody = document.getElementById('energy-tbody');
   const eidosWithTime = [...eidos].map(e => {
-    const time = (e['Energy Cost'] - e['Initial Energy']) / e['Energy Regen'];
-    return { ...e, time };
+    const regen = e['Energy Regen (Eidognosis)'];
+    const init = e['Initial Energy (Eidognosis)'];
+    const time = (e['Energy Cost'] - init) / regen;
+    return { ...e, eidoRegen: regen, eidoInit: init, time };
   });
 
   const avgCostE = (eidos.reduce((s, e) => s + e['Energy Cost'], 0) / total).toFixed(0);
-  const avgInitE = (eidos.reduce((s, e) => s + e['Initial Energy'], 0) / total).toFixed(0);
-  const avgRegenE = (eidos.reduce((s, e) => s + e['Energy Regen'], 0) / total).toFixed(1);
+  const avgInitE = (eidos.reduce((s, e) => s + e['Initial Energy (Eidognosis)'], 0) / total).toFixed(0);
+  const avgRegenE = (eidos.reduce((s, e) => s + e['Energy Regen (Eidognosis)'], 0) / total).toFixed(1);
   const avgTimeE = (eidosWithTime.reduce((s, e) => s + e.time, 0) / total).toFixed(1);
 
-  const sortKeys = ['Name', 'Rarity', 'Aspect', 'Energy Cost', 'Initial Energy', 'Energy Regen', 'time'];
+  const sortKeys = ['Name', 'Rarity', 'Aspect', 'Energy Cost', 'eidoInit', 'eidoRegen', 'time'];
   let currentSortCol = 6;
   let currentSortAsc = true;
 
@@ -781,8 +785,8 @@ async function init() {
         `<td style="color:${rarityColor}">${e.Rarity}-Star</td>` +
         `<td class="aspect-cell" style="color:${acColor}">${e.Aspect}</td>` +
         `<td>${e['Energy Cost']}</td>` +
-        `<td>${e['Initial Energy']}</td>` +
-        `<td>${e['Energy Regen']}/s</td>` +
+        `<td>${e.eidoInit}</td>` +
+        `<td>${e.eidoRegen}/s</td>` +
         `<td class="time-cell">${e.time.toFixed(1)}s</td>`;
       energyTbody.appendChild(tr);
     });
