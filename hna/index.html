@@ -125,13 +125,6 @@
     line-height: 1.6;
     color: var(--text-muted);
   }
-  @media (max-width: 768px) {
-    .nav-card-desc {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
 
   .nav-card-tag {
     display: inline-block;
@@ -283,7 +276,11 @@
     .cta-card { flex-direction: column; text-align: center; gap: 12px; }
     .stat-box { min-width: calc(50% - 8px); }
     .stat-box .num { font-size: 22px; }
-    .nav-grid { grid-template-columns: 1fr; }
+    .nav-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-card { padding: 12px; gap: 4px; }
+    .nav-card-img { width: 40px; height: 40px; }
+    .nav-card-title { font-size: 0.85rem; }
+    .nav-card-desc { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   }
 </style>
 </head>
