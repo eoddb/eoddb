@@ -147,7 +147,7 @@
     z-index: -1;
   }
 
-  .hex-cell.occupied .hex-border { background: var(--r5); }
+  .hex-cell.occupied .hex-border { background: rgba(201, 209, 217, 0.4); }
   .hex-cell.selected .hex-border { background: var(--accent1); }
 
   .hex-label {
@@ -242,8 +242,8 @@
   }
 
   .synergy-icon {
-    width: 22px;
-    height: 22px;
+    width: 52px;
+    height: 52px;
     flex-shrink: 0;
   }
 
@@ -481,6 +481,7 @@
 </head>
 <body>
 
+<script src="/hna/eoddb_hna_nav.js"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima Team Comp Planner</h1>
   <span class="subtitle">Visualize your dream team and share it with friends. Click a Nexus Anima and click on any Hex Grid to begin.</span>
@@ -771,21 +772,33 @@ const ASPECTS_LIST = Object.keys(ASPECT_THRESHOLDS);
 const activeTypes = new Set();
 const activeAspects = new Set();
 
-function applyRosterFilter() {
+function unitMatchesFilter(u) {
   const hasType = activeTypes.size > 0;
   const hasAspect = activeAspects.size > 0;
+  if (!hasType && !hasAspect) return true;
+  if (hasType && hasAspect) return activeTypes.has(u.type) && activeAspects.has(u.aspect);
+  if (hasType) return activeTypes.has(u.type);
+  return activeAspects.has(u.aspect);
+}
+
+function applyRosterFilter() {
+  const filtering = activeTypes.size > 0 || activeAspects.size > 0;
   document.querySelectorAll('.roster-unit').forEach(el => {
     const u = UNIT_MAP[el.dataset.name];
     if (!u) return;
-    let show = true;
-    if (hasType && hasAspect) {
-      show = activeTypes.has(u.type) && activeAspects.has(u.aspect);
-    } else if (hasType) {
-      show = activeTypes.has(u.type);
-    } else if (hasAspect) {
-      show = activeAspects.has(u.aspect);
-    }
-    el.classList.toggle('filter-hidden', !show);
+    el.classList.toggle('filter-hidden', !unitMatchesFilter(u));
+  });
+  grid.forEach(row => {
+    row.forEach(cell => {
+      if (!cell.unit) return;
+      const u = UNIT_MAP[cell.unit];
+      if (!u) return;
+      if (filtering && !unitMatchesFilter(u)) {
+        cell.el.style.opacity = '0.4';
+      } else {
+        cell.el.style.opacity = '';
+      }
+    });
   });
 }
 
@@ -1042,5 +1055,6 @@ document.getElementById('deselectBtn').addEventListener('click', () => {
 updateCount();
 updateSynergies();
 </script>
+<script src="/eoddb_footer.js" defer></script>
 </body>
 </html>
