@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honkai: Nexus Anima Team Comp Planner | EODdb.com</title>
+<meta property="og:title" content="Honkai: Nexus Anima Team Comp Planner | EODdb.com">
+<meta name="twitter:title" content="Honkai: Nexus Anima Team Comp Planner | EODdb.com">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --r5: #dfc86a;
+    --header-bg: #111821;
+    --header-text: #e6edf3;
+    --accent1: #6366f1;
+    --hex-size: 64px;
+    --hex-gap: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 1000px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .planner-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .unit-count {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .unit-count strong {
+    color: var(--r5);
+  }
+
+  /* ── Main layout: grid + synergy side by side ── */
+  .planner-main {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 16px;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+
+  /* ── Hex Grid ── */
+  .hex-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    flex: 2;
+    min-width: 0;
+  }
+
+  .hex-row {
+    display: flex;
+    gap: var(--hex-gap);
+  }
+
+  .hex-row.offset {
+    margin-left: calc(var(--hex-size) / 2 + var(--hex-gap) / 2 + 2px);
+  }
+
+  .hex-cell {
+    width: var(--hex-size);
+    height: var(--hex-size);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: var(--header-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .hex-cell:hover { background: var(--surface-hover); }
+  .hex-cell.selected { background: var(--accent1); }
+  .hex-cell.occupied { background: transparent; }
+
+  .hex-cell-inner {
+    width: calc(var(--hex-size) - 6px);
+    height: calc(var(--hex-size) - 6px);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: var(--header-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hex-cell.selected .hex-cell-inner { background: rgba(99, 102, 241, 0.3); }
+  .hex-cell.occupied .hex-cell-inner { background: transparent; }
+
+  .hex-cell img {
+    width: calc(var(--hex-size) - 4px);
+    height: calc(var(--hex-size) - 4px);
+    object-fit: cover;
+  }
+
+  .hex-cell .hex-border {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: var(--border);
+    z-index: -1;
+  }
+
+  .hex-cell.occupied .hex-border { background: var(--r5); }
+  .hex-cell.selected .hex-border { background: var(--accent1); }
+
+  .hex-label {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .hex-cell.occupied .hex-label { display: none; }
+
+  .hex-watermark {
+    font-size: 0.65rem;
+    color: rgba(201, 209, 217, 0.15);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    text-align: center;
+    user-select: none;
+    pointer-events: none;
+    margin: -4px 0;
+  }
+
+  .hex-row-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    pointer-events: none;
+    padding: 0 10%;
+    margin-bottom: 2px;
+  }
+
+  .hex-row-label .line {
+    flex: 1;
+    border-top: 1px dashed rgba(201, 209, 217, 0.15);
+  }
+
+  .hex-row-label .label-text {
+    font-size: 0.6rem;
+    color: rgba(201, 209, 217, 0.15);
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .hex-cell.hex-glow .hex-border {
+    transition: background 0.3s;
+  }
+
+  /* ── Synergy Panel ── */
+  .synergy-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .synergy-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .synergy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .synergy-row {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    padding: 5px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .synergy-row-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .synergy-row:last-child { border-bottom: none; }
+
+  .synergy-row.active {
+    display: flex;
+  }
+
+  .synergy-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .synergy-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .synergy-dots {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .syn-dot {
+    border-radius: 50%;
+    border: 1.5px solid var(--text-muted);
+    background: transparent;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .syn-dot.big {
+    width: 10px;
+    height: 10px;
+  }
+
+  .syn-dot.small {
+    width: 6px;
+    height: 6px;
+  }
+
+  .syn-dot.filled {
+    background: rgba(201, 209, 217, 0.35);
+    border-color: rgba(201, 209, 217, 0.5);
+  }
+
+  .syn-dot.threshold-met {
+    background: var(--r5);
+    border-color: var(--r5);
+  }
+
+  .synergy-desc {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  .synergy-empty {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 8px 0;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .ctrl-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .ctrl-btn:hover {
+    border-color: var(--text-muted);
+    background: var(--surface-hover);
+  }
+
+  .ctrl-btn.danger:hover {
+    border-color: #c44d4d;
+    color: #f87171;
+  }
+
+  /* ── Roster ── */
+  .roster-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+
+  .roster-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  .roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .roster-label {
+    width: 100%;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin: 10px 0 4px;
+    text-align: center;
+  }
+
+  .roster-label:first-child { margin-top: 0; }
+
+  .roster-unit {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+
+  .roster-unit.r5 { border-color: var(--r5); }
+  .roster-unit.r4 { border-color: var(--r4); }
+  .roster-unit.r3 { border-color: var(--r3); }
+
+  .roster-unit:hover {
+    transform: scale(1.1);
+    z-index: 2;
+  }
+
+  .roster-unit img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .roster-unit.placed {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  .roster-unit.placed:hover { transform: none; }
+
+  .roster-unit .roster-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.6rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    color: var(--text);
+  }
+
+  .roster-unit:hover .roster-tip { display: block; }
+
+  .roster-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+  }
+
+  .roster-filters .filter-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    min-width: 42px;
+  }
+
+  .filter-btn {
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 0.7rem;
+    font-family: inherit;
+  }
+
+  .filter-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .filter-btn.active {
+    background: var(--surface);
+    border-color: var(--accent1);
+    color: var(--header-text);
+  }
+
+  .filter-btn.undo {
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .filter-btn.undo:hover {
+    border-color: var(--text-muted);
+  }
+
+  .roster-unit.filter-hidden {
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    :root { --hex-size: 40px; }
+    .planner-main { flex-direction: column; }
+    .synergy-panel { min-width: 0; }
+    .roster-unit { width: 40px; height: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Honkai: Nexus Anima Team Comp Planner</h1>
+  <span class="subtitle">Visualize your dream team and share it with friends. Click a Nexus Anima and click on any Hex Grid to begin.</span>
+</div>
+
+<div class="planner-wrap">
+  <div class="unit-count" id="unitCount">Units: <strong>0</strong> / 8</div>
+
+  <div class="planner-main">
+    <div class="hex-grid" id="hexGrid"></div>
+    <div class="synergy-panel">
+      <div class="synergy-title">Synergies</div>
+      <div class="synergy-list" id="synergyList"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="deselectBtn">Deselect</button>
+    <button class="ctrl-btn danger" id="clearBtn">Clear All</button>
+  </div>
+
+  <div class="roster-section">
+    <div class="roster-title">Nexus Anima</div>
+    <div class="roster-filters" id="typeFilters"></div>
+    <div class="roster-filters" id="aspectFilters"></div>
+    <div class="roster" id="roster"></div>
+  </div>
+</div>
+
+<script>
+const UNITS = [
+  {name:"Puddlipup",aspect:"Satiation",type:"Protector",rarity:4},
+  {name:"Taileep",aspect:"Hate",type:"Explorer",rarity:4},
+  {name:"Batnyss",aspect:"Hate",type:"Mastermind",rarity:4},
+  {name:"Bunmareen",aspect:"Light",type:"Protector",rarity:3},
+  {name:"Inkifoal",aspect:"Reality",type:"Protector",rarity:3},
+  {name:"Cumulon",aspect:"Pride",type:"Blaster",rarity:5},
+  {name:"Apollinis",aspect:"Light",type:"Protector",rarity:4},
+  {name:"Felinoxie",aspect:"Dark",type:"Protector",rarity:4},
+  {name:"Lumeridon",aspect:"Dark",type:"Explorer",rarity:4},
+  {name:"Inkicorn",aspect:"Oblivion",type:"Protector",rarity:4},
+  {name:"Heartcease",aspect:"Love",type:"Blaster",rarity:4},
+  {name:"Dragamour",aspect:"Love",type:"Mascot",rarity:5},
+  {name:"Corvariatio",aspect:"Change",type:"Blaster",rarity:5},
+  {name:"Vulberry",aspect:"Satiation",type:"Mastermind",rarity:4},
+  {name:"Noctumbra",aspect:"Dark",type:"Explorer",rarity:5},
+  {name:"Mushgloomini",aspect:"Dark",type:"Protector",rarity:3},
+  {name:"Faeflux",aspect:"Change",type:"Mastermind",rarity:4},
+  {name:"Lepinamel",aspect:"Beauty",type:"Mastermind",rarity:3},
+  {name:"Donubi",aspect:"Hate",type:"Mastermind",rarity:3},
+  {name:"Olivesper",aspect:"Strength",type:"Mascot",rarity:3},
+  {name:"Squarel",aspect:"Competition",type:"Mascot",rarity:3},
+  {name:"Furrari",aspect:"Competition",type:"Protector",rarity:4},
+  {name:"Magisdrake",aspect:"Pride",type:"Explorer",rarity:3},
+  {name:"Nomnom",aspect:"Satiation",type:"Protector",rarity:4},
+  {name:"Pupanoo",aspect:"Satiation",type:"Blaster",rarity:3},
+  {name:"Bobabirb",aspect:"Insatiability",type:"Blaster",rarity:3},
+  {name:"Eggnok",aspect:"Competition",type:"Mastermind",rarity:4},
+  {name:"Rosfurcate",aspect:"Hate",type:"Explorer",rarity:4},
+  {name:"Glampa",aspect:"Light",type:"Explorer",rarity:5},
+  {name:"Chowpownd",aspect:"Insatiability",type:"Protector",rarity:5},
+  {name:"Damasque",aspect:"Change",type:"Mascot",rarity:4},
+  {name:"Cublade",aspect:"Strength",type:"Explorer",rarity:3},
+  {name:"Marshalbird",aspect:"Competition",type:"Explorer",rarity:4},
+  {name:"Plumelune",aspect:"Beauty",type:"Mascot",rarity:4},
+  {name:"Mimoo",aspect:"Reality",type:"Explorer",rarity:4},
+  {name:"Rimechime",aspect:"Love",type:"Mastermind",rarity:3},
+  {name:"Vixemourne",aspect:"Dark",type:"Mastermind",rarity:4},
+  {name:"Bladehound",aspect:"Strength",type:"Explorer",rarity:5},
+  {name:"Eggluvs",aspect:"Competition",type:"Explorer",rarity:3},
+  {name:"Chimaura",aspect:"Light",type:"Explorer",rarity:4},
+  {name:"Donnatallow",aspect:"Dark",type:"Mascot",rarity:3},
+  {name:"Frigull",aspect:"Satiation",type:"Mascot",rarity:3},
+  {name:"Starspine",aspect:"Light",type:"Mastermind",rarity:4},
+  {name:"Camcorgi",aspect:"Memory",type:"Blaster",rarity:5},
+  {name:"Kaffiend",aspect:"Insatiability",type:"Mascot",rarity:3},
+  {name:"Foalhardy",aspect:"Pride",type:"Explorer",rarity:4},
+  {name:"Octopourri",aspect:"Love",type:"Mascot",rarity:4},
+  {name:"Hoppelon",aspect:"Competition",type:"Explorer",rarity:5},
+  {name:"Mr. Avocado",aspect:"Ugliness",type:"Protector",rarity:3},
+  {name:"Cinechel",aspect:"Memory",type:"Protector",rarity:5},
+  {name:"C'locked",aspect:"Memory",type:"Mascot",rarity:3},
+  {name:"Catnapir",aspect:"Memory",type:"Protector",rarity:4},
+  {name:"Framamba",aspect:"Memory",type:"Blaster",rarity:4},
+  {name:"Chocllamour",aspect:"Love",type:"Explorer",rarity:3},
+  {name:"Capybunner",aspect:"Light",type:"Protector",rarity:3},
+  {name:"Waxula",aspect:"Dark",type:"Mastermind",rarity:5},
+  {name:"Pomparrot",aspect:"Competition",type:"Blaster",rarity:5},
+  {name:"Hamburgoof",aspect:"Ugliness",type:"Blaster",rarity:5},
+  {name:"Magisaki",aspect:"Change",type:"Protector",rarity:3},
+  {name:"Beaubeanie",aspect:"Beauty",type:"Mastermind",rarity:4},
+  {name:"Lumehart",aspect:"Light",type:"Mastermind",rarity:5},
+  {name:"Hugglebeary",aspect:"Strength",type:"Protector",rarity:4},
+  {name:"Derpydile",aspect:"Competition",type:"Explorer",rarity:3},
+  {name:"Umpurrella",aspect:"Beauty",type:"Mastermind",rarity:5},
+  {name:"Sharkalaka",aspect:"Reality",type:"Explorer",rarity:4},
+  {name:"Ugglewing",aspect:"Ugliness",type:"Blaster",rarity:3},
+  {name:"Goldfogey",aspect:"Oblivion",type:"Explorer",rarity:3},
+  {name:"Mariminnow",aspect:"Reality",type:"Protector",rarity:3},
+  {name:"Muscimmon",aspect:"Strength",type:"Explorer",rarity:4},
+  {name:"Sunspottie",aspect:"Joy",type:"Mascot",rarity:4},
+  {name:"Pumpkimp",aspect:"Joy",type:"Mastermind",rarity:4},
+  {name:"Jerboranj",aspect:"Insatiability",type:"Mastermind",rarity:4},
+  {name:"Sootsie",aspect:"Joy",type:"Mascot",rarity:3},
+  {name:"Broomba",aspect:"Reality",type:"Protector",rarity:3},
+  {name:"Famishade",aspect:"Joy",type:"Blaster",rarity:4},
+  {name:"Hoggit",aspect:"Satiation",type:"Explorer",rarity:5},
+  {name:"Fyrklor",aspect:"Strength",type:"Explorer",rarity:4},
+  {name:"Seroplumanth",aspect:"Reality",type:"Mastermind",rarity:5},
+  {name:"Mesmerith",aspect:"Hate",type:"Blaster",rarity:5},
+  {name:"Atragasus",aspect:"Oblivion",type:"Explorer",rarity:5},
+  {name:"Shampoco",aspect:"Reality",type:"Blaster",rarity:4},
+  {name:"Baggle",aspect:"Reality",type:"Mascot",rarity:3}
+];
+
+const UNIT_MAP = {};
+UNITS.forEach(u => { UNIT_MAP[u.name] = u; });
+
+const ASPECT_THRESHOLDS = {
+  Reality:[2,4,6], Change:[2,3,4,5], Light:[2,4,6], Dark:[3,6],
+  Oblivion:[2], Memory:[3,6], Strength:[1,3,5], Beauty:[2,4],
+  Ugliness:[2,3], Pride:[2,3], Love:[2,3], Hate:[3,5],
+  Competition:[2,4,7], Joy:[2,4,6], Satiation:[2,4,6],
+  Insatiability:[2,4]
+};
+
+const ASPECT_MAX = {};
+Object.keys(ASPECT_THRESHOLDS).forEach(a => {
+  ASPECT_MAX[a] = Math.max(...ASPECT_THRESHOLDS[a]);
+});
+
+const HEX_INTERACTIONS = [
+  {aspect:"Strength", units:1, hexes:["1D"], color:"#e8e0a0", desc:"Hex applies Dominator"},
+  {aspect:"Dark", units:3, hexes:["1A","1D","1G","4A","4G"], color:"#7a8bc4", desc:"Hex applies ASPD buff"},
+  {aspect:"Dark", units:6, hexes:["1A","1B","1C","1D","1E","1G","4A","4D","4G"], color:"#7a8bc4", desc:"Hex applies ASPD buff"}
+];
+
+function parseHexId(id) {
+  const row = parseInt(id[0]) - 1;
+  const col = id.charCodeAt(1) - 65;
+  return [row, col];
+}
+
+const ROWS = [
+  {cols: 7, offset: false},
+  {cols: 7, offset: true},
+  {cols: 7, offset: false},
+  {cols: 7, offset: true}
+];
+
+const COL_LETTERS = 'ABCDEFG';
+const MAX_UNITS = 8;
+
+function imgName(name) {
+  return name.toLowerCase().replace(/[ .']/g, '');
+}
+
+function imgSrc(name) {
+  return '/hna/img/nexusanima/' + imgName(name) + '.webp';
+}
+
+const grid = [];
+let selectedCell = null;
+let selectedRosterUnit = null;
+const placedUnits = new Set();
+
+const hexGridEl = document.getElementById('hexGrid');
+const rosterEl = document.getElementById('roster');
+const unitCountEl = document.getElementById('unitCount');
+const synergyListEl = document.getElementById('synergyList');
+
+// Frontline label above row 1
+const frontlineLabel = document.createElement('div');
+frontlineLabel.className = 'hex-row-label';
+frontlineLabel.innerHTML = '<div class="line"></div><span class="label-text">Frontline</span><div class="line"></div>';
+hexGridEl.appendChild(frontlineLabel);
+
+// Build hex grid
+ROWS.forEach((rowDef, ri) => {
+  const rowEl = document.createElement('div');
+  rowEl.className = 'hex-row' + (rowDef.offset ? ' offset' : '');
+  const rowCells = [];
+
+  for (let ci = 0; ci < rowDef.cols; ci++) {
+    const cell = document.createElement('div');
+    cell.className = 'hex-cell';
+
+    const border = document.createElement('div');
+    border.className = 'hex-border';
+    cell.appendChild(border);
+
+    const inner = document.createElement('div');
+    inner.className = 'hex-cell-inner';
+
+    const label = document.createElement('span');
+    label.className = 'hex-label';
+    label.textContent = (ri + 1) + COL_LETTERS[ci];
+    inner.appendChild(label);
+
+    cell.appendChild(inner);
+    cell.addEventListener('click', () => onCellClick(ri, ci));
+    rowEl.appendChild(cell);
+    rowCells.push({el: cell, inner: inner, unit: null, label: (ri + 1) + COL_LETTERS[ci]});
+  }
+
+  grid.push(rowCells);
+  hexGridEl.appendChild(rowEl);
+
+  if (ri === 1) {
+    const wm = document.createElement('div');
+    wm.className = 'hex-watermark';
+    wm.textContent = 'EODdb.com';
+    hexGridEl.appendChild(wm);
+  }
+});
+
+// Build synergy rows
+const synergyRows = {};
+Object.keys(ASPECT_THRESHOLDS).forEach(aspect => {
+  const row = document.createElement('div');
+  row.className = 'synergy-row';
+
+  const icon = document.createElement('div');
+  icon.className = 'synergy-icon';
+  const img = document.createElement('img');
+  img.src = '/hna/img/aspects/' + aspect.toLowerCase() + '.webp';
+  img.alt = aspect;
+  icon.appendChild(img);
+
+  const dots = document.createElement('div');
+  dots.className = 'synergy-dots';
+
+  const maxDots = ASPECT_MAX[aspect];
+  const thresholds = ASPECT_THRESHOLDS[aspect];
+  for (let i = 1; i <= maxDots; i++) {
+    const dot = document.createElement('span');
+    const isBig = thresholds.includes(i);
+    dot.className = 'syn-dot ' + (isBig ? 'big' : 'small');
+    dot.dataset.index = i;
+    dots.appendChild(dot);
+  }
+
+  const descEl = document.createElement('div');
+  descEl.className = 'synergy-desc';
+
+  const header = document.createElement('div');
+  header.className = 'synergy-row-header';
+  header.appendChild(icon);
+  header.appendChild(dots);
+  row.appendChild(header);
+  row.appendChild(descEl);
+
+  synergyListEl.appendChild(row);
+  synergyRows[aspect] = {el: row, dots: dots, desc: descEl};
+});
+
+// Build roster grouped by rarity
+[5, 4, 3].forEach(rarity => {
+  const label = document.createElement('div');
+  label.className = 'roster-label';
+  label.textContent = rarity + '-Star';
+  label.style.color = 'var(--r' + rarity + ')';
+  rosterEl.appendChild(label);
+
+  UNITS.filter(u => u.rarity === rarity).forEach(u => {
+    const div = document.createElement('div');
+    div.className = 'roster-unit r' + rarity;
+    div.dataset.name = u.name;
+
+    const img = document.createElement('img');
+    img.src = imgSrc(u.name);
+    img.alt = u.name;
+    div.appendChild(img);
+
+    const tip = document.createElement('span');
+    tip.className = 'roster-tip';
+    tip.textContent = u.name;
+    div.appendChild(tip);
+
+    div.addEventListener('click', () => onRosterClick(u.name, div));
+    rosterEl.appendChild(div);
+  });
+});
+
+// Build roster filters
+const TYPES = ["Blaster","Mastermind","Explorer","Protector","Mascot"];
+const ASPECTS_LIST = Object.keys(ASPECT_THRESHOLDS);
+const activeTypes = new Set();
+const activeAspects = new Set();
+
+function applyRosterFilter() {
+  const hasType = activeTypes.size > 0;
+  const hasAspect = activeAspects.size > 0;
+  document.querySelectorAll('.roster-unit').forEach(el => {
+    const u = UNIT_MAP[el.dataset.name];
+    if (!u) return;
+    let show = true;
+    if (hasType && hasAspect) {
+      show = activeTypes.has(u.type) && activeAspects.has(u.aspect);
+    } else if (hasType) {
+      show = activeTypes.has(u.type);
+    } else if (hasAspect) {
+      show = activeAspects.has(u.aspect);
+    }
+    el.classList.toggle('filter-hidden', !show);
+  });
+}
+
+function buildFilterRow(container, items, activeSet, labelText) {
+  const lbl = document.createElement('span');
+  lbl.className = 'filter-label';
+  lbl.textContent = labelText;
+  container.appendChild(lbl);
+
+  const undoBtn = document.createElement('span');
+  undoBtn.className = 'filter-btn undo';
+  undoBtn.textContent = 'Undo';
+  undoBtn.addEventListener('click', () => {
+    activeSet.clear();
+    container.querySelectorAll('.filter-btn:not(.undo)').forEach(b => b.classList.remove('active'));
+    applyRosterFilter();
+  });
+  container.appendChild(undoBtn);
+
+  items.forEach(item => {
+    const btn = document.createElement('span');
+    btn.className = 'filter-btn';
+    btn.textContent = item;
+    btn.addEventListener('click', () => {
+      if (activeSet.has(item)) {
+        activeSet.delete(item);
+        btn.classList.remove('active');
+      } else {
+        activeSet.add(item);
+        btn.classList.add('active');
+      }
+      applyRosterFilter();
+    });
+    container.appendChild(btn);
+  });
+}
+
+buildFilterRow(document.getElementById('typeFilters'), TYPES, activeTypes, 'Type');
+buildFilterRow(document.getElementById('aspectFilters'), ASPECTS_LIST, activeAspects, 'Aspect');
+
+function updateCount() {
+  unitCountEl.innerHTML = 'Units: <strong>' + placedUnits.size + '</strong> / ' + MAX_UNITS;
+}
+
+function clearSelection() {
+  if (selectedCell) {
+    const c = grid[selectedCell[0]][selectedCell[1]];
+    c.el.classList.remove('selected');
+    selectedCell = null;
+  }
+  selectedRosterUnit = null;
+  document.querySelectorAll('.roster-unit.selected-roster').forEach(r => r.classList.remove('selected-roster'));
+}
+
+function onRosterClick(name, div) {
+  if (placedUnits.has(name)) return;
+  clearSelection();
+  selectedRosterUnit = name;
+  div.classList.add('selected-roster');
+}
+
+function onCellClick(ri, ci) {
+  const cell = grid[ri][ci];
+
+  if (selectedRosterUnit) {
+    if (cell.unit) { clearSelection(); return; }
+    if (placedUnits.size >= MAX_UNITS) { clearSelection(); return; }
+    placeUnit(ri, ci, selectedRosterUnit);
+    clearSelection();
+    return;
+  }
+
+  if (selectedCell) {
+    const [sr, sc] = selectedCell;
+    if (sr === ri && sc === ci) {
+      if (cell.unit) removeUnit(ri, ci);
+      clearSelection();
+      return;
+    }
+    const srcCell = grid[sr][sc];
+    const srcUnit = srcCell.unit;
+    const dstUnit = cell.unit;
+    if (srcUnit && !dstUnit) {
+      removeUnit(sr, sc);
+      placeUnit(ri, ci, srcUnit);
+    } else if (srcUnit && dstUnit) {
+      removeUnit(sr, sc);
+      removeUnit(ri, ci);
+      placeUnit(ri, ci, srcUnit);
+      placeUnit(sr, sc, dstUnit);
+    }
+    clearSelection();
+    return;
+  }
+
+  if (cell.unit) {
+    selectedCell = [ri, ci];
+    cell.el.classList.add('selected');
+  }
+}
+
+function placeUnit(ri, ci, name) {
+  const cell = grid[ri][ci];
+  cell.unit = name;
+  cell.el.classList.add('occupied');
+
+  const inner = cell.inner;
+  inner.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = imgSrc(name);
+  img.alt = name;
+  inner.appendChild(img);
+
+  placedUnits.add(name);
+  updateRoster();
+  updateCount();
+  updateSynergies();
+}
+
+function removeUnit(ri, ci) {
+  const cell = grid[ri][ci];
+  const name = cell.unit;
+  cell.unit = null;
+  cell.el.classList.remove('occupied');
+
+  const inner = cell.inner;
+  inner.innerHTML = '';
+  const label = document.createElement('span');
+  label.className = 'hex-label';
+  label.textContent = cell.label;
+  inner.appendChild(label);
+
+  placedUnits.delete(name);
+  updateRoster();
+  updateCount();
+  updateSynergies();
+}
+
+function updateRoster() {
+  document.querySelectorAll('.roster-unit').forEach(div => {
+    div.classList.toggle('placed', placedUnits.has(div.dataset.name));
+  });
+}
+
+function updateSynergies() {
+  const aspectCounts = {};
+  placedUnits.forEach(name => {
+    const u = UNIT_MAP[name];
+    if (u) {
+      aspectCounts[u.aspect] = (aspectCounts[u.aspect] || 0) + 1;
+    }
+  });
+
+  // Collect all hex colors per cell
+  const hexColors = {};
+  grid.forEach((row, ri) => row.forEach((cell, ci) => {
+    hexColors[ri + '-' + ci] = [];
+    cell.el.classList.remove('hex-glow');
+    cell.el.querySelector('.hex-border').style.background = '';
+  }));
+
+  Object.keys(ASPECT_THRESHOLDS).forEach(aspect => {
+    const sr = synergyRows[aspect];
+    const count = aspectCounts[aspect] || 0;
+
+    if (count > 0) {
+      sr.el.classList.add('active');
+    } else {
+      sr.el.classList.remove('active');
+      sr.dots.querySelectorAll('.syn-dot').forEach(d => {
+        d.classList.remove('filled', 'threshold-met');
+      });
+      sr.desc.textContent = '';
+      return;
+    }
+
+    const thresholds = ASPECT_THRESHOLDS[aspect];
+    const highestMet = [...thresholds].reverse().find(t => count >= t);
+
+    sr.dots.querySelectorAll('.syn-dot').forEach(dot => {
+      const idx = parseInt(dot.dataset.index);
+      dot.classList.remove('filled', 'threshold-met');
+      if (idx <= count) {
+        if (highestMet && thresholds.includes(idx) && idx <= highestMet) {
+          dot.classList.add('threshold-met');
+        } else {
+          dot.classList.add('filled');
+        }
+      }
+    });
+
+    // Hex interactions — find the highest matching interaction for this aspect
+    let activeDesc = '';
+    let activeHexes = [];
+    let activeColor = '';
+    HEX_INTERACTIONS.filter(h => h.aspect === aspect).forEach(h => {
+      if (count >= h.units) {
+        activeHexes = h.hexes;
+        activeColor = h.color;
+        activeDesc = h.desc;
+      }
+    });
+
+    sr.desc.textContent = activeDesc;
+
+    if (activeHexes.length > 0) {
+      activeHexes.forEach(id => {
+        const [r, c] = parseHexId(id);
+        if (grid[r] && grid[r][c]) {
+          const key = r + '-' + c;
+          if (!hexColors[key].includes(activeColor)) {
+            hexColors[key].push(activeColor);
+          }
+        }
+      });
+    }
+  });
+
+  // Apply hex colors — hard-split gradient for overlaps
+  grid.forEach((row, ri) => row.forEach((cell, ci) => {
+    const key = ri + '-' + ci;
+    const colors = hexColors[key];
+    const border = cell.el.querySelector('.hex-border');
+    if (cell.unit) {
+      border.style.background = 'var(--r5)';
+    } else if (colors.length === 1) {
+      cell.el.classList.add('hex-glow');
+      border.style.background = colors[0];
+    } else if (colors.length > 1) {
+      cell.el.classList.add('hex-glow');
+      const stops = colors.map((c, i) => {
+        const pct1 = (i / colors.length * 100).toFixed(1);
+        const pct2 = ((i + 1) / colors.length * 100).toFixed(1);
+        return c + ' ' + pct1 + '%, ' + c + ' ' + pct2 + '%';
+      }).join(', ');
+      border.style.background = 'linear-gradient(135deg, ' + stops + ')';
+    }
+  }));
+}
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  clearSelection();
+  grid.forEach((row, ri) => {
+    row.forEach((cell, ci) => {
+      if (cell.unit) removeUnit(ri, ci);
+    });
+  });
+});
+
+document.getElementById('deselectBtn').addEventListener('click', () => {
+  clearSelection();
+});
+
+updateCount();
+updateSynergies();
+</script>
+</body>
+</html>
