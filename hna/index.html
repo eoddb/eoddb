@@ -299,8 +299,7 @@
   <a href="/hna/eidos" class="nav-card">
     <img src="/hna/img/eidos.webp" alt="Eidos" class="nav-card-img" loading="lazy">
     <div class="nav-card-title">Eidos</div>
-    <div class="nav-card-desc">Characters that aid you in battle, each have powerful skills and aspect synergies.</div>
-    <span class="nav-card-tag">Coming Soon</span>
+    <div class="nav-card-desc">All <strong id="eidos-count">—</strong> Eidos — companions, energy stats, and full skill breakdowns.</div>
   </a>
   <a href="/hna/aspects" class="nav-card">
     <img src="/hna/img/aspects.webp" alt="Aspects" class="nav-card-img" loading="lazy">
@@ -379,19 +378,22 @@
 <script>
 async function loadStats() {
   try {
-    const [units, aspects] = await Promise.all([
+    const [units, aspects, eidosData] = await Promise.all([
       fetch('/hna/eoddb_hna_nexus_anima_units.json').then(r => r.json()),
-      fetch('/hna/eoddb_hna_aspects.json').then(r => r.json())
+      fetch('/hna/eoddb_hna_aspects.json').then(r => r.json()),
+      fetch('/hna/eoddb_hna_eidos.json').then(r => r.json())
     ]);
 
     const naCount = units.length;
     const aspectNames = [...new Set(aspects.filter(a => a.Aspect).map(a => a.Aspect))];
     const aspectCount = aspectNames.length;
+    const eidosCount = eidosData.length;
 
     document.getElementById('na-count').textContent = naCount;
     document.getElementById('aspect-count').textContent = aspectCount;
+    document.getElementById('eidos-count').textContent = eidosCount;
     document.getElementById('stat-na').textContent = naCount;
-    document.getElementById('stat-eidos').textContent = '—';
+    document.getElementById('stat-eidos').textContent = eidosCount;
     document.getElementById('stat-aspects').textContent = aspectCount;
   } catch (e) {}
 }

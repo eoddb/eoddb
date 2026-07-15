@@ -6,25 +6,28 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
 <title>Honkai: Nexus Anima — Eidos Database & Guide | EODdb.com</title>
-<meta name="description" content="Honkai: Nexus Anima Eidos database — all Eidos equipment and companions with stats, effects, and team synergies. Coming soon to EODdb.com.">
-<meta name="keywords" content="Honkai Nexus Anima Eidos, Eidos database, Eidos guide, Eidos equipment, Eidos companions, EODdb">
+<meta name="description" content="Complete Honkai: Nexus Anima Eidos database — all Eidos with aspect skills, eidos skills, companion skills, energy stats, and synergy analysis. Browse by aspect and rarity.">
+<meta name="keywords" content="Honkai Nexus Anima Eidos, Eidos database, Eidos guide, Eidos skills, Eidos companions, aspect skills, energy cost, EODdb">
 <meta property="og:title" content="Honkai: Nexus Anima — Eidos Database & Guide | EODdb.com">
-<meta property="og:description" content="Complete Eidos database for Honkai: Nexus Anima. Coming soon to EODdb.com.">
+<meta property="og:description" content="Complete Eidos database for Honkai: Nexus Anima — all Eidos by aspect and rarity with skill breakdowns and energy stats.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Honkai: Nexus Anima — Eidos Database | EODdb.com">
-<meta name="twitter:description" content="Eidos database for Honkai: Nexus Anima. Coming soon.">
+<meta name="twitter:description" content="All Eidos for Honkai: Nexus Anima — skills, companions, energy stats, and aspect synergies.">
 <style>
   :root {
     --bg: #0d1117;
     --surface: #161b25;
+    --surface-hover: #1c2233;
     --border: #252d3d;
     --text: #c9d1d9;
     --text-muted: #6e7a8a;
+    --r4: #b89adb;
+    --r5: #dfc86a;
+    --header-bg: #111821;
     --header-text: #e6edf3;
     --accent1: #6366f1;
-    --discord: #5865F2;
-    --discord-dim: rgba(88,101,242,0.12);
+    --accent-stripe: 3px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -59,86 +62,802 @@
     letter-spacing: 0.04em;
   }
 
-  .coming-soon {
+  /* ── Stat Boxes ── */
+  .stat-row {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 auto 1.4rem;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 4rem 2rem;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    min-width: 120px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 8px;
+    padding: 14px 12px;
     text-align: center;
   }
 
-  .coming-soon-badge {
-    font-size: 0.7rem;
+  .stat-box .num {
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent1);
-    background: rgba(99,102,241,0.12);
-    padding: 5px 14px;
-    border-radius: 20px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
   }
 
-  .coming-soon h2 {
-    font-size: 1.3rem;
+  .stat-box .pct {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-box .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .stat-box.clickable {
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .stat-box.clickable:hover {
+    border-color: var(--text-muted);
+  }
+
+  .stat-box.active-r4 { border-color: var(--r4); }
+  .stat-box.active-r5 { border-color: var(--r5); }
+
+  /* ── Section headers ── */
+  .section-header {
+    max-width: 1400px;
+    margin: 0 auto 1rem;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  /* ── Rarity Legend ── */
+  .legend {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .legend-item.active {
+    background: var(--surface);
+    border-color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.r4 { background: var(--r4); }
+  .legend-dot.r5 { background: var(--r5); }
+
+  /* ── Table ── */
+  .table-wrap {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .table-wrap.filter-r4 .eidos-entry.r5 { opacity: 0.12; }
+  .table-wrap.filter-r5 .eidos-entry.r4 { opacity: 0.12; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.85rem;
     font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    cursor: default;
+  }
+
+  thead.expandable th:first-child::after {
+    content: '+';
+    margin-left: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  thead.expandable.expanded th:first-child::after {
+    content: '\2212';
+  }
+
+  tr.info-desc-row { display: none; }
+  tr.info-desc-row.visible { display: table-row; }
+
+  tr.info-desc-row td {
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 14px !important;
+    vertical-align: top;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  tr.info-desc-row td:first-child {
+    background: var(--bg) !important;
+    border-left: none;
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  tbody td {
+    padding: 0.6rem 0.8rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  tbody td:last-child { border-right: none; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--header-bg);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    padding-left: 0.7rem;
+  }
+
+  tbody tr.aspect-row:hover td { background: var(--surface-hover); }
+  tbody tr.aspect-row:hover td:first-child { background: #192030; }
+
+  .eidos-entry { display: block; }
+  .eidos-entry.r4 { color: var(--r4); }
+  .eidos-entry.r5 { color: var(--r5); }
+
+  .companion-name {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 0.3rem;
+  }
+
+  .empty-cell {
+    color: var(--text-muted);
+    opacity: 0.3;
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .count-cell {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .table-credit {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 400;
+    color: #8b95a5;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-top: 3px;
+  }
+
+  /* ── Expandable detail rows ── */
+  tbody tr.aspect-row {
+    cursor: pointer;
+  }
+
+  tbody tr.aspect-row td:first-child::after {
+    content: '+';
+    margin-left: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: inline-block;
+  }
+
+  tbody tr.aspect-row.expanded td:first-child::after {
+    content: '\2212';
+  }
+
+  tr.detail-row { display: none; }
+  tr.detail-row.visible { display: table-row; }
+
+  tr.detail-row td {
+    padding: 0 !important;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    background: var(--bg) !important;
+  }
+
+  .detail-inner {
+    padding: 14px 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .eidos-detail-block {
+    margin-bottom: 16px;
+  }
+
+  .eidos-detail-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .eidos-detail-header {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 4px;
+  }
+
+  .eidos-detail-header .rarity-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .rarity-tag.r4 { background: rgba(184,154,219,0.15); color: var(--r4); }
+  .rarity-tag.r5 { background: rgba(223,200,106,0.15); color: var(--r5); }
+
+  .eidos-energy-stats {
+    display: inline-flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    width: fit-content;
+    margin: 6px 0 10px;
+  }
+
+  .energy-stat {
+    min-width: 110px;
+    padding: 6px 10px;
+    border-right: 1px solid var(--border);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    background: var(--surface);
+  }
+
+  .energy-stat:last-child { border-right: none; }
+
+  .energy-stat-label {
+    font-weight: 700;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .energy-stat-value {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--header-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .skill-blocks {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .skill-block {
+    flex: 1;
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    font-size: 0.75rem;
+    line-height: 1.55;
+    background: var(--surface);
+    min-width: 0;
+  }
+
+  .skill-block:last-child { border-right: none; }
+
+  .skill-block-label {
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    color: var(--text-muted);
+  }
+
+  .skill-block-name {
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--header-text);
+    margin-bottom: 4px;
+  }
+
+  .skill-block-desc {
+    color: var(--text);
+    font-size: 0.73rem;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .skill-block-desc strong {
     color: var(--header-text);
   }
 
-  .coming-soon p {
-    font-size: 0.88rem;
-    line-height: 1.7;
+  /* ── Analysis ── */
+  .analysis {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .analysis h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--text-muted);
-    max-width: 500px;
+    margin-bottom: 12px;
   }
 
-  .discord-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
-    background: var(--discord);
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 600;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.15s;
-    margin-top: 0.5rem;
+  .analysis p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 10px;
   }
 
-  .discord-btn:hover { opacity: 0.85; }
+  .analysis p:last-child { margin-bottom: 0; }
+  .analysis strong { color: var(--header-text); }
 
-  .discord-btn svg {
-    width: 18px;
-    height: 18px;
-    fill: #fff;
+  .error-msg {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 20px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    color: #f87171;
+    text-align: center;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .stat-box { min-width: calc(50% - 8px); }
+    .stat-box .num { font-size: 22px; }
+    .detail-inner { padding: 10px 14px; }
+    .eidos-energy-stats { flex-direction: column; }
+    .energy-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .energy-stat:last-child { border-bottom: none; }
+    .skill-blocks { flex-direction: column; }
+    .skill-block { border-right: none; border-bottom: 1px solid var(--border); padding: 8px 10px; }
+    .skill-block:last-child { border-bottom: none; }
+    .skill-block-desc { font-size: 0.7rem; }
+    .analysis { padding: 16px; }
   }
 </style>
 </head>
 <body>
-<script src="/hna/eoddb_hna_nav.js"></script>
 
+<script src="/hna/eoddb_hna_nav.js"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima &mdash; Eidos Database</h1>
-  <span class="subtitle">All Eidos equipment and companions &mdash; stats, effects, and team synergies. Data based on closed beta &mdash; will be updated if there are any changes.</span>
+  <span class="subtitle">All Eidos by Aspect &amp; Rarity &mdash; companions, energy stats, and full skill breakdowns. Data based on closed beta &mdash; will be updated if there are any changes.</span>
 </div>
 
-<div class="coming-soon">
-  <span class="coming-soon-badge">Coming Soon</span>
-  <h2>Eidos Database</h2>
-  <p>We're building a complete Eidos database with stats, effects, and synergy analysis. Join the Discord to discuss builds and stay updated on when content drops.</p>
-  <a href="https://discord.gg/9trXVCZh7N" class="discord-btn" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    Join Discord
-  </a>
+<div class="stat-row" id="stats"></div>
+
+<h2 class="section-header">Eidos by Aspect &times; Rarity</h2>
+<div class="legend">
+  <span style="color:var(--text-muted);">Rarity:</span>
+  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
+  <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead id="thead"></thead>
+    <tbody id="grid"></tbody>
+  </table>
 </div>
 
+<div class="analysis" id="analysis"></div>
+
+<div class="error-msg" id="error"></div>
+
+<script>
+const ASPECT_COLORS = {
+  "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
+  "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
+  "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
+  "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
+};
+
+const ASPECT_ORDER = [
+  "Light","Dark","Reality","Oblivion","Love","Hate",
+  "Beauty","Ugliness","Joy","Pride","Strength","Competition",
+  "Satiation","Insatiability","Change","Memory"
+];
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function pct(n, total) {
+  return (n / total * 100).toFixed(1) + '%';
+}
+
+async function loadJSON(filename) {
+  const resp = await fetch('/hna/' + filename);
+  if (!resp.ok) throw new Error('Failed to load ' + filename);
+  return resp.json();
+}
+
+function formatSkillText(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  const name = lines[0];
+  const desc = lines.slice(1).join('\n').trim();
+  const formatted = desc
+    .replace(/\[([^\]]+)\]/g, '<strong>[$1]</strong>')
+    .replace(/\n/g, '<br>');
+  return { name, desc: formatted };
+}
+
+async function init() {
+  let eidos, skills;
+  try {
+    [eidos, skills] = await Promise.all([
+      loadJSON('eoddb_hna_eidos.json'),
+      loadJSON('eoddb_hna_eidos_skills.json')
+    ]);
+  } catch (e) {
+    showError('Could not load data files. Make sure eoddb_hna_eidos.json and eoddb_hna_eidos_skills.json are in the same folder.');
+    return;
+  }
+
+  const skillMap = {};
+  skills.forEach(s => { skillMap[s.Name] = s; });
+
+  const total = eidos.length;
+  const r4 = eidos.filter(e => e.Rarity === 4);
+  const r5 = eidos.filter(e => e.Rarity === 5);
+  const aspectSet = [...new Set(eidos.map(e => e.Aspect))];
+  const orderedAspects = ASPECT_ORDER.filter(a => aspectSet.includes(a));
+  const extraAspects = aspectSet.filter(a => !ASPECT_ORDER.includes(a));
+  const aspects = [...orderedAspects, ...extraAspects];
+
+  // ── Stat boxes ──
+  const statsEl = document.getElementById('stats');
+  const boxes = [
+    { num: total, label: 'Total Eidos', color: 'var(--header-text)', rarity: 'all' },
+    { num: r4.length, label: '4-Star Eidos', color: 'var(--r4)', p: pct(r4.length, total), rarity: '4' },
+    { num: r5.length, label: '5-Star Eidos', color: 'var(--r5)', p: pct(r5.length, total), rarity: '5' },
+    { num: aspects.length, label: 'Aspects Covered', color: 'var(--accent1)' },
+  ];
+  boxes.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'stat-box';
+    if (b.rarity) {
+      div.classList.add('clickable');
+      div.dataset.rarity = b.rarity;
+    }
+    div.innerHTML =
+      `<div class="num" style="color:${b.color}">${b.num}</div>` +
+      (b.p ? `<div class="pct" style="color:${b.color};opacity:0.7">${b.p}</div>` : '') +
+      `<div class="label">${b.label}</div>`;
+    statsEl.appendChild(div);
+  });
+
+  // ── Table header ──
+  const rarities = [4, 5];
+  const rarityColors = { 4: 'var(--r4)', 5: 'var(--r5)' };
+  const rarityLabels = { 4: '4-Star', 5: '5-Star' };
+
+  const thead = document.getElementById('thead');
+  thead.classList.add('expandable');
+  const headRow = document.createElement('tr');
+  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com</th>' +
+    rarities.map(r => `<th style="color:${rarityColors[r]}">${rarityLabels[r]}</th>`).join('') +
+    '<th>Total</th>';
+  thead.appendChild(headRow);
+
+  // ── Info description row (hidden by default) ──
+  const infoRow = document.createElement('tr');
+  infoRow.className = 'info-desc-row';
+  const infoLabelTd = document.createElement('td');
+  infoLabelTd.textContent = 'Info';
+  infoRow.appendChild(infoLabelTd);
+
+  const energyStats = ['Energy Cost', 'Energy Regen', 'Initial Energy'];
+  const energyDescs = {
+    'Energy Cost': 'Total energy needed to activate the Eidos Skill. Higher cost means longer charge time between skill uses.',
+    'Energy Regen': 'Energy passively regenerated per second. Determines how quickly the Eidos builds toward their skill activation.',
+    'Initial Energy': 'Energy the Eidos starts with at the beginning of battle. Higher values mean a faster first skill use.'
+  };
+
+  rarities.forEach(r => {
+    const td = document.createElement('td');
+    const rEidos = eidos.filter(e => e.Rarity === r);
+    const avgCost = (rEidos.reduce((s, e) => s + e['Energy Cost'], 0) / rEidos.length).toFixed(0);
+    const avgRegen = (rEidos.reduce((s, e) => s + e['Energy Regen'], 0) / rEidos.length).toFixed(1);
+    const avgInit = (rEidos.reduce((s, e) => s + e['Initial Energy'], 0) / rEidos.length).toFixed(0);
+    td.innerHTML = `<span style="display:block;font-size:0.7rem;font-weight:600;color:var(--accent1);margin-bottom:4px">${rEidos.length} Eidos</span>` +
+      `<strong>Avg Energy Cost:</strong> ${avgCost}<br>` +
+      `<strong>Avg Energy Regen:</strong> ${avgRegen}/s<br>` +
+      `<strong>Avg Initial Energy:</strong> ${avgInit}`;
+    infoRow.appendChild(td);
+  });
+
+  const infoTotalTd = document.createElement('td');
+  const avgCostAll = (eidos.reduce((s, e) => s + e['Energy Cost'], 0) / total).toFixed(0);
+  const avgRegenAll = (eidos.reduce((s, e) => s + e['Energy Regen'], 0) / total).toFixed(1);
+  const avgInitAll = (eidos.reduce((s, e) => s + e['Initial Energy'], 0) / total).toFixed(0);
+  infoTotalTd.innerHTML = `<span style="display:block;font-size:0.7rem;font-weight:600;color:var(--accent1);margin-bottom:4px">${total} Eidos</span>` +
+    `<strong>Avg Energy Cost:</strong> ${avgCostAll}<br>` +
+    `<strong>Avg Energy Regen:</strong> ${avgRegenAll}/s<br>` +
+    `<strong>Avg Initial Energy:</strong> ${avgInitAll}`;
+  infoRow.appendChild(infoTotalTd);
+  thead.appendChild(infoRow);
+
+  headRow.addEventListener('click', () => {
+    infoRow.classList.toggle('visible');
+    thead.classList.toggle('expanded');
+  });
+
+  // ── Build grid ──
+  const tbody = document.getElementById('grid');
+  aspects.forEach(aspect => {
+    const tr = document.createElement('tr');
+    tr.className = 'aspect-row';
+    const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
+    tr.style.setProperty('--aspect-color', acColor);
+
+    const tdName = document.createElement('td');
+    tdName.style.setProperty('--aspect-color', acColor);
+    tdName.textContent = aspect;
+    tr.appendChild(tdName);
+
+    const aspectEidos = eidos.filter(e => e.Aspect === aspect);
+    let rowTotal = 0;
+
+    rarities.forEach(r => {
+      const td = document.createElement('td');
+      const matched = aspectEidos.filter(e => e.Rarity === r);
+      rowTotal += matched.length;
+      if (matched.length === 0) {
+        td.innerHTML = '<span class="empty-cell">—</span>';
+      } else {
+        matched.sort((a, b) => a.Name.localeCompare(b.Name));
+        matched.forEach(e => {
+          const span = document.createElement('span');
+          span.className = 'eidos-entry r' + r;
+          span.innerHTML = e.Name + `<span class="companion-name">&bull; ${e.Companion}</span>`;
+          td.appendChild(span);
+        });
+      }
+      tr.appendChild(td);
+    });
+
+    const tdTotal = document.createElement('td');
+    tdTotal.className = 'count-cell';
+    tdTotal.textContent = rowTotal;
+    tr.appendChild(tdTotal);
+
+    tbody.appendChild(tr);
+
+    // ── Detail row ──
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.style.setProperty('--aspect-color', acColor);
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = rarities.length + 2;
+
+    let detailHTML = '<div class="detail-inner">';
+    aspectEidos.sort((a, b) => a.Rarity - b.Rarity || a.Name.localeCompare(b.Name));
+    aspectEidos.forEach(e => {
+      const sk = skillMap[e.Name] || {};
+      const aspectSkill = formatSkillText(sk['Aspect Skill'] || '');
+      const eidosSkill = formatSkillText(sk['Eidos Skill'] || '');
+      const companionSkill = formatSkillText(sk['Companion Skill'] || '');
+
+      detailHTML += `<div class="eidos-detail-block">
+        <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
+        <div class="eidos-energy-stats">
+          <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
+          <div class="energy-stat"><div class="energy-stat-label">Energy Regen</div><div class="energy-stat-value">${e['Energy Regen']}/s</div></div>
+          <div class="energy-stat"><div class="energy-stat-label">Initial Energy</div><div class="energy-stat-value">${e['Initial Energy']}</div></div>
+          <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
+        </div>
+        <div class="skill-blocks">
+          <div class="skill-block">
+            <div class="skill-block-label">Aspect Skill</div>
+            ${aspectSkill.name ? `<div class="skill-block-name">${aspectSkill.name}</div>` : ''}
+            <div class="skill-block-desc">${aspectSkill.desc || 'No data'}</div>
+          </div>
+          <div class="skill-block">
+            <div class="skill-block-label">Eidos Skill</div>
+            ${eidosSkill.name ? `<div class="skill-block-name">${eidosSkill.name}</div>` : ''}
+            <div class="skill-block-desc">${eidosSkill.desc || 'No data'}</div>
+          </div>
+          <div class="skill-block">
+            <div class="skill-block-label">Companion Skill</div>
+            ${companionSkill.name ? `<div class="skill-block-name">${companionSkill.name}</div>` : ''}
+            <div class="skill-block-desc">${companionSkill.desc || 'No data'}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    detailHTML += '</div>';
+    detailTd.innerHTML = detailHTML;
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
+
+    tr.addEventListener('click', () => {
+      const wasExpanded = tr.classList.contains('expanded');
+      document.querySelectorAll('.aspect-row.expanded').forEach(r => {
+        r.classList.remove('expanded');
+        r.nextElementSibling.classList.remove('visible');
+      });
+      if (!wasExpanded) {
+        tr.classList.add('expanded');
+        detailTr.classList.add('visible');
+      }
+    });
+  });
+
+  function ac(name) {
+    const c = ASPECT_COLORS[name] || 'var(--header-text)';
+    return `<strong style="color:${c}">${name}</strong>`;
+  }
+  function acList(names) { return names.map(n => ac(n)).join(', '); }
+
+  // ── Statistical Summary ──
+  const costRange = eidos.reduce((acc, e) => ({
+    min: Math.min(acc.min, e['Energy Cost']),
+    max: Math.max(acc.max, e['Energy Cost'])
+  }), { min: Infinity, max: 0 });
+  const cheapest = eidos.filter(e => e['Energy Cost'] === costRange.min);
+  const costliest = eidos.filter(e => e['Energy Cost'] === costRange.max);
+  const initRange = eidos.reduce((acc, e) => ({
+    min: Math.min(acc.min, e['Initial Energy']),
+    max: Math.max(acc.max, e['Initial Energy'])
+  }), { min: Infinity, max: 0 });
+  const fastStart = eidos.filter(e => e['Initial Energy'] === initRange.max);
+
+  const dualAspects = aspects.filter(a => eidos.filter(e => e.Aspect === a).length >= 2);
+  const uncoveredAspects = ASPECT_ORDER.filter(a => !aspectSet.includes(a));
+
+  const analysisEl = document.getElementById('analysis');
+  analysisEl.innerHTML = `
+    <h2>Statistical Summary</h2>
+    <p>
+      The current roster includes <strong>${total} Eidos</strong> across <strong>${aspects.length} of ${ASPECT_ORDER.length} aspects</strong>,
+      split between <strong style="color:var(--r4)">${r4.length} four-star</strong> (${pct(r4.length, total)}) and
+      <strong style="color:var(--r5)">${r5.length} five-star</strong> (${pct(r5.length, total)}).
+      ${dualAspects.length > 0
+        ? `${acList(dualAspects)} ${dualAspects.length === 1 ? 'has' : 'each have'} two Eidos, offering more flexibility within those aspects.`
+        : 'Each aspect currently has one Eidos.'}
+      ${uncoveredAspects.length > 0
+        ? ` ${acList(uncoveredAspects)} ${uncoveredAspects.length === 1 ? 'has' : 'have'} no Eidos yet — likely candidates for future releases.`
+        : ''}
+    </p>
+    <p>
+      <strong>Energy economy</strong> varies significantly across the roster.
+      Energy Cost ranges from <strong>${costRange.min}</strong> (${cheapest.map(e => e.Name).join(', ')})
+      to <strong>${costRange.max}</strong> (${costliest.map(e => e.Name).join(', ')}),
+      while Initial Energy spans <strong>${initRange.min}</strong> to <strong>${initRange.max}</strong>.
+      ${fastStart.map(e => e.Name).join(', ')} ${fastStart.length === 1 ? 'starts' : 'start'} with the most energy at <strong>${initRange.max}</strong>,
+      enabling the fastest first skill activation.
+      Every Eidos comes with a unique companion that gains exclusive effects when deployed alongside their Eidos.
+    </p>
+  `;
+
+  // ── Rarity filter ──
+  const tableWrap = document.querySelector('.table-wrap');
+  const legendItems = document.querySelectorAll('.legend-item');
+  const statBoxes = document.querySelectorAll('.stat-box.clickable');
+
+  function clearFilter() {
+    tableWrap.classList.remove('filter-r4', 'filter-r5');
+    legendItems.forEach(li => li.classList.remove('active'));
+    statBoxes.forEach(sb => sb.classList.remove('active-r4', 'active-r5'));
+  }
+  function applyFilter(rarity) {
+    if (rarity === 'all') { clearFilter(); return; }
+    const filterClass = 'filter-r' + rarity;
+    if (tableWrap.classList.contains(filterClass)) { clearFilter(); }
+    else {
+      clearFilter();
+      tableWrap.classList.add(filterClass);
+      legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
+      statBoxes.forEach(sb => { if (sb.dataset.rarity === rarity) sb.classList.add('active-r' + rarity); });
+    }
+  }
+
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => applyFilter(item.dataset.rarity));
+  });
+  statBoxes.forEach(box => {
+    box.addEventListener('click', () => applyFilter(box.dataset.rarity));
+  });
+}
+
+init();
+</script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
 </html>

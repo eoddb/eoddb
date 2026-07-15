@@ -1,0 +1,80 @@
+[
+  {
+    "Name": "Breadhead",
+    "Aspect Skill": "Healthy Breakfast\nTriggered after activating the Reality Synergy: Reality Anima have their Health increased by 320. Whenever a Daydreamer is defeated, the nearest non-Daydreamer opponent is immediately marked as a new Daydreamer. Additionally, Reality Anima launch a Butter Raid every 6s. Immediately launch a Butter Raid when a new Daydreamer appears on the field.\n\n[Daydreamer]: A unit marked by the Reality Synergy, it will take bonus DMG from allied Reality Anima.\n[Butter Raid]: Deals 200 Magic DMG to the Daydreamer with the lowest Health.",
+    "Eidos Skill": "Whole Wheat Bread\nLaunches 2 pieces of bread at the target. The first deals 400 Magic DMG and Stuns for 2s; the second applies 20% MR Shred to the target for 10s then deals 800 Magic DMG.",
+    "Companion Skill": "Mimoo Enhancement\nMimoo's Attack SPD increases by 20%.\nWhen the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Hua",
+    "Aspect Skill": "Lightning Run\nAfter activating the Competition Synergy:\nThe ATK of Competition Anima increases by 45. After triggering the Competition Marker reward, Competition Anima gain 1 stack of Head Start. Additionally, whenever a Competition Anima participates in defeating an opponent, Competition Marker generates an extra 20 points, and grants 1 stack of Head Start to each participating Anima.\n\n[Head Start]: Attack SPD increases by 15% until the end of battle. Max 5 stacks.",
+    "Eidos Skill": "Early Bird Gets the Worm\nAll allied Competition Anima gain Tempo. While Tempo is active, Basic Attacks deal 20 bonus Physical DMG.\n\n[Tempo]: Gain an 60% Attack SPD bonus that decays over 4s.",
+    "Companion Skill": "Marshalbird Enhancement\nMarshalbird regenerates 10% Energy when it participates in defeating an opponent. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Maple",
+    "Aspect Skill": "Spooked\nAfter activating the Joy Synergy:\nWhen an allied unit in the Ecstasy state deals DMG to an opponent, apply 1 stack of Lingering Dread to the target. When Lingering Dread reaches 10 stacks, consume all stacks and deal 200 Magic DMG. The first time 4 Anima on the field enter Ecstasy or Bright Idea, all allied units gain the Ecstasy state.\n\n[Ecstasy]: Regenerate 3 Energy/s. Gain an Attack SPD bonus that does not stack based on the number of Joy Anima deployed during the Preparation Phase.\n[Lingering Dread]: Attack SPD is reduced by 1%, max 10 stacks.\n[Bright Idea]: MP increases, Attack SPD increases.",
+    "Eidos Skill": "Pint-Size Prank\nDesignate an allied unit, who gains Bright Idea for 10s.\n\n[Bright Idea]: MP increases by 25%, Attack SPD increases by 10%.",
+    "Companion Skill": "Pumpkimp Enhancement\nPumpkimp's Attack SPD increases by 16%. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Otto",
+    "Aspect Skill": "Shimmering Gold on Water\nLight Anima gain 50 MP. 26s after the start of battle, triggers an additional Shining Light. The Shield Strength of Shining Light's Shield increases by their own *2, and while the Shield is active, Anima gain 65% Attack SPD.\n\n[Shining Light]: Aspect effect. Grants a Shield to all Light Anima.",
+    "Eidos Skill": "Drift Through the Void\nCauses DMG taken by all opponents within 2 hexes of the selected hex to increase by 30% for 8s, then deals 100 Magic DMG and applies 1% Burning for 8s.\n\n[Burning]: Receive True DMG equal to 1% Max Health every second.",
+    "Companion Skill": "Chimaura Enhancement\nChimaura gains 40% Attack SPD bonus for 8s when attacking opponents hit by Drift Through the Void. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Kiana",
+    "Aspect Skill": "Celestial Ranger\nAfter activating the Strength Synergy:\nThe Max Health of Strength Anima increases by 330, and each Follower gains an additional 270 Max Health. At the start of battle, each Follower gains 2 stacks of Entropy. Whenever a Follower takes DMG equal to at least 10% of their Max Health, the Dominator gains 1 stack of Entropy, max 10 stacks. When the Dominator participates in defeating an enemy Anima, the Dominator and all Followers recover 240 Health.\n\n[Followers]: Strength Anima other than the Dominator.\n[Entropy]: Increases ATK and Attack SPD by 4.5% each.\n[Dominator]: The strongest Strength Anima. Gains Worship Bonus from Followers.",
+    "Eidos Skill": "Written in the Stars\nSelect 1 allied Anima, granting them the Destiny effect and a Shield equal to 25% of their own Max Health.\n\n[Destiny]: Increases Max Health by 1080 and ATK by 80 for 16s.",
+    "Companion Skill": "Fyrklor Enhancement\nGains a Shield equal to 10% at the start of battle, triggering again when Health reaches 50% for the first time. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Nanafey",
+    "Aspect Skill": "Blink of the Heart\nBeauty Anima gain 40 MP. Units in the \"Butterfly Dance\" state gain 15% Attack SPD. For each Beauty Anima that enters the \"Butterfly Dance\" state, the trigger time for the next \"Butterfly Dance\" is reduced by 2s (minimum interval: 2s). When all Beauty Anima are in the \"Butterfly Dance\" state, \"Butterfly Dance\" will be granted to non-Beauty Anima.\n\n[Butterfly Dance]: Beauty Aspect Synergy effect, grants an MP bonus.",
+    "Eidos Skill": "Small Town Girl\nGrants all Anima within 1 hex of the selected hex 40% increased Attack SPD and 820 Shield for 12s.",
+    "Companion Skill": "Beaubeanie Enhancement\nBeaubeanie gains 20% MP. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Shilian",
+    "Aspect Skill": "Detention!\nAfter activating the Memory Synergy:\nThe Max Health of Memory Anima increases by 320. When Memory Anima trigger Echo the first time, they gain 50% Echo Intensity. After each time a Memory Anima triggers Echo, it gains 1 stack of Lingering Melody.\n\nEidognosis Bonus: When a Memory Anima triggers Echo for the first time, gain 1 additional stack of Lingering Melody.\n\n[Echo]: Recast the Active Skill once, with no Energy Cost, with converted stats. Each Active Skill cast can trigger Echo once at most, and Echo itself does not count as an Active Skill. Converted Stats include: ATK, MP, Armor, MR, Max Health.\n[Lingering Melody]: Regenerate 10 Energy every 4s, lasting until the end of battle. Max 3 stacks.",
+    "Eidos Skill": "Praise!\nApply Commendation to all allied units within 1 hex of the selected hex for 5s.\n\nEidognosis Bonus: Each time Commendation is obtained or refreshed, ATK increases by 5% until the end of battle. This effect can stack.\n\n[Commendation]: Regenerate 10 Energy/s.",
+    "Companion Skill": "Framamba Enhancement\nFramamba's Attack SPD increases by 20%. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Herocrates",
+    "Aspect Skill": "On the Sacred Disease\nAfter activating the Memory Synergy:\nThe ATK of Memory Anima is increased by 40. After Echo deals DMG, mark the targeted opponent with Crisis.\n\n[Echo]: Recast the Active Skill once, with no Energy Cost, with converted stats. Each Active Skill cast can trigger Echo once at most, and Echo itself does not count as an Active Skill. Converted Stats include: ATK, MP, Armor, MR, Max Health.\n[Crisis]: For 4s, DMG received from Memory Anima increases by 35%, and DMG received from non-Memory Anima increases by 10%.",
+    "Eidos Skill": "Herocratic Oath\nSelect an allied Anima and generate 30 Energy for them. After it next uses an Active Skill, Echo occurs once. The Echo intensity is 40%+40%, and it enters Follow-Up Visit for 6s.\n\n[Follow-Up Visit]: While in the Follow-Up Visit state, if an instance of DMG does not Critically Hit, perform one additional Critical Hit check.",
+    "Companion Skill": "Camcorgi Enhancement\nCamcorgi's CRIT Rate increases by 15%. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Bai Mei",
+    "Aspect Skill": "Night Chills Under the Frost Moon\nTriggered after activating the Reality Synergy:\nThe MP of Reality Anima increases by 45. Whenever a Reality Anima deals DMG to a Daydreamer, it gains 1 stack of Frost. If the target is Frozen or Frostbitten, gain 1 additional stack.\n\n[Daydreamer]: A unit marked by the Reality Synergy, it will take bonus DMG from allied Reality Anima.\n[Frost]: Every 4 stacks increases MP by 15, max 20 stacks.\n[Frostbite]: A state caused by Bai Mei's Eidos Skill. When removed, deals Magic DMG to the bearer. DMG increases with stacks.",
+    "Eidos Skill": "Flurries at Daybreak\nApplies 4s of Freeze to all opponents within 3 hexes. For the next 4s, opponents hit gain 1 stack of Frostbite whenever they take any DMG. Removes all Frostbite stacks after 4s, dealing (100+20 x Frostbite stacks) Magic DMG.",
+    "Companion Skill": "Seroplumanth Enhancement\nGain immunity to Control Effects while the Skill is active. Decreases the Active Skill's hit interval to once every 0.2s. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Olympia",
+    "Aspect Skill": "Veil\nDark Anima gain 90 ATK and 1 stack of Shadow Breath. Anima in Umbral Shrouds gain 20 initial Energy.\n\n[Shadow Breath]: Each stack reduces an Anima's max Energy Costs by 3. Max 4 stacks.\n[Umbral Shroud]: A special hex created by the Dark Aspect Synergy. After the start of battle, the Attack SPD of allied units on this hex increases.",
+    "Eidos Skill": "Confession\nDeals 50+6 + 120 Physical DMG to all enemy Anima within 3 hexes and applies Night Rend to targets hit.\n\n[Night Rend]: Applies 20% Armor Shred, and increases DMG taken from Dark Anima by 25% for 6s. Duration can be refreshed.",
+    "Companion Skill": "Noctumbra Enhancement\nWhen an enemy unit is concurrently affected by Lingering Shade and Night Rend, increase DMG taken from Noctumbra by 30%. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Hungrille",
+    "Aspect Skill": "None Shall Hunger in the Age of Plenty\nAfter activating the Satiation Synergy:\nThe Satiation Synergy's healing effect expands to include all allied Anima. When receiving healing, Satiation Anima gain 1 stack of Sated, max 5 stacks. They additionally gain the Gorged state until the end of battle after reaching max stacks.\n\n[Sated]: Increases Max Health by 120.\n[Gorged]: Increases Size by 20% and Max Health by 20%.",
+    "Eidos Skill": "No Stopping the Night Banquet\nAll allied units are invited to the Court's Night Banquet, gaining Afterglow when it ends.\n\n[Court's Night Banquet]: For 4s, all allied units' Max Health increases by 750 and their Health cannot drop below 200. DMG opponents would theoretically deal is recorded as Bloodfeast.\n[Afterglow]: Gain a Shield equal to 30% of Bloodfeast, lasts 10s.",
+    "Companion Skill": "Hoggit Enhancement\nGains 1% Max Health for each hex traveled through movement or displacement. Up to 30% can be gained from this effect. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Parayaya",
+    "Aspect Skill": "A Scarlet Slash in the Dark\nIncreases Hate Anima Health by 1200. For every 4 stacks of Rancor, gain 1 stack of Vengeance. Anima with Vengeance restore 250 Health whenever their Rancor stacks increase.\n\n[Rancor]: Hate Aspect Synergy effect. When an allied Anima is defeated, Hate Anima accumulate Rancor, gaining an ATK Bonus.\n[Vengeance]: Hate Anima deal 15% bonus DMG to opponents that have dealt DMG to them, stacking up to 5 times.",
+    "Eidos Skill": "A Touch of Boredom Amid the Chaos\nSelect a target opponent, turning them into a Puppet of Love. Allied Hate Anima recover 40 Health when hitting a Puppet of Love.\n\n[Puppet of Love]: Changes allegiance, ATK and MP are reduced by 30%-10% for 5s.",
+    "Companion Skill": "Mesmerith Enhancement\nMesmerith's Basic Attacks regenerate an additional 2 Energy, and its Skill will prioritize units Beguiled by Parayaya as targets. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  },
+  {
+    "Name": "Blade",
+    "Aspect Skill": "Through the Valley of Wandering Souls\nAfter activating the Strength Synergy:\nStrength Anima ATK increases by 40. After the Dominator deals DMG, inflicts Splinter on the target. Additionally, different effects are provided based on the number of Strength Anima deployed:\n- Only 1 deployed: The Dominator gains Steelforged.\n- More than 1 deployed: All Followers gain the same ratio of Light of the Strong as the Dominator.\n\n[Splinter]: DMG taken from the Dominator increases by 20%.\n[Steelforged]: Max Health and ATK increase by 20%.\n[Light of the Strong]: Stat bonuses provided by the Strength Synergy based on Anima Traits.",
+    "Eidos Skill": "Thus, the Mourning Dew\nSummons a Splintered Sword to attack 1 enemy unit, dealing 1800 Physical DMG and applying 20% Armor Shred for 15s.",
+    "Companion Skill": "Bladehound Enhancement\nBladehound ignores 35% of the target's Armor when dealing DMG to targets that have taken DMG from Blade. When the Eidos and their Anima Companion are deployed together, the Anima Companion gains an exclusive special effect."
+  }
+]

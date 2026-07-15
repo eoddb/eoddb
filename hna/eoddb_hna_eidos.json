@@ -1,0 +1,119 @@
+[
+  {
+    "Name": "Breadhead",
+    "Aspect": "Reality",
+    "Rarity": 4,
+    "Energy Cost": 220,
+    "Energy Regen": 12,
+    "Initial Energy": 120,
+    "Companion": "Mimoo"
+  },
+  {
+    "Name": "Hua",
+    "Aspect": "Competition",
+    "Rarity": 4,
+    "Energy Cost": 250,
+    "Energy Regen": 12,
+    "Initial Energy": 90,
+    "Companion": "Marshalbird"
+  },
+  {
+    "Name": "Maple",
+    "Aspect": "Joy",
+    "Rarity": 4,
+    "Energy Cost": 200,
+    "Energy Regen": 12,
+    "Initial Energy": 110,
+    "Companion": "Pumpkimp"
+  },
+  {
+    "Name": "Otto",
+    "Aspect": "Light",
+    "Rarity": 4,
+    "Energy Cost": 230,
+    "Energy Regen": 14,
+    "Initial Energy": 100,
+    "Companion": "Chimaura"
+  },
+  {
+    "Name": "Kiana",
+    "Aspect": "Strength",
+    "Rarity": 4,
+    "Energy Cost": 240,
+    "Energy Regen": 14,
+    "Initial Energy": 70,
+    "Companion": "Fyrklor"
+  },
+  {
+    "Name": "Nanafey",
+    "Aspect": "Beauty",
+    "Rarity": 4,
+    "Energy Cost": 230,
+    "Energy Regen": 14,
+    "Initial Energy": 100,
+    "Companion": "Beaubeanie"
+  },
+  {
+    "Name": "Shilian",
+    "Aspect": "Memory",
+    "Rarity": 4,
+    "Energy Cost": 230,
+    "Energy Regen": 14,
+    "Initial Energy": 140,
+    "Companion": "Framamba"
+  },
+  {
+    "Name": "Herocrates",
+    "Aspect": "Memory",
+    "Rarity": 5,
+    "Energy Cost": 210,
+    "Energy Regen": 12,
+    "Initial Energy": 60,
+    "Companion": "Camcorgi"
+  },
+  {
+    "Name": "Bai Mei",
+    "Aspect": "Reality",
+    "Rarity": 5,
+    "Energy Cost": 260,
+    "Energy Regen": 12,
+    "Initial Energy": 90,
+    "Companion": "Seroplumanth"
+  },
+  {
+    "Name": "Olympia",
+    "Aspect": "Dark",
+    "Rarity": 5,
+    "Energy Cost": 250,
+    "Energy Regen": 12,
+    "Initial Energy": 100,
+    "Companion": "Noctumbra"
+  },
+  {
+    "Name": "Hungrille",
+    "Aspect": "Satiation",
+    "Rarity": 5,
+    "Energy Cost": 240,
+    "Energy Regen": 12,
+    "Initial Energy": 60,
+    "Companion": "Hoggit"
+  },
+  {
+    "Name": "Parayaya",
+    "Aspect": "Hate",
+    "Rarity": 5,
+    "Energy Cost": 310,
+    "Energy Regen": 12,
+    "Initial Energy": 200,
+    "Companion": "Mesmerith"
+  },
+  {
+    "Name": "Blade",
+    "Aspect": "Strength",
+    "Rarity": 5,
+    "Energy Cost": 230,
+    "Energy Regen": 12,
+    "Initial Energy": 80,
+    "Companion": "Bladehound"
+  }
+]
