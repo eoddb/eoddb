@@ -1,5 +1,6 @@
 const EODDB_NAV_PAGES = [
   { label: 'Honkai: Nexus Anima', href: '/hna', isHome: true },
+  { label: 'Guide', href: '/hna/guide' },
   { label: 'Nexus Anima', href: '/hna/nexusanima' },
   { label: 'Eidos', href: '/hna/eidos' },
   { label: 'Aspects', href: '/hna/aspects' },
