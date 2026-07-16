@@ -306,21 +306,13 @@
 
 
   /* ── Expandable detail rows ── */
-  tbody tr.aspect-row {
+  .eidos-entry {
     cursor: pointer;
   }
 
-  tbody tr.aspect-row td:first-child::after {
-    content: '+';
-    margin-left: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    display: inline-block;
-  }
-
-  tbody tr.aspect-row.expanded td:first-child::after {
-    content: '\2212';
+  .eidos-entry.active-eidos .eidos-portrait {
+    border-color: var(--accent1) !important;
+    box-shadow: 0 0 6px rgba(99,102,241,0.4);
   }
 
   tr.detail-row { display: none; }
@@ -339,7 +331,12 @@
   }
 
   .eidos-detail-block {
+    display: none;
     margin-bottom: 16px;
+  }
+
+  .eidos-detail-block.show-block {
+    display: block;
   }
 
   .eidos-detail-block:last-child {
@@ -695,6 +692,7 @@ async function init() {
       aspectEidos.forEach(e => {
         const span = document.createElement('span');
         span.className = 'eidos-entry r' + e.Rarity;
+        span.dataset.eidosName = e.Name;
         const imgName = e.Name.toLowerCase().replace(/ /g, '');
         span.innerHTML = `<img class="eidos-portrait" src="/hna/img/eidos/${imgName}.webp" alt="${e.Name}"><span class="eidos-entry-name">${e.Name}</span><span class="companion-name">${e.Companion}</span>`;
         td.appendChild(span);
@@ -709,7 +707,7 @@ async function init() {
       detailTd.colSpan = 2;
       let detailHTML = '<div class="detail-inner">';
       aspectEidos.forEach(e => {
-        detailHTML += `<div class="eidos-detail-block">
+        detailHTML += `<div class="eidos-detail-block" data-eidos-name="${e.Name}">
           <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
           <div class="eidos-energy-stats">
             <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
@@ -724,16 +722,16 @@ async function init() {
       detailTr.appendChild(detailTd);
       tbody.appendChild(detailTr);
 
-      tr.addEventListener('click', () => {
-        const wasExpanded = tr.classList.contains('expanded');
-        tbody.querySelectorAll('.aspect-row.expanded').forEach(r => {
-          r.classList.remove('expanded');
-          r.nextElementSibling.classList.remove('visible');
+      td.querySelectorAll('.eidos-entry').forEach(span => {
+        span.addEventListener('click', (evt) => {
+          evt.stopPropagation();
+          const name = span.dataset.eidosName;
+          const block = detailTd.querySelector(`.eidos-detail-block[data-eidos-name="${name}"]`);
+          span.classList.toggle('active-eidos');
+          block.classList.toggle('show-block');
+          const anyVisible = detailTd.querySelectorAll('.eidos-detail-block.show-block').length > 0;
+          detailTr.classList.toggle('visible', anyVisible);
         });
-        if (!wasExpanded) {
-          tr.classList.add('expanded');
-          detailTr.classList.add('visible');
-        }
       });
     });
 
