@@ -7,7 +7,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
 <title>Honkai: Nexus Anima Guides — Team Building Tips & Strategy | EODdb.com</title>
 <meta name="description" content="Honkai: Nexus Anima team building guide — learn how to build strong teams using Aspects, Eidos synergies, and smart positioning. Beginner-friendly tips for F2P and competitive players.">
-<meta name="keywords" content="Honkai Nexus Anima guide, HNA team building, Nexus Anima team comp, Honkai Nexus Anima tips, Nexus Anima strategy, Eidos synergy guide, Nexus Anima beginner guide, Nexus Anima F2P guide">
+<meta name="keywords" content="Honkai Nexus Anima guide, HNA team building, Nexus Anima team comp, Honkai Nexus Anima tips, Nexus Anima strategy, Eidos synergy guide, Nexus Anima beginner guide, Nexus Anima F2P guide, Honkai Nexus Anima gacha">
 <meta property="og:title" content="Honkai: Nexus Anima Guides — Team Building Tips & Strategy | EODdb.com">
 <meta property="og:description" content="Team building guide for Honkai: Nexus Anima. Learn Aspect synergies, Eidos pairing, positioning, and F2P-friendly strategies.">
 <meta property="og:type" content="website">
@@ -60,6 +60,48 @@
     letter-spacing: 0.04em;
   }
 
+  /* ── TOC Grid ── */
+  .toc-grid {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .toc-card:hover {
+    border-color: var(--accent1);
+    background: var(--surface-hover);
+  }
+
+  .toc-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--header-text);
+  }
+
+  .toc-card-desc {
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  /* ── Guide content ── */
   .guide-content {
     max-width: 800px;
     margin: 0 auto;
@@ -145,27 +187,61 @@
     text-decoration: underline;
   }
 
+  .back-to-top {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: var(--accent1);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-to-top:hover {
+    text-decoration: underline;
+  }
+
   @media (max-width: 500px) {
     .guide-section { padding: 16px 18px; }
+    .toc-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body>
 <script src="/hna/eoddb_hna_nav.js"></script>
 
-<div class="page-header">
+<div class="page-header" id="top">
   <h1>Honkai: Nexus Anima Guides</h1>
   <span class="subtitle">Team building tips, Aspect synergies, and strategy for new and experienced players.</span>
 </div>
 
+<div class="toc-grid">
+  <a class="toc-card" href="#team-building">
+    <span class="toc-card-title">Team Building</span>
+    <span class="toc-card-desc">Build strong comps with frontline anchors, Aspect synergies, and smart roles.</span>
+  </a>
+  <a class="toc-card" href="#key-principles">
+    <span class="toc-card-title">Key Principles</span>
+    <span class="toc-card-desc">Core tips for positioning, rarity, and adapting to endgame modes.</span>
+  </a>
+  <a class="toc-card" href="#gacha-system">
+    <span class="toc-card-title">Gacha System</span>
+    <span class="toc-card-desc">How the gacha works, pity system, and spending your pulls wisely.</span>
+  </a>
+  <a class="toc-card" href="#plan-your-team">
+    <span class="toc-card-title">Plan Your Team</span>
+    <span class="toc-card-desc">Use EODdb tools to visualize and optimize your compositions.</span>
+  </a>
+</div>
+
 <div class="guide-content">
 
-  <div class="guide-section">
+  <div class="guide-section" id="team-building">
     <h2>Team Building</h2>
     <p>Building a strong team in Honkai: Nexus Anima often starts with a solid frontline. Consider picking a Protector first — your backline can fall apart quickly if your front collapses early. From there, try building around your Eidos' Aspect (e.g. Memory, Dark) to activate synergy bonuses, then look to fill in damage dealers (Blasters, Masterminds) and round out your last slot with a Healer for sustain.</p>
+    <a href="#top" class="back-to-top">Back to Top</a>
   </div>
 
-  <div class="guide-section">
+  <div class="guide-section" id="key-principles">
     <h2>Key Principles</h2>
     <ul class="guide-tips">
       <li><strong>Frontline first</strong> — consider anchoring your comp with a tanky Protector before adding DPS.</li>
@@ -175,12 +251,20 @@
       <li><strong>Adapt per mode</strong> — endgame content like Magic Fracture can reward swapping even one unit to better match the encounter.</li>
       <li><strong>F2P friendly</strong> — it's very possible to clear the hardest content without perfect Eidos synergy or whale rosters.</li>
     </ul>
+    <a href="#top" class="back-to-top">Back to Top</a>
   </div>
 
-  <div class="guide-section">
+  <div class="guide-section" id="gacha-system">
+    <h2>Gacha System</h2>
+    <p>Coming soon — a breakdown of Honkai: Nexus Anima's gacha mechanics, pity system, banner types, and tips for making the most of your pulls as F2P or low-spender.</p>
+    <a href="#top" class="back-to-top">Back to Top</a>
+  </div>
+
+  <div class="guide-section" id="plan-your-team">
     <h2>Plan Your Team</h2>
     <div class="guide-cta">Use the <a href="/hna/teamplanner">Team Comp Planner</a> on EODdb.com to plan, visualize, and share your compositions with the community for feedback.</div>
     <p style="margin-top:12px;">Explore all available units in the <a href="/hna/nexusanima" style="color:var(--accent1);text-decoration:none;font-weight:600;">Nexus Anima database</a>, check <a href="/hna/aspects" style="color:var(--accent1);text-decoration:none;font-weight:600;">Aspect synergies</a>, and pair with the right <a href="/hna/eidos" style="color:var(--accent1);text-decoration:none;font-weight:600;">Eidos</a> to maximize your team's potential.</p>
+    <a href="#top" class="back-to-top">Back to Top</a>
   </div>
 
 </div>
