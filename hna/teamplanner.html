@@ -138,6 +138,22 @@
     border-radius: 50%;
   }
 
+  .hex-cell-inner.multi-unit {
+    flex-direction: column;
+    gap: 1px;
+    padding: 2px 0;
+  }
+
+  .hex-cell-inner.multi-unit img {
+    width: calc(var(--hex-size) * 0.35);
+    height: calc(var(--hex-size) * 0.35);
+    flex-shrink: 0;
+  }
+
+  .hex-cell-inner.multi-unit img.companion-buffed {
+    box-shadow: 0 2px 0 0 #e05555;
+  }
+
   .hex-cell .hex-border {
     position: absolute;
     inset: 0;
@@ -225,7 +241,7 @@
     display: none;
     align-items: flex-start;
     gap: 8px;
-    padding: 6px 4px;
+    padding: 4px 4px;
     border-bottom: 1px solid var(--border);
   }
 
@@ -236,8 +252,8 @@
   }
 
   .synergy-icon {
-    width: 150px;
-    min-width: 150px;
+    width: 120px;
+    min-width: 120px;
     flex-shrink: 0;
     display: flex;
     align-items: flex-start;
@@ -245,9 +261,9 @@
   }
 
   .synergy-icon img {
-    height: 35px;
+    height: 28px;
     width: auto;
-    max-width: 150px;
+    max-width: 120px;
     display: block;
   }
 
@@ -258,8 +274,8 @@
     gap: 2px;
     align-items: center;
     justify-content: center;
-    min-height: 35px;
-    height: 35px;
+    min-height: 28px;
+    height: 28px;
   }
 
   .synergy-dots {
@@ -367,6 +383,38 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 14px;
+  }
+
+  .roster-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .roster-tab {
+    flex: 1;
+    padding: 6px 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+
+  .roster-tab:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+
+  .roster-tab.active {
+    color: var(--header-text);
+    border-color: var(--accent1);
+    background: var(--accent1-dim);
   }
 
   .roster-title {
@@ -538,18 +586,30 @@
   </div>
 
   <div class="roster-section">
-    <div class="roster-title">Nexus Anima</div>
-    <div class="roster-filters" id="typeFilters"></div>
-    <div class="roster-filters" id="aspectFilters"></div>
-    <div class="roster" id="roster"></div>
+    <div class="roster-tabs">
+      <button class="roster-tab active" id="tabNA">Nexus Anima</button>
+      <button class="roster-tab" id="tabEidos">Eidos</button>
+    </div>
+    <div class="roster-panel" id="panelNA">
+      <div class="roster-filters" id="typeFilters"></div>
+      <div class="roster-filters" id="aspectFilters"></div>
+      <div class="roster" id="roster"></div>
+    </div>
+    <div class="roster-panel" id="panelEidos" style="display:none;">
+      <div class="roster-filters" id="eidosAspectFilters"></div>
+      <div class="roster" id="eidosRoster"></div>
+    </div>
   </div>
 </div>
 
 <script>
 let UNITS = [];
+let EIDOS = [];
 const UNIT_MAP = {};
+const EIDOS_MAP = {};
 const ASPECT_THRESHOLDS = {};
 const ASPECT_MAX = {};
+let activeTab = 'na';
 
 const HEX_INTERACTIONS = [
   {aspect:"Strength", units:1, hexes:["1D"], color:"#e8e0a0", desc:"Hex applies Dominator"},
@@ -579,6 +639,10 @@ function imgName(name) {
 
 function imgSrc(name) {
   return '/hna/img/nexusanima/' + imgName(name) + '.webp';
+}
+
+function eidosImgSrc(name) {
+  return '/hna/img/eidos/' + imgName(name) + '.webp';
 }
 
 const grid = [];
@@ -624,7 +688,7 @@ ROWS.forEach((rowDef, ri) => {
     cell.appendChild(inner);
     cell.addEventListener('click', () => onCellClick(ri, ci));
     rowEl.appendChild(cell);
-    rowCells.push({el: cell, inner: inner, unit: null, label: (ri + 1) + COL_LETTERS[ci]});
+    rowCells.push({el: cell, inner: inner, unit: null, eidos: null, label: (ri + 1) + COL_LETTERS[ci]});
   }
 
   grid.push(rowCells);
@@ -641,11 +705,15 @@ ROWS.forEach((rowDef, ri) => {
 // Load data from JSON then build UI
 Promise.all([
   fetch('/hna/eoddb_hna_nexus_anima_units.json').then(r => r.json()),
-  fetch('/hna/eoddb_hna_aspects.json').then(r => r.json())
-]).then(([unitsData, aspectsData]) => {
+  fetch('/hna/eoddb_hna_aspects.json').then(r => r.json()),
+  fetch('/hna/eoddb_hna_eidos.json').then(r => r.json())
+]).then(([unitsData, aspectsData, eidosData]) => {
 
 UNITS = unitsData.map(u => ({name: u.Name, aspect: u.Aspect, type: u.Type, rarity: u.Rarity}));
 UNITS.forEach(u => { UNIT_MAP[u.name] = u; });
+
+EIDOS = eidosData.map(e => ({name: e.Name, aspect: e.Aspect, rarity: e.Rarity, companion: e.Companion}));
+EIDOS.forEach(e => { EIDOS_MAP[e.name] = e; });
 
 let currentAspect = null;
 aspectsData.forEach(row => {
@@ -762,7 +830,7 @@ function applyRosterFilter() {
   });
 }
 
-function buildFilterRow(container, items, activeSet, labelText) {
+function buildFilterRow(container, items, activeSet, labelText, isEidos) {
   const lbl = document.createElement('span');
   lbl.className = 'filter-label';
   lbl.textContent = labelText;
@@ -774,7 +842,7 @@ function buildFilterRow(container, items, activeSet, labelText) {
   undoBtn.addEventListener('click', () => {
     activeSet.clear();
     container.querySelectorAll('.filter-btn:not(.undo)').forEach(b => b.classList.remove('active'));
-    applyRosterFilter();
+    if (isEidos) applyEidosFilter(); else applyRosterFilter();
   });
   container.appendChild(undoBtn);
 
@@ -790,7 +858,7 @@ function buildFilterRow(container, items, activeSet, labelText) {
         activeSet.add(item);
         btn.classList.add('active');
       }
-      applyRosterFilter();
+      if (isEidos) applyEidosFilter(); else applyRosterFilter();
     });
     container.appendChild(btn);
   });
@@ -798,6 +866,63 @@ function buildFilterRow(container, items, activeSet, labelText) {
 
 buildFilterRow(document.getElementById('typeFilters'), TYPES, activeTypes, 'Type');
 buildFilterRow(document.getElementById('aspectFilters'), ASPECTS_LIST, activeAspects, 'Aspect');
+
+// Build eidos roster
+const eidosRosterEl = document.getElementById('eidosRoster');
+[5, 4].forEach(rarity => {
+  const eidosOfRarity = EIDOS.filter(e => e.rarity === rarity);
+  if (!eidosOfRarity.length) return;
+  const label = document.createElement('div');
+  label.className = 'roster-label';
+  label.textContent = rarity + '-Star';
+  label.style.color = 'var(--r' + rarity + ')';
+  eidosRosterEl.appendChild(label);
+
+  eidosOfRarity.forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'roster-unit eidos-roster-unit r' + e.rarity;
+    div.dataset.name = e.name;
+    div.dataset.companion = e.companion;
+
+    const img = document.createElement('img');
+    img.src = eidosImgSrc(e.name);
+    img.alt = e.name;
+    div.appendChild(img);
+
+    const tip = document.createElement('span');
+    tip.className = 'roster-tip';
+    tip.textContent = e.name;
+    div.appendChild(tip);
+
+    div.addEventListener('click', () => onEidosRosterClick(e.name, div));
+    eidosRosterEl.appendChild(div);
+  });
+});
+
+// Eidos aspect filter
+const eidosActiveAspects = new Set();
+const eidosFilterContainer = document.getElementById('eidosAspectFilters');
+eidosFilterContainer._activeSet = eidosActiveAspects;
+buildFilterRow(eidosFilterContainer, ASPECTS_LIST, eidosActiveAspects, 'Aspect', true);
+
+// Tab switching
+document.getElementById('tabNA').addEventListener('click', () => {
+  activeTab = 'na';
+  document.getElementById('tabNA').classList.add('active');
+  document.getElementById('tabEidos').classList.remove('active');
+  document.getElementById('panelNA').style.display = '';
+  document.getElementById('panelEidos').style.display = 'none';
+  clearSelection();
+});
+
+document.getElementById('tabEidos').addEventListener('click', () => {
+  activeTab = 'eidos';
+  document.getElementById('tabEidos').classList.add('active');
+  document.getElementById('tabNA').classList.remove('active');
+  document.getElementById('panelNA').style.display = 'none';
+  document.getElementById('panelEidos').style.display = '';
+  clearSelection();
+});
 
 updateCount();
 updateSynergies();
@@ -808,6 +933,9 @@ function updateCount() {
   unitCountEl.innerHTML = 'Units: <strong>' + placedUnits.size + '</strong> / ' + MAX_UNITS;
 }
 
+let selectedEidos = null;
+const placedEidos = new Set();
+
 function clearSelection() {
   if (selectedCell) {
     const c = grid[selectedCell[0]][selectedCell[1]];
@@ -815,6 +943,7 @@ function clearSelection() {
     selectedCell = null;
   }
   selectedRosterUnit = null;
+  selectedEidos = null;
   document.querySelectorAll('.roster-unit.selected-roster').forEach(r => r.classList.remove('selected-roster'));
 }
 
@@ -825,13 +954,47 @@ function onRosterClick(name, div) {
   div.classList.add('selected-roster');
 }
 
+function onEidosRosterClick(name, div) {
+  if (placedEidos.has(name)) return;
+  clearSelection();
+  selectedEidos = name;
+  div.classList.add('selected-roster');
+}
+
+function applyEidosFilter() {
+  const eidosActiveAspects = document.getElementById('eidosAspectFilters')._activeSet;
+  const filtering = eidosActiveAspects && eidosActiveAspects.size > 0;
+  document.querySelectorAll('.eidos-roster-unit').forEach(el => {
+    const e = EIDOS_MAP[el.dataset.name];
+    if (!e) return;
+    el.classList.toggle('filter-hidden', filtering && !eidosActiveAspects.has(e.aspect));
+  });
+}
+
 function onCellClick(ri, ci) {
   const cell = grid[ri][ci];
 
   if (selectedRosterUnit) {
     if (cell.unit) { clearSelection(); return; }
     if (placedUnits.size >= MAX_UNITS) { clearSelection(); return; }
-    placeUnit(ri, ci, selectedRosterUnit);
+    cell.unit = selectedRosterUnit;
+    placedUnits.add(selectedRosterUnit);
+    renderCell(ri, ci);
+    updateRoster();
+    updateCount();
+    updateSynergies();
+    clearSelection();
+    return;
+  }
+
+  if (selectedEidos) {
+    if (cell.eidos) { clearSelection(); return; }
+    if (!cell.unit) { clearSelection(); return; }
+    cell.eidos = selectedEidos;
+    placedEidos.add(selectedEidos);
+    renderCell(ri, ci);
+    updateEidosRoster();
+    updateCompanionHighlights();
     clearSelection();
     return;
   }
@@ -839,21 +1002,42 @@ function onCellClick(ri, ci) {
   if (selectedCell) {
     const [sr, sc] = selectedCell;
     if (sr === ri && sc === ci) {
-      if (cell.unit) removeUnit(ri, ci);
+      if (cell.eidos) {
+        placedEidos.delete(cell.eidos);
+        cell.eidos = null;
+        renderCell(ri, ci);
+        updateEidosRoster();
+        updateCompanionHighlights();
+      } else if (cell.unit) {
+        removeUnit(ri, ci);
+      }
       clearSelection();
       return;
     }
     const srcCell = grid[sr][sc];
     const srcUnit = srcCell.unit;
+    const srcEidos = srcCell.eidos;
     const dstUnit = cell.unit;
+    const dstEidos = cell.eidos;
     if (srcUnit && !dstUnit) {
-      removeUnit(sr, sc);
-      placeUnit(ri, ci, srcUnit);
+      srcCell.unit = null; srcCell.eidos = null;
+      if (srcEidos) placedEidos.delete(srcEidos);
+      placedUnits.delete(srcUnit);
+      cell.unit = srcUnit; cell.eidos = srcEidos;
+      if (srcEidos) placedEidos.add(srcEidos);
+      placedUnits.add(srcUnit);
+      renderCell(sr, sc);
+      renderCell(ri, ci);
+      updateRoster();
+      updateCount();
+      updateSynergies();
+      updateCompanionHighlights();
     } else if (srcUnit && dstUnit) {
-      removeUnit(sr, sc);
-      removeUnit(ri, ci);
-      placeUnit(ri, ci, srcUnit);
-      placeUnit(sr, sc, dstUnit);
+      srcCell.unit = dstUnit; srcCell.eidos = dstEidos;
+      cell.unit = srcUnit; cell.eidos = srcEidos;
+      renderCell(sr, sc);
+      renderCell(ri, ci);
+      updateCompanionHighlights();
     }
     clearSelection();
     return;
@@ -865,19 +1049,55 @@ function onCellClick(ri, ci) {
   }
 }
 
+function renderCell(ri, ci) {
+  const cell = grid[ri][ci];
+  const inner = cell.inner;
+  inner.innerHTML = '';
+  inner.classList.remove('multi-unit');
+
+  if (!cell.unit) {
+    cell.el.classList.remove('occupied');
+    const label = document.createElement('span');
+    label.className = 'hex-label';
+    label.textContent = cell.label;
+    inner.appendChild(label);
+    return;
+  }
+
+  cell.el.classList.add('occupied');
+  const e = cell.eidos ? EIDOS_MAP[cell.eidos] : null;
+  const hasCompanion = e && cell.unit === e.companion;
+
+  if (cell.eidos) {
+    inner.classList.add('multi-unit');
+    const naImg = document.createElement('img');
+    naImg.src = imgSrc(cell.unit);
+    naImg.alt = cell.unit;
+    inner.appendChild(naImg);
+
+    const eidosImg = document.createElement('img');
+    eidosImg.src = eidosImgSrc(cell.eidos);
+    eidosImg.alt = cell.eidos;
+    inner.appendChild(eidosImg);
+
+    const compImg = document.createElement('img');
+    compImg.src = imgSrc(e.companion);
+    compImg.alt = e.companion;
+    if (hasCompanion) compImg.classList.add('companion-buffed');
+    inner.appendChild(compImg);
+  } else {
+    const img = document.createElement('img');
+    img.src = imgSrc(cell.unit);
+    img.alt = cell.unit;
+    inner.appendChild(img);
+  }
+}
+
 function placeUnit(ri, ci, name) {
   const cell = grid[ri][ci];
   cell.unit = name;
-  cell.el.classList.add('occupied');
-
-  const inner = cell.inner;
-  inner.innerHTML = '';
-  const img = document.createElement('img');
-  img.src = imgSrc(name);
-  img.alt = name;
-  inner.appendChild(img);
-
   placedUnits.add(name);
+  renderCell(ri, ci);
   updateRoster();
   updateCount();
   updateSynergies();
@@ -886,26 +1106,38 @@ function placeUnit(ri, ci, name) {
 function removeUnit(ri, ci) {
   const cell = grid[ri][ci];
   const name = cell.unit;
+  if (cell.eidos) {
+    placedEidos.delete(cell.eidos);
+    cell.eidos = null;
+    updateEidosRoster();
+  }
   cell.unit = null;
-  cell.el.classList.remove('occupied');
-
-  const inner = cell.inner;
-  inner.innerHTML = '';
-  const label = document.createElement('span');
-  label.className = 'hex-label';
-  label.textContent = cell.label;
-  inner.appendChild(label);
-
   placedUnits.delete(name);
+  renderCell(ri, ci);
   updateRoster();
   updateCount();
   updateSynergies();
+  updateCompanionHighlights();
 }
 
 function updateRoster() {
-  document.querySelectorAll('.roster-unit').forEach(div => {
+  document.querySelectorAll('.roster-unit:not(.eidos-roster-unit)').forEach(div => {
     div.classList.toggle('placed', placedUnits.has(div.dataset.name));
   });
+}
+
+function updateEidosRoster() {
+  document.querySelectorAll('.eidos-roster-unit').forEach(div => {
+    div.classList.toggle('placed', placedEidos.has(div.dataset.name));
+  });
+}
+
+function updateCompanionHighlights() {
+  grid.forEach((row, ri) => row.forEach((cell, ci) => {
+    if (cell.unit && cell.eidos) {
+      renderCell(ri, ci);
+    }
+  }));
 }
 
 function updateSynergies() {
@@ -1016,9 +1248,15 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   clearSelection();
   grid.forEach((row, ri) => {
     row.forEach((cell, ci) => {
+      if (cell.eidos) {
+        placedEidos.delete(cell.eidos);
+        cell.eidos = null;
+      }
       if (cell.unit) removeUnit(ri, ci);
     });
   });
+  updateEidosRoster();
+  updateCompanionHighlights();
 });
 
 document.getElementById('deselectBtn').addEventListener('click', () => {
