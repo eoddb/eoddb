@@ -144,7 +144,7 @@
     inset: 0;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     background: var(--border);
-    z-index: -1;
+    z-index: -2;
   }
 
   .hex-cell.occupied .hex-border { background: rgba(201, 209, 217, 0.4); }
@@ -525,6 +525,7 @@
     right: 15%;
     height: 4px;
     border-radius: 1px;
+    z-index: -1;
   }
 
   .roster-unit.placed {
