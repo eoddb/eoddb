@@ -508,6 +508,28 @@
     object-fit: cover;
   }
 
+  .companion-heart {
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    line-height: 1;
+    color: #e8a0b0;
+    pointer-events: none;
+    z-index: 3;
+    text-shadow: 0 0 2px rgba(0,0,0,0.6);
+  }
+
+  .hex-cell .companion-heart {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    z-index: 3;
+  }
+
   .roster-unit.placed {
     opacity: 0.25;
     cursor: default;
@@ -629,7 +651,6 @@
   </div>
 
   <div class="controls">
-    <button class="ctrl-btn" id="deselectBtn">Deselect</button>
     <button class="ctrl-btn danger" id="clearBtn">Clear All</button>
   </div>
 
@@ -1074,6 +1095,7 @@ function onEidosSlotClick(slotIdx) {
     renderEidosSlots();
     updateEidosRoster();
     updateAspectFilterOutlines();
+    updateCompanionHearts();
     clearSelection();
     return;
   }
@@ -1082,6 +1104,7 @@ function onEidosSlotClick(slotIdx) {
     renderEidosSlots();
     updateEidosRoster();
     updateAspectFilterOutlines();
+    updateCompanionHearts();
   }
 }
 
@@ -1117,6 +1140,7 @@ function placeUnit(ri, ci, name) {
   updateRoster();
   updateCount();
   updateSynergies();
+  updateCompanionHearts();
 }
 
 function removeUnit(ri, ci) {
@@ -1136,6 +1160,7 @@ function removeUnit(ri, ci) {
   updateRoster();
   updateCount();
   updateSynergies();
+  updateCompanionHearts();
 }
 
 function updateRoster() {
@@ -1162,6 +1187,37 @@ function updateAspectFilterOutlines() {
     const count = aspectCounts[btn.textContent] || 0;
     if (count >= 1 && count <= 3) btn.classList.add('eidos-' + count);
   });
+}
+
+function updateCompanionHearts() {
+  const companions = new Set();
+  eidosSlots.forEach(name => {
+    if (!name) return;
+    const e = EIDOS_MAP[name];
+    if (e) companions.add(e.companion);
+  });
+
+  document.querySelectorAll('.roster-unit:not(.eidos-roster-unit)').forEach(div => {
+    const existing = div.querySelector('.companion-heart');
+    if (existing) existing.remove();
+    if (companions.has(div.dataset.name)) {
+      const heart = document.createElement('span');
+      heart.className = 'companion-heart';
+      heart.textContent = '♥';
+      div.appendChild(heart);
+    }
+  });
+
+  grid.forEach(row => row.forEach(cell => {
+    const existing = cell.el.querySelector('.companion-heart');
+    if (existing) existing.remove();
+    if (cell.unit && companions.has(cell.unit)) {
+      const heart = document.createElement('span');
+      heart.className = 'companion-heart';
+      heart.textContent = '♥';
+      cell.el.appendChild(heart);
+    }
+  }));
 }
 
 function updateSynergies() {
@@ -1279,11 +1335,9 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   renderEidosSlots();
   updateEidosRoster();
   updateAspectFilterOutlines();
+  updateCompanionHearts();
 });
 
-document.getElementById('deselectBtn').addEventListener('click', () => {
-  clearSelection();
-});
 </script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
