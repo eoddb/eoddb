@@ -508,26 +508,23 @@
     object-fit: cover;
   }
 
-  .companion-heart {
+  .companion-bar {
     position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 30px;
-    line-height: 1;
-    color: #e8a0b0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #d98a8a;
     pointer-events: none;
     z-index: 3;
-    text-shadow: 0 0 3px rgba(0,0,0,0.6);
   }
 
-  .hex-cell .companion-heart {
-    position: absolute;
-    bottom: 12%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 27px;
-    z-index: 3;
+  .hex-cell .companion-bar {
+    bottom: 25%;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    border-radius: 1px;
   }
 
   .roster-unit.placed {
@@ -1198,23 +1195,21 @@ function updateCompanionHearts() {
   });
 
   document.querySelectorAll('.roster-unit:not(.eidos-roster-unit)').forEach(div => {
-    const existing = div.querySelector('.companion-heart');
+    const existing = div.querySelector('.companion-bar');
     if (existing) existing.remove();
     if (companions.has(div.dataset.name)) {
       const heart = document.createElement('span');
-      heart.className = 'companion-heart';
-      heart.textContent = '♥';
+      heart.className = 'companion-bar';
       div.appendChild(heart);
     }
   });
 
   grid.forEach(row => row.forEach(cell => {
-    const existing = cell.el.querySelector('.companion-heart');
+    const existing = cell.el.querySelector('.companion-bar');
     if (existing) existing.remove();
     if (cell.unit && companions.has(cell.unit)) {
       const heart = document.createElement('span');
-      heart.className = 'companion-heart';
-      heart.textContent = '♥';
+      heart.className = 'companion-bar';
       cell.el.appendChild(heart);
     }
   }));
