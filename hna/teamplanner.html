@@ -585,6 +585,7 @@ const grid = [];
 let selectedCell = null;
 let selectedRosterUnit = null;
 const placedUnits = new Set();
+const synergyRows = {};
 
 const hexGridEl = document.getElementById('hexGrid');
 const hexLegendEl = document.getElementById('hexLegend');
@@ -658,7 +659,6 @@ Object.keys(ASPECT_THRESHOLDS).forEach(a => {
 });
 
 // Build synergy rows
-const synergyRows = {};
 Object.keys(ASPECT_THRESHOLDS).forEach(aspect => {
   const row = document.createElement('div');
   row.className = 'synergy-row';
@@ -799,6 +799,11 @@ function buildFilterRow(container, items, activeSet, labelText) {
 buildFilterRow(document.getElementById('typeFilters'), TYPES, activeTypes, 'Type');
 buildFilterRow(document.getElementById('aspectFilters'), ASPECTS_LIST, activeAspects, 'Aspect');
 
+updateCount();
+updateSynergies();
+
+}); // end Promise.all
+
 function updateCount() {
   unitCountEl.innerHTML = 'Units: <strong>' + placedUnits.size + '</strong> / ' + MAX_UNITS;
 }
@@ -923,6 +928,7 @@ function updateSynergies() {
 
   Object.keys(ASPECT_THRESHOLDS).forEach(aspect => {
     const sr = synergyRows[aspect];
+    if (!sr) return;
     const count = aspectCounts[aspect] || 0;
 
     if (count > 0) {
@@ -1018,11 +1024,6 @@ document.getElementById('clearBtn').addEventListener('click', () => {
 document.getElementById('deselectBtn').addEventListener('click', () => {
   clearSelection();
 });
-
-updateCount();
-updateSynergies();
-
-}); // end Promise.all
 </script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
