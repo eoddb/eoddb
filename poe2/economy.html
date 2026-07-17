@@ -253,10 +253,15 @@
 
 <hr class="divider">
 
-<div class="section-label">Analysis</div>
-<div class="placeholder-section">
-  <h2>More Analysis Coming Soon</h2>
-  <p>Detailed breakdowns of currency trends, trading strategies, and league-over-league comparisons.</p>
+<div class="section-label">Commentary</div>
+<div class="placeholder-section" style="text-align:left;">
+  <p>Graph shows currencies plotted with respect to Divine Orb. A currency moving up means it is inflating against Divine Orbs. The Y-axis is normalized to a particular reference date within each league — i.e. 10 on the Y-axis means the currency has increased 10 times in value relative to the reference day's Divine Orb value.</p>
+  <p style="margin-top:12px;">Date range is 45 days after the reference date is established per league for analysis. Negative dates represent possibly volatile data which we exclude from referencing.</p>
+  <p style="margin-top:20px;">Thank you for supporting this resource.</p>
+  <p style="margin-top:16px;"><strong>PoE2 Guide to Economic Cycles:</strong><br>
+    <a href="https://youtu.be/oYWiT0AmhnE" target="_blank" rel="noopener" style="color:var(--accent1);">https://youtu.be/oYWiT0AmhnE</a>
+  </p>
+  <p style="margin-top:16px;">If you find this useful, consider <a href="https://ko-fi.com/eodgamer" target="_blank" rel="noopener" style="color:#FF5E5B;">supporting on Ko-fi</a>.</p>
 </div>
 
 <script>
@@ -304,17 +309,17 @@ function getLineColor(currency, league) {
 var LEAGUE_DASHES = {
   'First League': [],
   'Hunt': [14, 6],
-  'Abyss': [2, 4, 8, 4],
-  'Vaal': [4, 6],
+  'Abyss': [4, 6],
+  'Vaal': [2, 4, 8, 4],
   'Runes': []
 };
 
 var LEAGUE_WIDTHS = {
-  'First League': 1.2,
+  'First League': 2,
   'Hunt': 2,
   'Abyss': 2,
   'Vaal': 2,
-  'Runes': 3
+  'Runes': 1.2
 };
 
 var LEAGUE_ORDER = ['First League', 'Hunt', 'Abyss', 'Vaal', 'Runes'];
