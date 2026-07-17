@@ -205,6 +205,131 @@ td.best-price {
   text-align: center;
   color: var(--text-muted);
 }
+
+.divider {
+  max-width: 1060px;
+  margin: 2rem auto;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.guide-section {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.guide-section p { margin-bottom: 1rem; }
+.guide-section p:last-of-type { margin-bottom: 0; }
+
+.guide-section a {
+  color: var(--accent1);
+  text-decoration: none;
+}
+
+.guide-section a:hover { text-decoration: underline; }
+
+.guide-subheading {
+  font-weight: 700;
+  color: var(--header-text);
+  margin-top: 0.5rem;
+}
+
+.best-rates-wrap {
+  margin-top: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.best-rates-wrap table { font-size: 0.82rem; }
+
+.best-rates-wrap thead th {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.best-rates-wrap tbody td { font-weight: 600; }
+
+.saving { color: var(--green); font-size: 0.7rem; font-weight: 400; }
+
+.changelog {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.changelog-entry {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.changelog-entry + .changelog-entry {
+  border-top: 1px solid var(--border);
+}
+
+.changelog-date {
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 90px;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  padding-top: 1px;
+}
+
+.changelog-text { color: var(--text); }
+
+.video-wrap {
+  max-width: 1100px;
+  margin: 0 auto 2rem;
+}
+
+.yt-facade {
+  position: relative;
+  cursor: pointer;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.yt-facade img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.yt-facade:hover img { opacity: 1; }
+
+.yt-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px; height: 48px;
+  opacity: 0.9;
+}
+
+.yt-facade:hover .yt-play { opacity: 1; }
+
+#yt-player iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: none;
+  border-radius: 10px;
+}
 </style>
 </head>
 <body>
@@ -225,7 +350,7 @@ td.best-price {
     </table>
   </div>
 
-  <div class="os-note">OS = Oneiric Shards</div>
+  <div class="os-note">*OS = Oneiric Shards. USD equivalent. Rates calculated based on European Central Bank rates.</div>
   <div class="section-label">Best Prices (USD)</div>
   <div class="summary-wrap">
     <table>
@@ -236,6 +361,57 @@ td.best-price {
 
   <div class="footnotes" id="footnotes"></div>
   <div class="timestamp" id="timestamp"></div>
+
+  <hr class="divider">
+
+  <!-- ── Guide ── -->
+  <div class="section-label">Guide</div>
+  <div class="guide-section" id="guide-section">
+    <p>Honkai Star Rail follows a regional pricing model, certain countries are tagged to different currencies. You will get the respective country rates if you travel overseas with your laptop to these countries (not phone because app store locks your home country most of the time). A trusted VPN may act in a similar way &mdash; EODdb.com recommends <a href="https://nordvpn.com/EODGamer" target="_blank" rel="noopener">NordVPN</a> plus get an exclusive special offer with our code that is exclusive to us.</p>
+    <p>In 2026 Hoyoverse seemed to have cracked down on Third Party Sites, making do it yourself the best way, with little counterparty fraud.</p>
+    <p class="guide-subheading">This is the best area currently:</p>
+    <div class="best-rates-wrap">
+      <table id="best-rates-table">
+        <thead><tr id="best-rates-header"></tr></thead>
+        <tbody><tr id="best-rates-body"></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Changelog ── -->
+  <div class="section-label">Changelog</div>
+  <div class="changelog">
+    <div class="changelog-entry">
+      <span class="changelog-date">Jul 2026</span>
+      <span class="changelog-text">Turkey (TRY) &mdash; now priced in USD</span>
+    </div>
+    <div class="changelog-entry">
+      <span class="changelog-date">Jul 2026</span>
+      <span class="changelog-text">New Zealand (NZD) &mdash; priced in USD</span>
+    </div>
+    <div class="changelog-entry">
+      <span class="changelog-date">Jul 2026</span>
+      <span class="changelog-text">Vietnam (VND) &mdash; in-game store uses HKD pricing</span>
+    </div>
+    <div class="changelog-entry">
+      <span class="changelog-date">Jul 2026</span>
+      <span class="changelog-text">Thailand (THB) &mdash; in-game store uses SGD pricing</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Video Guide ── -->
+  <div class="section-label">Step-by-step Tutorial</div>
+  <div class="video-wrap">
+    <div class="yt-facade" id="yt-facade" onclick="loadYT()">
+      <img src="https://img.youtube.com/vi/xsVFul3oQF4/maxresdefault.jpg" alt="Step-by-step Tutorial" loading="lazy">
+      <div class="yt-play"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+    </div>
+    <div id="yt-player"></div>
+  </div>
 </div>
 
 <script>
@@ -299,6 +475,7 @@ async function init() {
     buildHeader();
     renderTable();
     buildSummary();
+    buildBestRates();
     buildFootnotes(exr);
 
     document.getElementById('loading').style.display = 'none';
@@ -430,19 +607,85 @@ function buildSummary() {
   });
 }
 
+function buildBestRates() {
+  const usRow = rows.find(r => r.label === 'US');
+  const headerTr = document.getElementById('best-rates-header');
+  const bodyTr = document.getElementById('best-rates-body');
+
+  const th0 = document.createElement('th');
+  th0.textContent = 'Item';
+  th0.style.textAlign = 'left';
+  headerTr.appendChild(th0);
+
+  const thPrice = document.createElement('th');
+  thPrice.textContent = 'Best Price';
+  headerTr.appendChild(thPrice);
+
+  const thSource = document.createElement('th');
+  thSource.textContent = 'Source';
+  headerTr.appendChild(thSource);
+
+  const thSaving = document.createElement('th');
+  thSaving.textContent = 'vs USD';
+  headerTr.appendChild(thSaving);
+
+  bodyTr.remove();
+  const tbody = document.getElementById('best-rates-table').querySelector('tbody') || document.getElementById('best-rates-table').createTBody();
+
+  ITEMS.forEach((item, i) => {
+    let min = Infinity;
+    let source = '';
+    rows.forEach(r => {
+      const p = r.usdPrices[i];
+      if (p !== null && p < min) { min = p; source = r.label; }
+    });
+    if (min === Infinity) return;
+
+    const usPrice = usRow ? usRow.usdPrices[i] : null;
+    const tr = document.createElement('tr');
+
+    const tdItem = document.createElement('td');
+    tdItem.textContent = item;
+    tdItem.style.textAlign = 'left';
+    tdItem.style.color = 'var(--header-text)';
+    tr.appendChild(tdItem);
+
+    const tdPrice = document.createElement('td');
+    tdPrice.textContent = '$' + min.toFixed(2);
+    tdPrice.style.color = 'var(--green)';
+    tr.appendChild(tdPrice);
+
+    const tdSource = document.createElement('td');
+    tdSource.textContent = source;
+    tdSource.style.color = 'var(--text-muted)';
+    tdSource.style.fontSize = '0.75rem';
+    tr.appendChild(tdSource);
+
+    const tdSaving = document.createElement('td');
+    if (usPrice && usPrice > min) {
+      const pct = ((usPrice - min) / usPrice * 100).toFixed(1);
+      tdSaving.innerHTML = '<span class="saving">-' + pct + '%</span>';
+    } else {
+      tdSaving.textContent = '—';
+      tdSaving.style.color = 'var(--text-muted)';
+    }
+    tr.appendChild(tdSaving);
+
+    tbody.appendChild(tr);
+  });
+}
+
 function buildFootnotes(exr) {
   const fn = document.getElementById('footnotes');
-  fn.innerHTML = [
-    '* Turkey (TRY) — now priced in USD, identical to US pricing',
-    '* New Zealand (NZD) — priced in USD, identical to US pricing',
-    '* Vietnam (VND) — in-game store uses HKD pricing',
-    '* Thailand (THB) — in-game store uses SGD pricing',
-    '',
-    '^ Third Party data based off Jul 2026'
-  ].map(l => '<p>' + l + '</p>').join('');
+  fn.innerHTML = '<p>^ Third Party data based off Jul 2026</p>';
 
   const ts = document.getElementById('timestamp');
   ts.textContent = 'Exchange rates last updated: ' + exr.updated_utc + ' (European Central Bank reference date: ' + exr.european_central_bank_reference_date + ')';
+}
+
+function loadYT() {
+  document.getElementById('yt-facade').style.display = 'none';
+  document.getElementById('yt-player').innerHTML = '<iframe src="https://www.youtube.com/embed/xsVFul3oQF4?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
 }
 
 init();
