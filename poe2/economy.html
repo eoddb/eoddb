@@ -303,10 +303,18 @@ function getLineColor(currency, league) {
 
 var LEAGUE_DASHES = {
   'First League': [],
-  'Hunt': [8, 4],
-  'Abyss': [4, 4],
-  'Vaal': [12, 4, 4, 4],
-  'Runes': [2, 3]
+  'Hunt': [14, 6],
+  'Abyss': [2, 4, 8, 4],
+  'Vaal': [4, 6],
+  'Runes': []
+};
+
+var LEAGUE_WIDTHS = {
+  'First League': 1.2,
+  'Hunt': 2,
+  'Abyss': 2,
+  'Vaal': 2,
+  'Runes': 3
 };
 
 var LEAGUE_ORDER = ['First League', 'Hunt', 'Abyss', 'Vaal', 'Runes'];
@@ -474,7 +482,7 @@ function drawChart() {
   for (var s = 0; s < series.length; s++) {
     var sr = series[s];
     ctx.strokeStyle = sr.color;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = LEAGUE_WIDTHS[sr.league] || 2;
     ctx.setLineDash(sr.dash);
     ctx.beginPath();
     for (var pi = 0; pi < sr.points.length; pi++) {
@@ -521,12 +529,13 @@ function updateLegend() {
       ln.setAttribute('x2', '24');
       ln.setAttribute('y2', '1.5');
       ln.setAttribute('stroke', '#c9d1d9');
-      ln.setAttribute('stroke-width', '2');
+      ln.setAttribute('stroke-width', LEAGUE_WIDTHS[leagues[i]] || 2);
       ln.setAttribute('stroke-dasharray', dash.join(','));
       svg.appendChild(ln);
       item.appendChild(svg);
     } else {
       line.style.background = '#c9d1d9';
+      line.style.height = (LEAGUE_WIDTHS[leagues[i]] || 2) + 'px';
       item.appendChild(line);
     }
     var label = document.createElement('span');
