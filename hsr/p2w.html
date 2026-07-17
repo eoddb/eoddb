@@ -145,10 +145,10 @@ td.best-price {
 .section-label {
   max-width: 1100px;
   margin: 0 auto 0.8rem;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--header-text);
 }
 
 .summary-wrap {
@@ -291,7 +291,7 @@ td.best-price {
 .changelog-text { color: var(--text); }
 
 .video-wrap {
-  max-width: 1100px;
+  max-width: 550px;
   margin: 0 auto 2rem;
 }
 
@@ -588,7 +588,7 @@ function buildSummary() {
 
     let min = Infinity;
     let source = '';
-    rows.forEach(r => {
+    rows.filter(r => !r.isThirdParty).forEach(r => {
       const p = r.usdPrices[i];
       if (p !== null && p < min) {
         min = p;
@@ -635,7 +635,7 @@ function buildBestRates() {
   ITEMS.forEach((item, i) => {
     let min = Infinity;
     let source = '';
-    rows.forEach(r => {
+    rows.filter(r => !r.isThirdParty).forEach(r => {
       const p = r.usdPrices[i];
       if (p !== null && p < min) { min = p; source = r.label; }
     });
@@ -677,7 +677,7 @@ function buildBestRates() {
 
 function buildFootnotes(exr) {
   const fn = document.getElementById('footnotes');
-  fn.innerHTML = '<p>^ Third Party data based off Jul 2026</p>';
+  fn.innerHTML = '';
 
   const ts = document.getElementById('timestamp');
   ts.textContent = 'Exchange rates last updated: ' + exr.updated_utc + ' (European Central Bank reference date: ' + exr.european_central_bank_reference_date + ')';
