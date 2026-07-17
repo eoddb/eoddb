@@ -165,6 +165,17 @@ td.best-price {
   color: var(--text-muted);
 }
 
+.hero-img-wrap {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
 #loading {
   max-width: 1100px;
   margin: 2rem auto;
@@ -308,6 +319,10 @@ td.best-price {
 <div class="page-header">
   <h1>Guide Before You Buy Honkai: Star Rail Oneiric Shards</h1>
   <div class="subtitle">All prices converted to USD equivalent for easy comparison</div>
+</div>
+
+<div class="hero-img-wrap">
+  <img src="/hsr/img/usd_store.webp" alt="Honkai: Star Rail Oneiric Shard Store (USD)" class="hero-img" loading="lazy">
 </div>
 
 <div id="loading">Loading price data...</div>
@@ -608,5 +623,6 @@ function loadYT() {
 
 init();
 </script>
+<script src="/eoddb_footer.js" defer></script>
 </body>
 </html>
