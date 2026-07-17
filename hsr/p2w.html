@@ -232,25 +232,24 @@ td.best-price {
 
 <script>
 const ITEMS = [
-  "Express Supply Pass", "Nameless Glory", "Nameless Medal",
-  "60 Oneiric Shards", "300 Oneiric Shards", "980 Oneiric Shards",
-  "1980 Oneiric Shards", "3280 Oneiric Shards", "6480 Oneiric Shards"
+  "Express Supply Pass",
+  "60 OS", "300 OS", "980 OS",
+  "1980 OS", "3280 OS", "6480 OS",
+  "Nameless Glory", "Nameless Medal"
 ];
 
-const ITEM_KEYS = ITEMS.map(i => i.toLowerCase().replace(/ /g, '_'));
-
 const COUNTRY_DATA = [
-  { label: "US", currency: "USD", prices: [4.99,9.99,19.99,0.99,4.99,14.99,29.99,49.99,99.99] },
-  { label: "UK", currency: "GBP", prices: [4.99,9.99,19.99,0.99,4.99,14.99,29.99,49.99,99.99] },
-  { label: "EU", currency: "EUR", prices: [5.99,9.99,20.99,0.99,5.99,17.99,34.99,59.99,99.99] },
-  { label: "Japan", currency: "JPY", prices: [610,1220,2480,120,610,1840,3680,6100,12000] },
-  { label: "Australia", currency: "AUD", prices: [7.99,14.99,29.99,1.99,7.99,22.99,49.99,79.99,149.99] },
-  { label: "Canada", currency: "CAD", prices: [6.99,12.99,24.99,1.29,6.99,19.99,39.99,69.99,129.99] },
-  { label: "Indonesia", currency: "IDR", prices: [79000,159000,329000,16000,79000,249000,479000,799000,1599000] },
-  { label: "Korea", currency: "KRW", prices: [5900,12000,25000,1200,5900,19000,37000,65000,119000] },
-  { label: "Malaysia", currency: "MYR", prices: [19.90,39.90,79.90,4.90,19.90,59.90,129.90,199.90,399.90] },
-  { label: "Philippines", currency: "PHP", prices: [299,499,999,49,299,799,1790,2990,4990] },
-  { label: "Singapore", currency: "SGD", prices: [6.98,14.98,29.98,1.48,6.98,21.98,42.98,73.98,149.98] }
+  { label: "US", currency: "USD", prices: [4.99,0.99,4.99,14.99,29.99,49.99,99.99,9.99,19.99] },
+  { label: "UK", currency: "GBP", prices: [4.99,0.99,4.99,14.99,29.99,49.99,99.99,9.99,19.99] },
+  { label: "EU", currency: "EUR", prices: [5.99,0.99,5.99,17.99,34.99,59.99,99.99,9.99,20.99] },
+  { label: "Japan", currency: "JPY", prices: [610,120,610,1840,3680,6100,12000,1220,2480] },
+  { label: "Australia", currency: "AUD", prices: [7.99,1.99,7.99,22.99,49.99,79.99,149.99,14.99,29.99] },
+  { label: "Canada", currency: "CAD", prices: [6.99,1.29,6.99,19.99,39.99,69.99,129.99,12.99,24.99] },
+  { label: "Indonesia", currency: "IDR", prices: [79000,16000,79000,249000,479000,799000,1599000,159000,329000] },
+  { label: "Korea", currency: "KRW", prices: [5900,1200,5900,19000,37000,65000,119000,12000,25000] },
+  { label: "Malaysia", currency: "MYR", prices: [19.90,4.90,19.90,59.90,129.90,199.90,399.90,39.90,79.90] },
+  { label: "Philippines", currency: "PHP", prices: [299,49,299,799,1790,2990,4990,499,999] },
+  { label: "Singapore", currency: "SGD", prices: [6.98,1.48,6.98,21.98,42.98,73.98,149.98,14.98,29.98] }
 ];
 
 const THIRD_PARTIES = [
@@ -258,13 +257,13 @@ const THIRD_PARTIES = [
     label: "Third Party S ^",
     currency: "SGD",
     isThirdParty: true,
-    prices: [null, null, null, 1.41, 6.63, 20.88, 40.83, 70.28, 142.48]
+    prices: [6.63, 1.41, 6.63, 20.88, 40.83, 70.28, 142.48, null, null]
   },
   {
     label: "Third Party L ^",
     currency: "SGD",
     isThirdParty: true,
-    prices: [6.98, null, null, 1.48, 6.98, 21.98, 42.98, 73.98, 149.98]
+    prices: [6.98, 1.48, 6.98, 21.98, 42.98, 73.98, 149.98, null, null]
   }
 ];
 
@@ -426,6 +425,8 @@ function buildSummary() {
 function buildFootnotes(exr) {
   const fn = document.getElementById('footnotes');
   fn.innerHTML = [
+    'OS = Oneiric Shards',
+    '',
     '* Turkey (TRY) — now priced in USD, identical to US pricing',
     '* New Zealand (NZD) — priced in USD, identical to US pricing',
     '* Vietnam (VND) — in-game store uses HKD pricing',
@@ -435,7 +436,7 @@ function buildFootnotes(exr) {
   ].map(l => '<p>' + l + '</p>').join('');
 
   const ts = document.getElementById('timestamp');
-  ts.textContent = 'Exchange rates last updated: ' + exr.updated_utc + ' (ECB reference date: ' + exr.ecb_reference_date + ')';
+  ts.textContent = 'Exchange rates last updated: ' + exr.updated_utc + ' (European Central Bank reference date: ' + exr.european_central_bank_reference_date + ')';
 }
 
 init();
