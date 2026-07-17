@@ -260,6 +260,15 @@
 </div>
 
 <script>
+var CURRENCY_BASE_COLORS = {
+  'Mirror of Kalandra': { r: 244, g: 167, b: 187 },
+  'Fracturing Orb': { r: 167, g: 216, b: 240 },
+  'Omen of Whittling': { r: 184, g: 230, b: 200 },
+  'Omen of Light': { r: 244, g: 214, b: 160 },
+  'Chaos Orb': { r: 212, g: 167, b: 244 },
+  'Exalted Orb': { r: 244, g: 244, b: 167 }
+};
+
 var CURRENCY_COLORS = {
   'Mirror of Kalandra': '#F4A7BB',
   'Fracturing Orb': '#A7D8F0',
@@ -268,6 +277,29 @@ var CURRENCY_COLORS = {
   'Chaos Orb': '#D4A7F4',
   'Exalted Orb': '#F4F4A7'
 };
+
+var LEAGUE_SHADE = {
+  'First League': 0.65,
+  'Hunt': 0.80,
+  'Abyss': 1.0,
+  'Vaal': 1.15,
+  'Runes': 1.30
+};
+
+function shadeColor(rgb, factor) {
+  var r = Math.min(255, Math.round(rgb.r * factor));
+  var g = Math.min(255, Math.round(rgb.g * factor));
+  var b = Math.min(255, Math.round(rgb.b * factor));
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function getLineColor(currency, league) {
+  var base = CURRENCY_BASE_COLORS[currency];
+  if (typeof base === 'object' && base.r !== undefined) {
+    return shadeColor(base, LEAGUE_SHADE[league]);
+  }
+  return base;
+}
 
 var LEAGUE_DASHES = {
   'First League': [],
@@ -330,7 +362,7 @@ function buildSeries() {
           league: league,
           currency: currency,
           points: points,
-          color: CURRENCY_COLORS[currency],
+          color: getLineColor(currency, league),
           dash: LEAGUE_DASHES[league]
         });
       }
@@ -509,9 +541,9 @@ function setupFilters() {
   var currencyContainer = document.getElementById('currencyFilters');
 
   for (var i = 0; i < LEAGUE_ORDER.length; i++) {
-    activeLeagues[LEAGUE_ORDER[i]] = true;
+    activeLeagues[LEAGUE_ORDER[i]] = LEAGUE_ORDER[i] === 'Runes';
     var btn = document.createElement('button');
-    btn.className = 'filter-btn active';
+    btn.className = 'filter-btn' + (activeLeagues[LEAGUE_ORDER[i]] ? ' active' : '');
     btn.textContent = LEAGUE_ORDER[i];
     btn.dataset.league = LEAGUE_ORDER[i];
     btn.addEventListener('click', function() {
@@ -524,15 +556,13 @@ function setupFilters() {
   }
 
   for (var j = 0; j < CURRENCY_ORDER.length; j++) {
-    activeCurrencies[CURRENCY_ORDER[j]] = CURRENCY_ORDER[j] === 'Exalted Orb';
+    activeCurrencies[CURRENCY_ORDER[j]] = true;
     var btn2 = document.createElement('button');
-    btn2.className = 'filter-btn currency-btn' + (activeCurrencies[CURRENCY_ORDER[j]] ? ' active' : '');
+    btn2.className = 'filter-btn currency-btn active';
     btn2.textContent = CURRENCY_ORDER[j];
     btn2.dataset.currency = CURRENCY_ORDER[j];
-    if (activeCurrencies[CURRENCY_ORDER[j]]) {
-      btn2.style.borderColor = CURRENCY_COLORS[CURRENCY_ORDER[j]];
-      btn2.style.color = CURRENCY_COLORS[CURRENCY_ORDER[j]];
-    }
+    btn2.style.borderColor = CURRENCY_COLORS[CURRENCY_ORDER[j]];
+    btn2.style.color = CURRENCY_COLORS[CURRENCY_ORDER[j]];
     btn2.addEventListener('click', function() {
       var c = this.dataset.currency;
       activeCurrencies[c] = !activeCurrencies[c];
