@@ -1,6 +1,7 @@
 const EODDB_NAV_PAGES = [
   { label: 'Path of Exile 2', href: '/poe2', isHome: true },
   { label: 'Crafting', href: '/poe2/crafting' },
+  { label: 'Economy', href: '/poe2/economy' },
 ];
 
 (function() {
