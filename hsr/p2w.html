@@ -153,26 +153,14 @@ td.best-price {
 
 .os-note {
   max-width: 1100px;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto 0;
   font-size: 0.75rem;
   color: var(--text-muted);
-}
-
-.footnotes {
-  max-width: 1100px;
-  margin: 0 auto 2rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.8;
-}
-
-.footnotes p {
-  margin-bottom: 2px;
 }
 
 .timestamp {
   max-width: 1100px;
-  margin: 0 auto 1rem;
+  margin: 0.2rem auto 0;
   font-size: 0.7rem;
   color: var(--text-muted);
 }
@@ -315,6 +303,7 @@ td.best-price {
 </style>
 </head>
 <body>
+<script src="/hsr/eoddb_hsr_nav.js"></script>
 
 <div class="page-header">
   <h1>Guide Before You Buy Honkai: Star Rail Oneiric Shards</h1>
@@ -334,7 +323,6 @@ td.best-price {
 
   <div class="os-note">*OS = Oneiric Shards. USD equivalent. Rates calculated based on European Central Bank rates.</div>
 
-  <div class="footnotes" id="footnotes"></div>
   <div class="timestamp" id="timestamp"></div>
 
   <hr class="divider">
@@ -450,7 +438,7 @@ async function init() {
     buildHeader();
     renderTable();
     buildBestRates();
-    buildFootnotes(exr);
+    buildTimestamp(exr);
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
@@ -608,10 +596,7 @@ function buildBestRates() {
   });
 }
 
-function buildFootnotes(exr) {
-  const fn = document.getElementById('footnotes');
-  fn.innerHTML = '';
-
+function buildTimestamp(exr) {
   const ts = document.getElementById('timestamp');
   ts.textContent = 'Exchange rates last updated: ' + exr.updated_utc + ' (European Central Bank reference date: ' + exr.european_central_bank_reference_date + ')';
 }
