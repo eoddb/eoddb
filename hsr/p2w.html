@@ -173,6 +173,13 @@ td.best-price {
   font-weight: 600;
 }
 
+.os-note {
+  max-width: 1100px;
+  margin: 0 auto 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 .footnotes {
   max-width: 1100px;
   margin: 0 auto 2rem;
@@ -218,6 +225,7 @@ td.best-price {
     </table>
   </div>
 
+  <div class="os-note">OS = Oneiric Shards</div>
   <div class="section-label">Best Prices (USD)</div>
   <div class="summary-wrap">
     <table>
@@ -425,8 +433,6 @@ function buildSummary() {
 function buildFootnotes(exr) {
   const fn = document.getElementById('footnotes');
   fn.innerHTML = [
-    'OS = Oneiric Shards',
-    '',
     '* Turkey (TRY) — now priced in USD, identical to US pricing',
     '* New Zealand (NZD) — priced in USD, identical to US pricing',
     '* Vietnam (VND) — in-game store uses HKD pricing',
