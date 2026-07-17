@@ -7,26 +7,25 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
 <title>Path of Exile 2 Economy Guide | EODdb.com</title>
-<meta name="description" content="Path of Exile 2 economy guide — currency values, trading strategies, and market insights for PoE2.">
-<meta name="keywords" content="Path of Exile 2 economy, PoE2 economy, PoE2 trading, PoE2 currency values, PoE2 market, EODdb">
+<meta name="description" content="Path of Exile 2 economy guide — normalized currency price charts across all leagues. Compare Mirror of Kalandra, Fracturing Orb, Chaos Orb and more.">
+<meta name="keywords" content="Path of Exile 2 economy, PoE2 economy, PoE2 currency prices, PoE2 market data, PoE2 price chart, EODdb">
 <meta property="og:title" content="Path of Exile 2 Economy Guide | EODdb.com">
-<meta property="og:description" content="Path of Exile 2 economy guide — currency values, trading strategies, and market insights.">
+<meta property="og:description" content="Normalized currency price charts across all PoE2 leagues. Compare market trends over time.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Path of Exile 2 Economy Guide | EODdb.com">
-<meta name="twitter:description" content="Path of Exile 2 economy guide — currency values, trading strategies, and market insights.">
+<meta name="twitter:description" content="Normalized currency price charts across all PoE2 leagues.">
 <style>
   :root {
     --bg: #0d1117;
     --surface: #161b25;
+    --surface-hover: #1c2233;
     --border: #252d3d;
     --text: #c9d1d9;
     --text-muted: #6e7a8a;
     --header-text: #e6edf3;
     --accent1: #6366f1;
     --accent1-dim: rgba(99,102,241,0.12);
-    --discord: #5865F2;
-    --discord-dim: rgba(88,101,242,0.12);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -40,7 +39,7 @@
   }
 
   .page-header {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto 1.5rem;
     display: flex;
     flex-direction: column;
@@ -61,65 +60,171 @@
     letter-spacing: 0.04em;
   }
 
-  .coming-soon {
-    max-width: 900px;
+  .section-label {
+    max-width: 1100px;
+    margin: 0 auto 0.8rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .divider {
+    max-width: 1100px;
+    margin: 1.8rem auto;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .chart-container {
+    max-width: 1100px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 4rem 2rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    text-align: center;
+    padding: 24px;
   }
 
-  .coming-soon-badge {
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .filter-label {
     font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-weight: 600;
     text-transform: uppercase;
-    color: var(--accent1);
-    background: var(--accent1-dim);
-    padding: 5px 14px;
-    border-radius: 20px;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-right: 4px;
+    min-width: 70px;
   }
 
-  .coming-soon h2 {
-    font-size: 1.3rem;
-    font-weight: 700;
+  .filter-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 0.75rem;
+    font-family: inherit;
+  }
+
+  .filter-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .filter-btn.active {
+    background: var(--surface);
+    border-color: var(--accent1);
     color: var(--header-text);
   }
 
-  .coming-soon p {
-    font-size: 0.88rem;
-    line-height: 1.7;
-    color: var(--text-muted);
-    max-width: 500px;
+  .filter-btn.currency-btn.active {
+    color: var(--header-text);
   }
 
-  .discord-btn {
-    display: inline-flex;
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
-    background: var(--discord);
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 600;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.15s;
-    margin-top: 0.5rem;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
   }
 
-  .discord-btn:hover { opacity: 0.85; }
+  .legend-line {
+    width: 24px;
+    height: 3px;
+    border-radius: 2px;
+  }
 
-  .discord-btn svg {
-    width: 18px;
-    height: 18px;
-    fill: #fff;
+  .tooltip {
+    position: absolute;
+    background: #1c2233;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    color: var(--text);
+    pointer-events: none;
+    display: none;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  .tooltip-title {
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 4px;
+  }
+
+  .tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.6;
+  }
+
+  .tooltip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .placeholder-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .placeholder-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 8px;
+  }
+
+  .placeholder-section p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .chart-container { padding: 16px 12px; }
+    .filter-label { min-width: auto; width: 100%; margin-bottom: 2px; }
   }
 </style>
 </head>
@@ -131,15 +236,386 @@
   <span class="subtitle">Historical market data, charts and analysis.</span>
 </div>
 
-<div class="coming-soon">
-  <span class="coming-soon-badge">Coming Soon</span>
-  <h2>Path of Exile 2 Economy Guide</h2>
-  <p>Historical market data, charts and analysis for Path of Exile 2. Join the Discord to stay updated on when content drops.</p>
-  <a href="https://discord.gg/9trXVCZh7N" class="discord-btn" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    Join Discord
-  </a>
+<div class="section-label">Normalized Currency Prices</div>
+<div class="chart-container">
+  <div class="filter-row" id="leagueFilters">
+    <span class="filter-label">Leagues</span>
+  </div>
+  <div class="filter-row" id="currencyFilters">
+    <span class="filter-label">Currencies</span>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="priceChart" height="420"></canvas>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+  <div class="chart-legend" id="chartLegend"></div>
 </div>
+
+<hr class="divider">
+
+<div class="section-label">Analysis</div>
+<div class="placeholder-section">
+  <h2>More Analysis Coming Soon</h2>
+  <p>Detailed breakdowns of currency trends, trading strategies, and league-over-league comparisons.</p>
+</div>
+
+<script>
+var CURRENCY_COLORS = {
+  'Mirror of Kalandra': '#F4A7BB',
+  'Fracturing Orb': '#A7D8F0',
+  'Omen of Whittling': '#B8E6C8',
+  'Omen of Light': '#F4D6A0',
+  'Chaos Orb': '#D4A7F4',
+  'Exalted Orb': '#F4F4A7'
+};
+
+var LEAGUE_DASHES = {
+  'First League': [],
+  'Hunt': [8, 4],
+  'Abyss': [4, 4],
+  'Vaal': [12, 4, 4, 4],
+  'Runes': [2, 3]
+};
+
+var LEAGUE_ORDER = ['First League', 'Hunt', 'Abyss', 'Vaal', 'Runes'];
+var CURRENCY_ORDER = ['Mirror of Kalandra', 'Fracturing Orb', 'Omen of Whittling', 'Omen of Light', 'Chaos Orb', 'Exalted Orb'];
+
+var chartData = null;
+var activeLeagues = {};
+var activeCurrencies = {};
+var dpr = window.devicePixelRatio || 1;
+
+function findRefIndex(records, currencies) {
+  for (var i = 0; i < records.length; i++) {
+    var allOne = true;
+    var hasAny = false;
+    for (var c = 0; c < currencies.length; c++) {
+      var v = records[i][currencies[c]];
+      if (v !== null && v !== undefined) {
+        hasAny = true;
+        if (Math.abs(v - 1.0) > 0.001) { allOne = false; break; }
+      }
+    }
+    if (hasAny && allOne) return i;
+  }
+  return 0;
+}
+
+function buildSeries() {
+  var series = [];
+  var leagues = LEAGUE_ORDER.filter(function(l) { return activeLeagues[l]; });
+  var currencies = CURRENCY_ORDER.filter(function(c) { return activeCurrencies[c]; });
+
+  for (var li = 0; li < leagues.length; li++) {
+    var league = leagues[li];
+    var records = chartData[league];
+    if (!records) continue;
+    var curs = [];
+    for (var c = 0; c < CURRENCY_ORDER.length; c++) {
+      if (records[0] && records[0][CURRENCY_ORDER[c]] !== undefined) curs.push(CURRENCY_ORDER[c]);
+    }
+    var refIdx = findRefIndex(records, curs);
+
+    for (var ci = 0; ci < currencies.length; ci++) {
+      var currency = currencies[ci];
+      var points = [];
+      for (var r = 0; r < records.length; r++) {
+        var val = records[r][currency];
+        if (val !== null && val !== undefined) {
+          points.push({ day: r - refIdx, value: val });
+        }
+      }
+      if (points.length > 0) {
+        series.push({
+          league: league,
+          currency: currency,
+          points: points,
+          color: CURRENCY_COLORS[currency],
+          dash: LEAGUE_DASHES[league]
+        });
+      }
+    }
+  }
+  return series;
+}
+
+function drawChart() {
+  var canvas = document.getElementById('priceChart');
+  var wrap = canvas.parentElement;
+  var w = wrap.clientWidth;
+  var h = 420;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  var series = buildSeries();
+
+  var pad = { top: 20, right: 20, bottom: 40, left: 55 };
+  var plotW = w - pad.left - pad.right;
+  var plotH = h - pad.top - pad.bottom;
+
+  if (series.length === 0) {
+    ctx.fillStyle = '#6e7a8a';
+    ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Select at least one league and one currency', w / 2, h / 2);
+    return;
+  }
+
+  var minDay = Infinity, maxDay = -Infinity, minVal = Infinity, maxVal = -Infinity;
+  for (var i = 0; i < series.length; i++) {
+    for (var j = 0; j < series[i].points.length; j++) {
+      var p = series[i].points[j];
+      if (p.day < minDay) minDay = p.day;
+      if (p.day > maxDay) maxDay = p.day;
+      if (p.value < minVal) minVal = p.value;
+      if (p.value > maxVal) maxVal = p.value;
+    }
+  }
+
+  var valPad = (maxVal - minVal) * 0.08 || 0.5;
+  minVal = Math.max(0, minVal - valPad);
+  maxVal = maxVal + valPad;
+
+  function xPos(day) { return pad.left + ((day - minDay) / (maxDay - minDay || 1)) * plotW; }
+  function yPos(val) { return pad.top + (1 - (val - minVal) / (maxVal - minVal || 1)) * plotH; }
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  var yTicks = 6;
+  for (var t = 0; t <= yTicks; t++) {
+    var yv = minVal + (maxVal - minVal) * (t / yTicks);
+    var yy = yPos(yv);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yy);
+    ctx.lineTo(w - pad.right, yy);
+    ctx.stroke();
+
+    ctx.fillStyle = '#6e7a8a';
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(yv.toFixed(1), pad.left - 8, yy + 4);
+  }
+
+  var dayRange = maxDay - minDay;
+  var xStep = dayRange <= 15 ? 1 : dayRange <= 30 ? 5 : 10;
+  var startTick = Math.ceil(minDay / xStep) * xStep;
+  ctx.textAlign = 'center';
+  for (var d = startTick; d <= maxDay; d += xStep) {
+    var xx = xPos(d);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.beginPath();
+    ctx.moveTo(xx, pad.top);
+    ctx.lineTo(xx, h - pad.bottom);
+    ctx.stroke();
+
+    ctx.fillStyle = '#6e7a8a';
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.fillText('Day ' + d, xx, h - pad.bottom + 20);
+  }
+
+  if (minDay <= 0 && maxDay >= 0) {
+    ctx.strokeStyle = 'rgba(136,136,136,0.3)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(xPos(0), pad.top);
+    ctx.lineTo(xPos(0), h - pad.bottom);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  if (minVal <= 1 && maxVal >= 1) {
+    ctx.strokeStyle = 'rgba(136,136,136,0.3)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yPos(1));
+    ctx.lineTo(w - pad.right, yPos(1));
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  for (var s = 0; s < series.length; s++) {
+    var sr = series[s];
+    ctx.strokeStyle = sr.color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash(sr.dash);
+    ctx.beginPath();
+    for (var pi = 0; pi < sr.points.length; pi++) {
+      var px = xPos(sr.points[pi].day);
+      var py = yPos(sr.points[pi].value);
+      if (pi === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  canvas._series = series;
+  canvas._xPos = xPos;
+  canvas._yPos = yPos;
+  canvas._pad = pad;
+  canvas._minDay = minDay;
+  canvas._maxDay = maxDay;
+  canvas._plotW = plotW;
+
+  updateLegend();
+}
+
+function updateLegend() {
+  var container = document.getElementById('chartLegend');
+  container.innerHTML = '';
+  var leagues = LEAGUE_ORDER.filter(function(l) { return activeLeagues[l]; });
+
+  for (var i = 0; i < leagues.length; i++) {
+    var item = document.createElement('div');
+    item.className = 'legend-item';
+    var line = document.createElement('div');
+    line.className = 'legend-line';
+    line.style.background = '#888';
+    var dash = LEAGUE_DASHES[leagues[i]];
+    if (dash.length > 0) {
+      var svgNS = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', '24');
+      svg.setAttribute('height', '3');
+      var ln = document.createElementNS(svgNS, 'line');
+      ln.setAttribute('x1', '0');
+      ln.setAttribute('y1', '1.5');
+      ln.setAttribute('x2', '24');
+      ln.setAttribute('y2', '1.5');
+      ln.setAttribute('stroke', '#c9d1d9');
+      ln.setAttribute('stroke-width', '2');
+      ln.setAttribute('stroke-dasharray', dash.join(','));
+      svg.appendChild(ln);
+      item.appendChild(svg);
+    } else {
+      line.style.background = '#c9d1d9';
+      item.appendChild(line);
+    }
+    var label = document.createElement('span');
+    label.textContent = leagues[i];
+    item.appendChild(label);
+    container.appendChild(item);
+  }
+}
+
+function setupFilters() {
+  var leagueContainer = document.getElementById('leagueFilters');
+  var currencyContainer = document.getElementById('currencyFilters');
+
+  for (var i = 0; i < LEAGUE_ORDER.length; i++) {
+    activeLeagues[LEAGUE_ORDER[i]] = true;
+    var btn = document.createElement('button');
+    btn.className = 'filter-btn active';
+    btn.textContent = LEAGUE_ORDER[i];
+    btn.dataset.league = LEAGUE_ORDER[i];
+    btn.addEventListener('click', function() {
+      var l = this.dataset.league;
+      activeLeagues[l] = !activeLeagues[l];
+      this.classList.toggle('active');
+      drawChart();
+    });
+    leagueContainer.appendChild(btn);
+  }
+
+  for (var j = 0; j < CURRENCY_ORDER.length; j++) {
+    activeCurrencies[CURRENCY_ORDER[j]] = CURRENCY_ORDER[j] === 'Exalted Orb';
+    var btn2 = document.createElement('button');
+    btn2.className = 'filter-btn currency-btn' + (activeCurrencies[CURRENCY_ORDER[j]] ? ' active' : '');
+    btn2.textContent = CURRENCY_ORDER[j];
+    btn2.dataset.currency = CURRENCY_ORDER[j];
+    if (activeCurrencies[CURRENCY_ORDER[j]]) {
+      btn2.style.borderColor = CURRENCY_COLORS[CURRENCY_ORDER[j]];
+      btn2.style.color = CURRENCY_COLORS[CURRENCY_ORDER[j]];
+    }
+    btn2.addEventListener('click', function() {
+      var c = this.dataset.currency;
+      activeCurrencies[c] = !activeCurrencies[c];
+      this.classList.toggle('active');
+      if (activeCurrencies[c]) {
+        this.style.borderColor = CURRENCY_COLORS[c];
+        this.style.color = CURRENCY_COLORS[c];
+      } else {
+        this.style.borderColor = '';
+        this.style.color = '';
+      }
+      drawChart();
+    });
+    currencyContainer.appendChild(btn2);
+  }
+}
+
+function setupTooltip() {
+  var canvas = document.getElementById('priceChart');
+  var tooltip = document.getElementById('tooltip');
+
+  canvas.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var series = canvas._series;
+    if (!series || series.length === 0) { tooltip.style.display = 'none'; return; }
+
+    var pad = canvas._pad;
+    var minDay = canvas._minDay;
+    var maxDay = canvas._maxDay;
+    var plotW = canvas._plotW;
+
+    if (mx < pad.left || mx > pad.left + plotW) { tooltip.style.display = 'none'; return; }
+
+    var hoverDay = Math.round(minDay + ((mx - pad.left) / plotW) * (maxDay - minDay));
+
+    var rows = [];
+    for (var s = 0; s < series.length; s++) {
+      var sr = series[s];
+      var closest = null;
+      for (var p = 0; p < sr.points.length; p++) {
+        if (sr.points[p].day === hoverDay) { closest = sr.points[p]; break; }
+      }
+      if (closest) {
+        rows.push({ league: sr.league, currency: sr.currency, value: closest.value, color: sr.color });
+      }
+    }
+
+    if (rows.length === 0) { tooltip.style.display = 'none'; return; }
+
+    var html = '<div class="tooltip-title">Day ' + hoverDay + '</div>';
+    for (var r = 0; r < rows.length; r++) {
+      html += '<div class="tooltip-row"><span class="tooltip-dot" style="background:' + rows[r].color + '"></span>' +
+        rows[r].currency + ' <span style="color:var(--text-muted)">(' + rows[r].league + ')</span>: <strong>' + rows[r].value.toFixed(3) + '</strong></div>';
+    }
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+
+    var tw = tooltip.offsetWidth;
+    var tx = mx + 16;
+    if (tx + tw > canvas.clientWidth) tx = mx - tw - 16;
+    var ty = my - 10;
+    if (ty < 0) ty = 10;
+    tooltip.style.left = tx + 'px';
+    tooltip.style.top = ty + 'px';
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    tooltip.style.display = 'none';
+  });
+}
+
+fetch('/poe2/eoddb_poe2_price_data.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    chartData = data;
+    setupFilters();
+    setupTooltip();
+    drawChart();
+    window.addEventListener('resize', drawChart);
+  });
+</script>
 
 <script src="/eoddb_footer.js" defer></script>
 </body>
