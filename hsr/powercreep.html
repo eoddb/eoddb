@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
+<title>Powercreep — Honkai: Star Rail | EODdb.com</title>
+<meta name="description" content="Interactive spider chart comparing ATK, DEF, HP, SPD, and Energy across all Honkai: Star Rail characters by rarity and banner type.">
+<meta property="og:title" content="Powercreep — HSR Character Stats | EODdb.com">
+<meta property="og:description" content="Interactive spider chart comparing stats across all HSR characters.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Powercreep — HSR Character Stats | EODdb.com">
+<meta name="twitter:description" content="Interactive spider chart comparing stats across all HSR characters.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --header-text: #e6edf3;
+    --accent1: #6366f1;
+    --c1: #717092; --c1-bg: rgba(113,112,146,0.18);
+    --c2: #82A69C; --c2-bg: rgba(130,166,156,0.18);
+    --c3: #D4D4CC; --c3-bg: rgba(212,212,204,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .page-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 0.3rem;
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .chart-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-row .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-right: 2px;
+  }
+
+  .fbtn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .fbtn.sm { padding: 4px 10px; font-size: 12px; }
+  .fbtn:hover { background: var(--surface-hover); }
+  .fbtn.active { background: var(--c1); color: #fff; border-color: var(--c1); }
+
+  .compare-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .compare-row .label {
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Georgia', serif;
+  }
+  .compare-row select {
+    flex: 1;
+    min-width: 160px;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  #legendBox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-family: 'Georgia', serif;
+  }
+
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 480px;
+  }
+
+  #loading {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--text-muted);
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+  }
+
+  @media (max-width: 500px) {
+    .chart-wrap { height: 360px; }
+    .compare-row select { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<script src="/hsr/eoddb_hsr_nav.js"></script>
+
+<div class="page-header">
+  <h1>Powercreep</h1>
+  <span class="subtitle">Interactive stat comparison spider chart across all Honkai: Star Rail characters.</span>
+</div>
+
+<div class="chart-container">
+  <div class="filter-row">
+    <span class="label">Rarity:</span>
+    <button id="btnAll" class="fbtn active" onclick="setFilter('all')">All</button>
+    <button id="btn5" class="fbtn" onclick="setFilter('5star')">5</button>
+    <button id="btn4" class="fbtn" onclick="setFilter('4star')">4</button>
+  </div>
+  <div class="filter-row">
+    <span class="label">Banner:</span>
+    <button id="btnStd" class="fbtn sm" onclick="setFilter('Standard')">Standard</button>
+    <button id="btnL1" class="fbtn sm" onclick="setFilter('Limited (1.0)')">Limited 1.0</button>
+    <button id="btnL2" class="fbtn sm" onclick="setFilter('Limited (2.0)')">Limited 2.0</button>
+    <button id="btnL3" class="fbtn sm" onclick="setFilter('Limited (3.0)')">Limited 3.0</button>
+    <button id="btnL4" class="fbtn sm" onclick="setFilter('Limited (4.0)')">Limited 4.0</button>
+    <button id="btn41" class="fbtn sm" onclick="setFilter('4-Star (1.0)')">4★ 1.0</button>
+    <button id="btn42" class="fbtn sm" onclick="setFilter('4-Star (2.0)')">4★ 2.0</button>
+  </div>
+
+  <div class="compare-row">
+    <span class="label">Compare:</span>
+    <select id="char1"></select>
+    <select id="char2"></select>
+    <select id="char3"></select>
+  </div>
+
+  <div id="legendBox"></div>
+
+  <div id="loading">Loading character data…</div>
+  <div class="chart-wrap" style="display:none;">
+    <canvas id="spiderChart"></canvas>
+  </div>
+</div>
+
+<script>
+const serifFont = "'Georgia', serif";
+const sansFont = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+
+const colors = [
+  {br:'#717092', bgRaw:'rgba(113,112,146,0.18)'},
+  {br:'#82A69C', bgRaw:'rgba(130,166,156,0.18)'},
+  {br:'#D4D4CC', bgRaw:'rgba(212,212,204,0.25)'}
+];
+const avgDash = [6,4];
+
+const filterBtnMap = {
+  'all':'btnAll','5star':'btn5','4star':'btn4',
+  'Standard':'btnStd',
+  'Limited (1.0)':'btnL1','Limited (2.0)':'btnL2','Limited (3.0)':'btnL3','Limited (4.0)':'btnL4',
+  '4-Star (1.0)':'btn41','4-Star (2.0)':'btn42'
+};
+
+const allAvgKeys = ['__avgAll__','__avg5__','__avg4__','__avgStd__','__avgL1__','__avgL2__','__avgL3__','__avgL4__','__avg4s1__','__avg4s2__'];
+const filterAvgMap = {
+  'all':           allAvgKeys,
+  '5star':         ['__avg5__','__avgStd__','__avgL1__','__avgL2__','__avgL3__','__avgL4__','__avgAll__'],
+  '4star':         ['__avg4__','__avg4s1__','__avg4s2__','__avgAll__'],
+  'Standard':      ['__avgStd__','__avg5__','__avgAll__'],
+  'Limited (1.0)': ['__avgL1__','__avgL2__','__avgL3__','__avgL4__','__avg5__','__avgAll__'],
+  'Limited (2.0)': ['__avgL2__','__avgL1__','__avgL3__','__avgL4__','__avg5__','__avgAll__'],
+  'Limited (3.0)': ['__avgL3__','__avgL1__','__avgL2__','__avgL4__','__avg5__','__avgAll__'],
+  'Limited (4.0)': ['__avgL4__','__avgL1__','__avgL2__','__avgL3__','__avg5__','__avgAll__'],
+  '4-Star (1.0)':  ['__avg4s1__','__avg4s2__','__avg4__','__avgAll__'],
+  '4-Star (2.0)':  ['__avg4s2__','__avg4s1__','__avg4__','__avgAll__'],
+};
+
+let chars = [];
+let avgs = {};
+let maxA, maxD, maxH, maxS, maxE;
+let activeFilter = 'all';
+let chart;
+
+const sel1 = document.getElementById('char1');
+const sel2 = document.getElementById('char2');
+const sel3 = document.getElementById('char3');
+
+function computeAvg(list) {
+  const n = list.length;
+  if (n === 0) return {a:0,d:0,h:0,s:0,e:0};
+  return {
+    a: list.reduce((s,c) => s+c.a, 0)/n,
+    d: list.reduce((s,c) => s+c.d, 0)/n,
+    h: list.reduce((s,c) => s+c.h, 0)/n,
+    s: list.reduce((s,c) => s+c.s, 0)/n,
+    e: list.reduce((s,c) => s+c.e, 0)/n
+  };
+}
+
+function starLabel(c) {
+  return (c.r === 5 ? '5' : '4') + '★ ' + c.n;
+}
+
+function matchesFilter(c) {
+  if (activeFilter === 'all') return true;
+  if (activeFilter === '5star') return c.r === 5;
+  if (activeFilter === '4star') return c.r === 4;
+  return c.bt === activeFilter;
+}
+
+function populateSelects() {
+  const filtered = chars.filter(matchesFilter);
+  filtered.sort((a,b) => {
+    if (a.r !== b.r) return b.r - a.r;
+    return a.n.localeCompare(b.n);
+  });
+
+  const relevantAvgs = filterAvgMap[activeFilter] || allAvgKeys;
+  const prev = [sel1.value, sel2.value, sel3.value];
+
+  [sel1,sel2,sel3].forEach((sel, si) => {
+    sel.innerHTML = '';
+    if (si > 0) {
+      const o = document.createElement('option');
+      o.value = ''; o.textContent = '(none)';
+      sel.appendChild(o);
+    }
+
+    const avgGroup = document.createElement('optgroup');
+    avgGroup.label = '— Averages —';
+    relevantAvgs.forEach(key => {
+      const av = avgs[key];
+      if (!av) return;
+      const o = document.createElement('option');
+      o.value = key; o.textContent = '▇ ' + av.label;
+      avgGroup.appendChild(o);
+    });
+    sel.appendChild(avgGroup);
+
+    const charGroup = document.createElement('optgroup');
+    charGroup.label = '— Characters (' + filtered.length + ') —';
+    filtered.forEach(c => {
+      const idx = chars.indexOf(c);
+      const o = document.createElement('option');
+      o.value = idx; o.textContent = starLabel(c);
+      charGroup.appendChild(o);
+    });
+    sel.appendChild(charGroup);
+  });
+
+  [sel1,sel2,sel3].forEach((sel, si) => {
+    const pv = prev[si];
+    if ([...sel.options].some(o => o.value === pv)) sel.value = pv;
+    else if (si > 0) sel.value = '';
+  });
+}
+
+function getCharData(val) {
+  if (avgs[val]) {
+    const av = avgs[val];
+    return {obj: av.obj, label: av.label, isAvg: true, stars: '', starColor: '#6e7a8a'};
+  }
+  const c = chars[parseInt(val)];
+  const stars = c.r === 5 ? '5★' : '4★';
+  const starColor = c.r === 5 ? '#d4a017' : '#9370db';
+  return {obj: c, label: c.n + ' ' + stars, isAvg: false, starColor, stars};
+}
+
+function update() {
+  const picks = [sel1.value, sel2.value, sel3.value].filter(v => v !== '');
+  chart.data.datasets = picks.map((val, i) => {
+    const dd = getCharData(val);
+    const c = dd.obj;
+    const normData = [
+      Math.round(c.a/maxA*100), Math.round(c.d/maxD*100),
+      Math.round(c.h/maxH*100), Math.round(c.s/maxS*100),
+      Math.round(c.e/maxE*100)
+    ];
+    return {
+      label: dd.label, data: normData,
+      borderColor: colors[i].br,
+      backgroundColor: dd.isAvg ? 'transparent' : colors[i].bgRaw,
+      pointBorderColor: colors[i].br,
+      borderDash: dd.isAvg ? avgDash : [],
+      rawStats: [c.a, c.d, c.h, c.s, c.e]
+    };
+  });
+  chart.update();
+
+  const lb = document.getElementById('legendBox');
+  lb.innerHTML = picks.map((val, i) => {
+    const dd = getCharData(val);
+    const dashStyle = dd.isAvg
+      ? 'border-top:2px dashed ' + colors[i].br + ';width:14px;height:0;'
+      : 'width:10px;height:10px;border-radius:2px;background:' + colors[i].br + ';';
+    const starHtml = dd.stars ? ' <span style="color:' + dd.starColor + ';">' + dd.stars + '</span>' : '';
+    const nameLabel = dd.isAvg ? dd.label : dd.obj.n;
+    return '<span style="display:flex;align-items:center;gap:4px;"><span style="' + dashStyle + 'display:inline-block;"></span>' + nameLabel + starHtml + '</span>';
+  }).join('');
+}
+
+window.setFilter = function(f) {
+  activeFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  const btnId = filterBtnMap[f];
+  if (btnId) document.getElementById(btnId).classList.add('active');
+  populateSelects();
+  update();
+};
+
+async function init() {
+  const resp = await fetch('/hsr/hsr_spider_data.json');
+  chars = await resp.json();
+  chars.sort((a,b) => a.n.localeCompare(b.n));
+
+  maxA = Math.max(...chars.map(c => c.a));
+  maxD = Math.max(...chars.map(c => c.d));
+  maxH = Math.max(...chars.map(c => c.h));
+  maxS = Math.max(...chars.map(c => c.s));
+  maxE = Math.max(...chars.map(c => c.e));
+
+  avgs = {
+    '__avgAll__':  {obj: computeAvg(chars),                          label:'Avg: All Characters (' + chars.length + ')'},
+    '__avg5__':    {obj: computeAvg(chars.filter(c => c.r===5)),     label:'Avg: All 5-Star (' + chars.filter(c => c.r===5).length + ')'},
+    '__avg4__':    {obj: computeAvg(chars.filter(c => c.r===4)),     label:'Avg: All 4-Star (' + chars.filter(c => c.r===4).length + ')'},
+    '__avgStd__':  {obj: computeAvg(chars.filter(c => c.bt==='Standard')),       label:'Avg: Standard (' + chars.filter(c => c.bt==='Standard').length + ')'},
+    '__avgL1__':   {obj: computeAvg(chars.filter(c => c.bt==='Limited (1.0)')),  label:'Avg: Limited 1.0 (' + chars.filter(c => c.bt==='Limited (1.0)').length + ')'},
+    '__avgL2__':   {obj: computeAvg(chars.filter(c => c.bt==='Limited (2.0)')),  label:'Avg: Limited 2.0 (' + chars.filter(c => c.bt==='Limited (2.0)').length + ')'},
+    '__avgL3__':   {obj: computeAvg(chars.filter(c => c.bt==='Limited (3.0)')),  label:'Avg: Limited 3.0 (' + chars.filter(c => c.bt==='Limited (3.0)').length + ')'},
+    '__avgL4__':   {obj: computeAvg(chars.filter(c => c.bt==='Limited (4.0)')),  label:'Avg: Limited 4.0 (' + chars.filter(c => c.bt==='Limited (4.0)').length + ')'},
+    '__avg4s1__':  {obj: computeAvg(chars.filter(c => c.bt==='4-Star (1.0)')),   label:'Avg: 4★ 1.0 (' + chars.filter(c => c.bt==='4-Star (1.0)').length + ')'},
+    '__avg4s2__':  {obj: computeAvg(chars.filter(c => c.bt==='4-Star (2.0)')),   label:'Avg: 4★ 2.0 (' + chars.filter(c => c.bt==='4-Star (2.0)').length + ')'},
+  };
+
+  document.getElementById('loading').style.display = 'none';
+  document.querySelector('.chart-wrap').style.display = 'block';
+
+  Chart.defaults.font.family = sansFont;
+
+  chart = new Chart(document.getElementById('spiderChart'), {
+    type: 'radar',
+    data: { labels: ['ATK','DEF','HP','SPD','Energy'], datasets: [] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        r: {
+          beginAtZero: true, max: 100,
+          ticks: { stepSize: 20, color: '#6e7a8a', backdropColor: 'transparent', font: {size: 11, family: sansFont} },
+          grid: { color: 'rgba(255,255,255,0.08)' },
+          angleLines: { color: 'rgba(255,255,255,0.08)' },
+          pointLabels: { color: '#c9d1d9', font: {size: 14, weight: '500', family: serifFont} }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          titleFont: { family: serifFont, size: 13 },
+          bodyFont: { family: sansFont, size: 12 },
+          callbacks: {
+            title: items => items[0].dataset.label,
+            label: item => {
+              const raw = item.dataset.rawStats;
+              return item.label + ': ' + Math.round(raw[item.dataIndex]*100)/100 + ' (' + item.raw + '%)';
+            }
+          }
+        }
+      },
+      elements: {
+        line: { borderWidth: 2 },
+        point: { radius: 5, hoverRadius: 7, borderWidth: 2, backgroundColor: '#161b25' }
+      }
+    }
+  });
+
+  populateSelects();
+
+  const defaults = ['Kafka','Seele','Gepard'];
+  defaults.forEach((name, i) => {
+    const idx = chars.findIndex(c => c.n === name);
+    if (idx >= 0) [sel1,sel2,sel3][i].value = idx;
+  });
+
+  [sel1,sel2,sel3].forEach(s => s.addEventListener('change', update));
+  update();
+}
+
+init();
+</script>
+
+<script src="/eoddb_footer.js" defer></script>
+</body>
+</html>

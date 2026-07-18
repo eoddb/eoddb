@@ -1,6 +1,7 @@
 const EODDB_NAV_PAGES = [
   { label: 'Honkai: Star Rail', href: '/hsr', isHome: true },
   { label: 'Price Comparison', href: '/hsr/p2w' },
+  { label: 'Powercreep', href: '/hsr/powercreep' },
 ];
 
 (function() {
