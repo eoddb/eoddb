@@ -533,6 +533,27 @@
         </tbody>
       </table>
       <p style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">Formula: Total DEF = Base DEF &times; (1 + &Sigma; DEF%). Values truncated to integer in-game.</p>
+      <table class="annex-def-table" style="margin-top:24px;">
+        <caption>HP% formula verification &mdash; Hugglebeary (Base HP: 1,914)</caption>
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th>Build</th>
+            <th>&Sigma; HP%</th>
+            <th>Expected</th>
+            <th>Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Aspect STR(1)</td><td>15%</td><td>2,201</td><td>2,201</td></tr>
+          <tr><td>DOM(1)</td><td>23%</td><td>2,354</td><td>2,345</td></tr>
+          <tr><td>STR(3)</td><td>24%</td><td>2,373</td><td>2,374</td></tr>
+          <tr><td>DOM(3)</td><td>36%</td><td>2,603</td><td>2,603</td></tr>
+          <tr><td>STR(5)</td><td>38%</td><td>2,639</td><td>2,632</td></tr>
+          <tr><td>DOM(5)</td><td>56%</td><td>2,986</td><td>2,991</td></tr>
+          <tr><td>DOM(5) + UGL(2) Mr Avocado Buff</td><td>68%</td><td>3,216</td><td>3,221</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">Formula: Total HP = Base HP &times; (1 + &Sigma; HP%). Minor variance (&le;5) likely from hidden decimal precision on base stats or buff values.</p>
     </details>
   </div>
 
