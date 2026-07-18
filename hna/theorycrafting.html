@@ -616,7 +616,9 @@
         var x=padL+(d/maxDef)*pW;ctx.fillText(d,x,padT+pH+18);
         if(d>0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();}
       }
-      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText('DEF',padL+pW/2,padT+pH+38);
+      var defPctLabel=Math.round(existingDefPct*100);
+      var axisLabel=defPctLabel>0?'DEF (Existing DEF bonus of '+defPctLabel+'%)':'DEF';
+      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText(axisLabel,padL+pW/2,padT+pH+38);
 
       ctx.font='11px sans-serif';ctx.fillStyle=txtM;ctx.textAlign='right';
       for(var h=0;h<=maxHP;h+=10){
