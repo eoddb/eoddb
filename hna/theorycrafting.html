@@ -435,6 +435,10 @@
 
   var ttip={backgroundColor:'#161b25',titleColor:hdr,bodyColor:txt,borderColor:'#252d3d',borderWidth:1,padding:10,displayColors:false};
 
+  var wmPlugin={id:'watermark',afterDraw:function(chart){var ctx=chart.ctx;var w=chart.chartArea.width;var h=chart.chartArea.height;var cx=chart.chartArea.left+w/2;var cy=chart.chartArea.top+h/2;ctx.save();ctx.font='700 14px sans-serif';ctx.fillStyle='rgba(201,209,217,0.12)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.letterSpacing='1.5px';ctx.fillText('EODdb.com',cx,cy);ctx.restore();}};
+
+  function drawWatermark(ctx,W,H,padL,padR,padT,padB){var cx=padL+(W-padL-padR)/2;var cy=padT+(H-padT-padB)/2;ctx.save();ctx.font='700 14px sans-serif';ctx.fillStyle='rgba(201,209,217,0.12)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.letterSpacing='1.5px';ctx.fillText('EODdb.com',cx,cy);ctx.restore();}
+
   function xDef(max){
     return{type:'linear',min:0,max:max,
       title:{display:true,text:'DEF',color:hdr,font:{size:13,weight:500}},
@@ -452,7 +456,8 @@
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
       plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'Reduction: '+i.raw.y.toFixed(1)+'%';}}})},
       scales:{x:xDef(1000),y:{min:0,max:100,title:{display:true,text:'Damage reduction (%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
-      interaction:{mode:'nearest',axis:'x',intersect:false}}
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
   });
 
   // Chart 2: +12% DEF perk gain
@@ -465,7 +470,7 @@
       plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'DR gain: +'+i.raw.y.toFixed(2)+'%';}}})},
       scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'DR gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v.toFixed(1)+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',axis:'x',intersect:false}},
-    plugins:[{afterDraw:function(chart){var meta=chart.getDatasetMeta(0);var idx=Math.round(peakD/5);if(!meta.data[idx])return;var pt=meta.data[idx];var ctx=chart.ctx;ctx.save();ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle=txtM;ctx.lineWidth=1;ctx.moveTo(pt.x,chart.scales.y.bottom);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=hdr;ctx.font='500 11px sans-serif';ctx.textAlign='center';ctx.fillText('Peak ~'+peakD+' DEF',pt.x,pt.y-10);ctx.restore();}}]
+    plugins:[wmPlugin,{afterDraw:function(chart){var meta=chart.getDatasetMeta(0);var idx=Math.round(peakD/5);if(!meta.data[idx])return;var pt=meta.data[idx];var ctx=chart.ctx;ctx.save();ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle=txtM;ctx.lineWidth=1;ctx.moveTo(pt.x,chart.scales.y.bottom);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=hdr;ctx.font='500 11px sans-serif';ctx.textAlign='center';ctx.fillText('Peak ~'+peakD+' DEF',pt.x,pt.y-10);ctx.restore();}}]
   });
 
   // Chart 3: TTK vs DEF
@@ -477,7 +482,8 @@
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
       plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){var dr=(i.raw.x/(i.raw.x+100)*100).toFixed(1);return'TTK: '+i.raw.y.toFixed(1)+'x ('+dr+'% DR)';}}})},
       scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
-      interaction:{mode:'nearest',axis:'x',intersect:false}}
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
   });
 
   // Chart 4: TTK vs HP%
@@ -490,7 +496,8 @@
       plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'HP%: +'+i[0].raw.x+'%';},label:function(i){return'TTK: '+i.raw.y.toFixed(2)+'x';}}})},
       scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'HP% bonuses',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
         y:{min:1,max:2,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:0.25,color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
-      interaction:{mode:'nearest',axis:'x',intersect:false}}
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
   });
 
   // Heatmap helper
@@ -576,6 +583,8 @@
     var defLabel=defPct===0.12?'+12%':'+1%';
     var hpLabel=hpPct===0.08?'+8%':'+1%';
     document.getElementById(unitId).innerHTML='222 DEF | 68% HP% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% EHP</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% EHP</strong>';
+
+    drawWatermark(ctx,W,H,padL,padR,padT,padB);
 
     var hoverEl=document.getElementById(hoverId);
     canvas.addEventListener('mousemove',function(e){
