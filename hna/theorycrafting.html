@@ -348,6 +348,18 @@
 <div class="tc-content" id="tank-tc">
 
   <div class="tc-section">
+    <h2>Summary</h2>
+    <ul class="summary-list">
+      <li><strong>DEF has true linear scaling</strong> in terms of survivability &mdash; every point of DEF extends Time To Kill (TTK) by the same flat amount, despite the Damage Reduction % curve looking like diminishing returns.</li>
+      <li><strong>HP% bonuses are additive</strong>, so stacking them gives diminishing marginal Effective HP gain per perk &mdash; the more HP% you already have, the less each additional +8% is worth.</li>
+      <li><strong>The 12% DEF vs 8% HP ratio is intentional balance</strong> &mdash; at 1:1, HP generally outperforms assuming no sources of either. The 1.5&times; multiplier on DEF makes it largely the superior pick for any build above ~200 DEF.</li>
+      <li><strong>DEF% bonuses dilute DEF perks</strong> the same way HP% dilutes HP perks &mdash; a +12% DEF perk at 50% existing DEF% only gives an effective +8% multiplier. Use the interactive sliders below to see how your existing DEF% shifts the breakpoint.</li>
+      <li><strong>The +12% DEF perk's damage reduction gain peaks around 100 DEF</strong> (~2.8%), but its EHP advantage over HP% grows as both DEF and existing HP% increase.</li>
+      <li><strong>To reach 99% damage reduction</strong> requires 9,900 DEF &mdash; the formula ensures this is prohibitively expensive, keeping the game balanced.</li>
+    </ul>
+  </div>
+
+  <div class="tc-section">
     <h2>DEF vs damage reduction</h2>
     <div class="formula-box">DMG_REDUCTION = DEF / (DEF + 100)</div>
     <div class="chart-container"><canvas id="chart1"></canvas></div>
@@ -417,17 +429,6 @@
       <div class="unit-detail" id="unit6detail">222 DEF | 68% HP%</div>
     </div>
     <p style="margin-top:12px;">At equal 1:1 ratios, HP is far stronger &mdash; you need 100 DEF just to break even with 0% existing HP%. At Hugglebeary's stats, the two perks are much closer than in the 12-vs-8 comparison. The devs intentionally gave DEF a 1.5&times; multiplier (12% vs 8%) to compensate for the +100 constant in the formula always diluting DEF's value.</p>
-  </div>
-
-  <div class="tc-section">
-    <h2>Summary</h2>
-    <ul class="summary-list">
-      <li><strong>DEF has true linear scaling</strong> in terms of survivability &mdash; every point of DEF extends Time To Kill (TTK) by the same flat amount, despite the Damage Reduction % curve looking like diminishing returns.</li>
-      <li><strong>HP% bonuses are additive</strong>, so stacking them gives diminishing marginal Effective HP gain per perk &mdash; the more HP% you already have, the less each additional +8% is worth.</li>
-      <li><strong>The 12% DEF vs 8% HP ratio is intentional balance</strong> &mdash; at 1:1, HP generally outperforms assuming no sources of either. The 1.5&times; multiplier on DEF makes it largely the superior pick for any build above ~200 DEF.</li>
-      <li><strong>The +12% DEF perk's damage reduction gain peaks around 100 DEF</strong> (~2.8%), but its EHP advantage over HP% grows as both DEF and existing HP% increase.</li>
-      <li><strong>To reach 99% damage reduction</strong> requires 9,900 DEF &mdash; the formula ensures this is prohibitively expensive, keeping the game balanced.</li>
-    </ul>
   </div>
 
   <div class="tc-section">
