@@ -321,6 +321,61 @@
     text-align: right;
   }
 
+  .tc-section details summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--accent1);
+    font-weight: 500;
+    padding: 4px 0;
+    user-select: none;
+    list-style: none;
+  }
+
+  .tc-section details summary::-webkit-details-marker { display: none; }
+
+  .tc-section details summary::before {
+    content: '▸ ';
+    display: inline;
+    transition: transform 0.15s;
+  }
+
+  .tc-section details[open] summary::before {
+    content: '▾ ';
+  }
+
+  .annex-def-table {
+    width: auto;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .annex-def-table caption {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--header-text);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .annex-def-table th {
+    padding: 4px 12px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .annex-def-table td {
+    padding: 3px 12px;
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  .annex-def-table tr + tr { border-top: 1px solid var(--border); }
+
   @media (max-width: 500px) {
     .tc-topic { flex-direction: column; text-align: center; gap: 10px; }
     .chart-container { height: 220px; }
@@ -432,34 +487,54 @@
   </div>
 
   <div class="tc-section">
-    <h2>Annex: test data</h2>
-    <div class="annex-table-wrap">
-      <table class="annex-table">
+    <details>
+      <summary>Annex: test data</summary>
+      <div class="annex-table-wrap" style="margin-top:12px;">
+        <table class="annex-table">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th colspan="7" style="color:var(--tc-1);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">My unit</th>
+              <th colspan="7" style="color:var(--tc-2);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">Opponent</th>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="color:var(--text-muted);">Unit</th>
+              <th style="color:var(--text-muted);">Lv</th>
+              <th style="color:var(--text-muted);">ATK</th>
+              <th style="color:var(--text-muted);">DEF</th>
+              <th style="color:var(--text-muted);">MDEF</th>
+              <th style="color:var(--text-muted);">DEF%</th>
+              <th style="color:var(--text-muted);">MDEF%</th>
+              <th style="color:var(--text-muted);">Unit</th>
+              <th style="color:var(--text-muted);">Lv</th>
+              <th style="color:var(--text-muted);">ATK</th>
+              <th style="color:var(--text-muted);">DEF</th>
+              <th style="color:var(--text-muted);">MR</th>
+              <th style="color:var(--text-muted);">DEF%</th>
+              <th style="color:var(--text-muted);">MDEF%</th>
+            </tr>
+          </thead>
+          <tbody id="annexBody"></tbody>
+        </table>
+      </div>
+      <table class="annex-def-table" style="margin-top:20px;">
+        <caption>DEF% formula verification &mdash; Puddlipup (Base DEF: 63)</caption>
         <thead>
-          <tr style="border-bottom:2px solid var(--border);">
-            <th colspan="7" style="color:var(--tc-1);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">My unit</th>
-            <th colspan="7" style="color:var(--tc-2);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">Opponent</th>
-          </tr>
           <tr style="border-bottom:1px solid var(--border);">
-            <th style="color:var(--text-muted);">Unit</th>
-            <th style="color:var(--text-muted);">Lv</th>
-            <th style="color:var(--text-muted);">ATK</th>
-            <th style="color:var(--text-muted);">DEF</th>
-            <th style="color:var(--text-muted);">MDEF</th>
-            <th style="color:var(--text-muted);">DEF%</th>
-            <th style="color:var(--text-muted);">MDEF%</th>
-            <th style="color:var(--text-muted);">Unit</th>
-            <th style="color:var(--text-muted);">Lv</th>
-            <th style="color:var(--text-muted);">ATK</th>
-            <th style="color:var(--text-muted);">DEF</th>
-            <th style="color:var(--text-muted);">MR</th>
-            <th style="color:var(--text-muted);">DEF%</th>
-            <th style="color:var(--text-muted);">MDEF%</th>
+            <th>Buffs active</th>
+            <th>&Sigma; DEF%</th>
+            <th>Expected</th>
+            <th>Actual</th>
           </tr>
         </thead>
-        <tbody id="annexBody"></tbody>
+        <tbody>
+          <tr><td>12% disposition</td><td>12%</td><td>70.56</td><td>70</td></tr>
+          <tr><td>24% disposition</td><td>24%</td><td>78.12</td><td>78</td></tr>
+          <tr><td>12% disposition + 40% skill</td><td>52%</td><td>95.76</td><td>95</td></tr>
+          <tr><td>24% disposition + 40% skill</td><td>64%</td><td>103.32</td><td>103</td></tr>
+        </tbody>
       </table>
-    </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">Formula: Total DEF = Base DEF &times; (1 + &Sigma; DEF%). Values truncated to integer in-game.</p>
+    </details>
   </div>
 
   <a href="#top" class="back-to-top">&uarr; Back to top</a>
