@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
+<title>Honkai: Nexus Anima Theorycrafting by EODGamer | EODdb.com</title>
+<meta name="description" content="Honkai: Nexus Anima theorycrafting — DEF vs damage reduction, EHP analysis, TTK calculations, and perk breakpoint comparisons. Using math and data to optimise builds.">
+<meta name="keywords" content="Honkai Nexus Anima theorycrafting, HNA tank build, DEF damage reduction, EHP analysis, TTK calculator, Nexus Anima perk comparison, Nexus Anima build guide, Nexus Anima defence, Nexus Anima HP">
+<meta property="og:title" content="Honkai: Nexus Anima Theorycrafting by EODGamer | EODdb.com">
+<meta property="og:description" content="DEF vs damage reduction, EHP analysis, TTK curves, and perk breakpoint comparisons for Honkai: Nexus Anima.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Honkai: Nexus Anima Theorycrafting by EODGamer | EODdb.com">
+<meta name="twitter:description" content="Theorycrafting for Honkai: Nexus Anima — defence, HP, and perk analysis on EODdb.com.">
+
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --header-text: #e6edf3;
+    --accent1: #6366f1;
+    --accent1-dim: rgba(99,102,241,0.12);
+    --tc-1: #8a89b0;
+    --tc-2: #92b6ac;
+    --tc-3: #8a8a84;
+    --tc-1-fill: rgba(138,137,176,0.12);
+    --tc-2-fill: rgba(146,182,172,0.12);
+    --tc-grid: #1e2430;
+    --tc-axis: #2a3040;
+    --def-win-rgb: 100,99,140;
+    --hp-win-rgb: 110,156,146;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Subsection box ── */
+  .tc-topic {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .tc-topic-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .tc-topic-text {
+    flex: 1;
+  }
+
+  .tc-topic-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 2px;
+  }
+
+  .tc-topic-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Report content ── */
+  .tc-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .tc-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+  }
+
+  .tc-section h2 {
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--header-text);
+    margin-bottom: 12px;
+  }
+
+  .tc-section p {
+    font-size: 0.85rem;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .tc-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .formula-box {
+    background: rgba(99,102,241,0.08);
+    border-left: 3px solid var(--tc-1);
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--header-text);
+    border-radius: 0 6px 6px 0;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    margin-bottom: 12px;
+  }
+
+  canvas.heatmap {
+    width: 100%;
+    border-radius: 4px;
+    cursor: crosshair;
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .chart-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .chart-legend .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .chart-legend .line-swatch {
+    width: 16px;
+    height: 2px;
+    flex-shrink: 0;
+  }
+
+  .hover-readout {
+    font-size: 11px;
+    color: var(--text-muted);
+    min-height: 16px;
+    margin-top: 6px;
+  }
+
+  .unit-card {
+    background: rgba(99,102,241,0.08);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .unit-card .unit-name {
+    font-weight: 600;
+    color: var(--header-text);
+    margin-bottom: 2px;
+  }
+
+  .unit-card .unit-detail {
+    color: var(--text);
+  }
+
+  /* ── Summary ── */
+  .summary-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .summary-list li {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .summary-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--tc-1);
+  }
+
+  .summary-list li strong {
+    color: var(--header-text);
+  }
+
+  /* ── Annex table ── */
+  .annex-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+
+  .annex-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .annex-table th {
+    padding: 4px 8px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .annex-table td {
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  /* ── Back to top ── */
+  .back-to-top {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: var(--accent1);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-to-top:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 500px) {
+    .tc-topic { flex-direction: column; text-align: center; gap: 10px; }
+    .chart-container { height: 220px; }
+  }
+</style>
+</head>
+<body>
+<script src="/hna/eoddb_hna_nav.js"></script>
+
+<div class="page-header">
+  <h1>Honkai: Nexus Anima Theorycrafting by EODGamer</h1>
+  <span class="subtitle">Using math and data to optimise builds, compare gear/perks, and find breakpoints.</span>
+</div>
+
+<!-- ── Tank Theorycrafting topic box ── -->
+<div class="tc-topic" id="top">
+  <img src="/hna/img/theorycrafting.webp" alt="Shield" class="tc-topic-icon">
+  <div class="tc-topic-text">
+    <div class="tc-topic-title">Tank Theorycrafting</div>
+    <div class="tc-topic-desc">Defence scaling, EHP analysis, time-to-kill curves, and DEF vs HP perk breakpoints.</div>
+  </div>
+</div>
+
+<!-- ── Tank Theorycrafting content ── -->
+<div class="tc-content" id="tank-tc">
+
+  <div class="tc-section">
+    <h2>DEF vs damage reduction</h2>
+    <div class="formula-box">DMG_REDUCTION = DEF / (DEF + 100)</div>
+    <div class="chart-container"><canvas id="chart1"></canvas></div>
+    <p>Defence converts to damage reduction on a diminishing-returns curve. The first 100 DEF buys 50% reduction; doubling to 200 only reaches 66.7%. Reaching 90% costs 900 DEF, and 99% costs 9,900. The formula ensures every point of DEF always helps, but each one helps a little less than the last.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>+12% DEF perk: damage reduction gained</h2>
+    <div class="formula-box">Gain = f(1.12 &times; DEF) &minus; f(DEF)<br>where f(x) = x / (x + 100)</div>
+    <div class="chart-container"><canvas id="chart2"></canvas></div>
+    <p>A percentage-based DEF perk doesn't give flat returns. At low DEF, 12% of a small number is still small. At high DEF, diminishing returns eat into the gain. The perk peaks around 100 DEF at roughly +2.8% damage reduction, then tapers. This hump shape &mdash; unlike a pure derivative &mdash; is what makes the perk's value position-dependent.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Time to kill vs DEF</h2>
+    <div class="formula-box">TTK multiplier = 1 / (1 &minus; DR) = (DEF + 100) / 100</div>
+    <div class="chart-container"><canvas id="chart3"></canvas></div>
+    <p>Substituting the DR formula back into effective HP reveals a perfectly straight line. Every point of DEF gives the same survivability gain as the last &mdash; 100 DEF = 2&times; TTK, 500 DEF = 6&times;, 900 DEF = 10&times;. This linearity is the entire purpose of the DEF/(DEF+100) formula: it makes DEF stacking feel consistently rewarding without ever becoming broken.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Time to kill vs HP% bonuses</h2>
+    <div class="formula-box">Total HP = Base HP &times; (1 + &Sigma; HP% Bonuses)<br>TTK multiplier from HP% = (1 + HP%)</div>
+    <div class="chart-container"><canvas id="chart4"></canvas></div>
+    <p>HP% bonuses are additive with each other, so the TTK multiplier from HP stacking is also a straight line &mdash; 50% HP bonus = 1.5&times; TTK, 100% = 2&times;. However, because each additional +8% HP is added to an ever-growing sum, the marginal EHP gain per perk diminishes: the first +8% gives 8% more TTK, but at 100% existing HP% it only gives 4%.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>+12% DEF vs +8% HP</h2>
+    <div class="formula-box">+12% DEF EHP gain = 0.12 &times; DEF / (DEF + 100)<br>+8% HP EHP gain&nbsp; = 0.08 / (1 + HP%)<br><br>Breakeven: HP% = 200 / (3 &times; DEF) &minus; 1/3</div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#717092;"></span>+12% DEF wins</span>
+      <span><span class="swatch" style="background:#82A69C;"></span>+8% HP wins</span>
+      <span><span class="line-swatch" style="background:#D4D4CC;"></span>Breakeven</span>
+    </div>
+    <canvas id="heat5" class="heatmap" width="660" height="400"></canvas>
+    <div class="hover-readout" id="hover5"></div>
+    <div class="unit-card">
+      <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
+      <div class="unit-detail" id="unit5detail">222 DEF | 68% HP%</div>
+    </div>
+    <p style="margin-top:12px;">With the game's actual perk ratio of 12% DEF to 8% HP, the DEF perk dominates for most mid-to-late game builds. At Hugglebeary's 222 DEF and 68% HP%, the +12% DEF perk gives +8.30% EHP versus +4.76% from +8% HP &mdash; DEF wins by 3.54%. The breakeven line shows that above 200 DEF, even 0% existing HP% favours DEF.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>+1% DEF vs +1% HP</h2>
+    <div class="formula-box">+1% DEF EHP gain = 0.01 &times; DEF / (DEF + 100)<br>+1% HP EHP gain&nbsp; = 0.01 / (1 + HP%)<br><br>Breakeven: HP% = 100 / DEF &minus; 1</div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#717092;"></span>+1% DEF wins</span>
+      <span><span class="swatch" style="background:#82A69C;"></span>+1% HP wins</span>
+      <span><span class="line-swatch" style="background:#D4D4CC;"></span>Breakeven</span>
+    </div>
+    <canvas id="heat6" class="heatmap" width="660" height="400"></canvas>
+    <div class="hover-readout" id="hover6"></div>
+    <div class="unit-card">
+      <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
+      <div class="unit-detail" id="unit6detail">222 DEF | 68% HP%</div>
+    </div>
+    <p style="margin-top:12px;">At equal 1:1 ratios, HP is far stronger &mdash; you need 100 DEF just to break even with 0% existing HP%. At Hugglebeary's stats, the two perks are much closer than in the 12-vs-8 comparison. The devs intentionally gave DEF a 1.5&times; multiplier (12% vs 8%) to compensate for the +100 constant in the formula always diluting DEF's value.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Summary</h2>
+    <ul class="summary-list">
+      <li><strong>DEF has true linear scaling</strong> in terms of survivability &mdash; every point of DEF extends TTK by the same flat amount, despite the DR% curve looking like diminishing returns.</li>
+      <li><strong>HP% bonuses are additive</strong>, so stacking them gives diminishing marginal EHP gain per perk &mdash; the more HP% you already have, the less each additional +8% is worth.</li>
+      <li><strong>The 12% DEF vs 8% HP ratio is intentional balance</strong> &mdash; at 1:1, HP always wins. The 1.5&times; multiplier on DEF makes it the superior pick for any build above ~200 DEF with any meaningful HP% stacking.</li>
+      <li><strong>For Hugglebeary at 222 DEF / 68% HP%</strong>, the +12% DEF perk delivers +8.30% EHP versus +4.76% from +8% HP. Take DEF every time at this stat line.</li>
+      <li><strong>The +12% DEF perk's damage reduction gain peaks around 100 DEF</strong> (~2.8%), but its EHP advantage over HP% grows as both DEF and existing HP% increase.</li>
+      <li><strong>To reach 99% damage reduction</strong> requires 9,900 DEF &mdash; the formula ensures this is prohibitively expensive, keeping the game balanced.</li>
+    </ul>
+  </div>
+
+  <div class="tc-section">
+    <h2>Annex: test data</h2>
+    <div class="annex-table-wrap">
+      <table class="annex-table">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border);">
+            <th colspan="7" style="color:var(--tc-1);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">My unit</th>
+            <th colspan="7" style="color:var(--tc-2);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">Opponent</th>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="color:var(--text-muted);">Unit</th>
+            <th style="color:var(--text-muted);">Lv</th>
+            <th style="color:var(--text-muted);">ATK</th>
+            <th style="color:var(--text-muted);">DEF</th>
+            <th style="color:var(--text-muted);">MDEF</th>
+            <th style="color:var(--text-muted);">DEF%</th>
+            <th style="color:var(--text-muted);">MDEF%</th>
+            <th style="color:var(--text-muted);">Unit</th>
+            <th style="color:var(--text-muted);">Lv</th>
+            <th style="color:var(--text-muted);">ATK</th>
+            <th style="color:var(--text-muted);">DEF</th>
+            <th style="color:var(--text-muted);">MR</th>
+            <th style="color:var(--text-muted);">DEF%</th>
+            <th style="color:var(--text-muted);">MDEF%</th>
+          </tr>
+        </thead>
+        <tbody id="annexBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <a href="#top" class="back-to-top">&uarr; Back to top</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  var tc1='#8a89b0',tc2='#92b6ac',tc3='#8a8a84';
+  var f1='rgba(138,137,176,0.12)',f2='rgba(146,182,172,0.12)';
+  var txt='#c9d1d9',txtM='#6e7a8a',hdr='#e6edf3';
+  var grd='#1e2430',axs='#2a3040',sfc='#161b25';
+
+  var ttip={backgroundColor:'#161b25',titleColor:hdr,bodyColor:txt,borderColor:'#252d3d',borderWidth:1,padding:10,displayColors:false};
+
+  function xDef(max){
+    return{type:'linear',min:0,max:max,
+      title:{display:true,text:'DEF',color:hdr,font:{size:13,weight:500}},
+      ticks:{stepSize:25,color:txtM,font:{size:11},callback:function(v){return v%(max<=100?25:100)===0?v:'';},autoSkip:false},
+      grid:{color:function(ctx){return ctx.tick.value%(max<=100?25:100)===0?grd:'transparent';},lineWidth:1},
+      border:{color:axs}};
+  }
+
+  // Chart 1: DEF vs DR
+  var d1=[];
+  for(var d=0;d<=1000;d+=5) d1.push({x:d,y:Math.round(d/(d+100)*10000)/100});
+  new Chart(document.getElementById('chart1'),{
+    type:'line',
+    data:{datasets:[{data:d1,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'Reduction: '+i.raw.y.toFixed(1)+'%';}}})},
+      scales:{x:xDef(1000),y:{min:0,max:100,title:{display:true,text:'Damage reduction (%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}}
+  });
+
+  // Chart 2: +12% DEF perk gain
+  var d2=[],peakV=0,peakD=0;
+  for(var d=0;d<=1000;d+=5){var gdr=d*1.12/(d*1.12+100)*100-d/(d+100)*100;d2.push({x:d,y:Math.round(gdr*1000)/1000});if(gdr>peakV){peakV=gdr;peakD=d;}}
+  new Chart(document.getElementById('chart2'),{
+    type:'line',
+    data:{datasets:[{data:d2,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'DR gain: +'+i.raw.y.toFixed(2)+'%';}}})},
+      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'DR gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v.toFixed(1)+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[{afterDraw:function(chart){var meta=chart.getDatasetMeta(0);var idx=Math.round(peakD/5);if(!meta.data[idx])return;var pt=meta.data[idx];var ctx=chart.ctx;ctx.save();ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle=txtM;ctx.lineWidth=1;ctx.moveTo(pt.x,chart.scales.y.bottom);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=hdr;ctx.font='500 11px sans-serif';ctx.textAlign='center';ctx.fillText('Peak ~'+peakD+' DEF',pt.x,pt.y-10);ctx.restore();}}]
+  });
+
+  // Chart 3: TTK vs DEF
+  var d3=[];
+  for(var d=0;d<=1000;d+=5) d3.push({x:d,y:Math.round((d+100)/100*100)/100});
+  new Chart(document.getElementById('chart3'),{
+    type:'line',
+    data:{datasets:[{data:d3,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){var dr=(i.raw.x/(i.raw.x+100)*100).toFixed(1);return'TTK: '+i.raw.y.toFixed(1)+'x ('+dr+'% DR)';}}})},
+      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}}
+  });
+
+  // Chart 4: TTK vs HP%
+  var d4=[];
+  for(var h=0;h<=100;h+=1) d4.push({x:h,y:Math.round((1+h/100)*100)/100});
+  new Chart(document.getElementById('chart4'),{
+    type:'line',
+    data:{datasets:[{data:d4,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'HP%: +'+i[0].raw.x+'%';},label:function(i){return'TTK: '+i.raw.y.toFixed(2)+'x';}}})},
+      scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'HP% bonuses',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
+        y:{min:1,max:2,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:0.25,color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}}
+  });
+
+  // Heatmap helper
+  function drawHeatmap(canvasId,hoverId,unitId,defPct,hpPct){
+    var canvas=document.getElementById(canvasId);
+    var ctx=canvas.getContext('2d');
+    var W=canvas.width,H=canvas.height;
+    var padL=55,padR=15,padT=10,padB=45;
+    var pW=W-padL-padR,pH=H-padT-padB;
+    var maxDef=1000,maxHP=100;
+    var defR=100,defG=99,defB=140;
+    var hpR=110,hpG=156,hpB=146;
+
+    function gDef(d){return((1+defPct)*d+100)/(d+100)-1;}
+    function gHP(h){return hpPct/(1+h);}
+
+    for(var dx=0;dx<=maxDef;dx+=5){
+      for(var hp=0;hp<=maxHP;hp+=1){
+        var diff=gDef(dx)-gHP(hp/100);
+        var intensity=Math.min(Math.abs(diff)/(defPct>0.05?0.08:0.008),1);
+        var alpha=0.15+intensity*0.7;
+        var px=padL+(dx/maxDef)*pW;
+        var py=padT+(1-hp/maxHP)*pH;
+        var bw=Math.ceil(5/maxDef*pW)+1;
+        var bh=Math.ceil(1/maxHP*pH)+1;
+        if(diff>0) ctx.fillStyle='rgba('+defR+','+defG+','+defB+','+alpha+')';
+        else ctx.fillStyle='rgba('+hpR+','+hpG+','+hpB+','+alpha+')';
+        ctx.fillRect(px,py,bw,bh);
+      }
+    }
+
+    ctx.beginPath();ctx.strokeStyle=tc3;ctx.lineWidth=2.5;
+    var first=true;
+    for(var dx=0;dx<=maxDef;dx+=2){
+      var gd=gDef(dx);if(gd<=0)continue;
+      var bHP=(hpPct/gd-1)*100;
+      if(bHP<0)bHP=0;if(bHP>maxHP)continue;
+      var px=padL+(dx/maxDef)*pW;
+      var py=padT+(1-bHP/maxHP)*pH;
+      if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+
+    var ux=padL+(222/maxDef)*pW,uy=padT+(1-68/maxHP)*pH;
+    ctx.beginPath();ctx.arc(ux,uy,8,0,Math.PI*2);ctx.fillStyle=sfc;ctx.fill();
+    ctx.beginPath();ctx.arc(ux,uy,6,0,Math.PI*2);ctx.fillStyle=tc3;ctx.fill();
+    ctx.beginPath();ctx.arc(ux,uy,7,0,Math.PI*2);ctx.strokeStyle=hdr;ctx.lineWidth=1.5;ctx.stroke();
+
+    var lx=ux+14;
+    var lines=['Lv.50 Hugglebeary','STR(5) Dominator','UGL(2) Mr Avocado Buff','222 DEF | 68% HP%'];
+    var lh=13,boxW=148,boxH=lines.length*lh+8;
+    var bx=lx-4,by=uy-lh-8;
+    if(bx+boxW>W-padR){lx=ux-14;bx=lx-boxW+4;ctx.textAlign='right';}else{ctx.textAlign='left';}
+    ctx.fillStyle=sfc;ctx.globalAlpha=0.92;ctx.fillRect(bx,by,boxW,boxH);ctx.globalAlpha=1;
+    ctx.strokeStyle='#252d3d';ctx.lineWidth=0.5;ctx.strokeRect(bx,by,boxW,boxH);
+    ctx.beginPath();ctx.strokeStyle=txtM;ctx.lineWidth=1;
+    ctx.moveTo(ux+(ctx.textAlign==='left'?9:-9),uy);ctx.lineTo(lx,uy);ctx.stroke();
+    var ty=uy-6;
+    lines.forEach(function(l,i){
+      ctx.font=i===0?'600 11px sans-serif':i===3?'500 10px sans-serif':'11px sans-serif';
+      ctx.fillStyle=i===0?hdr:txtM;
+      ctx.fillText(l,lx,ty);ty+=lh;
+    });
+
+    ctx.textAlign='center';ctx.fillStyle=txtM;ctx.font='11px sans-serif';
+    for(var d=0;d<=maxDef;d+=100){
+      var x=padL+(d/maxDef)*pW;ctx.fillText(d,x,padT+pH+18);
+      if(d>0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();}
+    }
+    ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText('DEF',padL+pW/2,padT+pH+38);
+
+    ctx.font='11px sans-serif';ctx.fillStyle=txtM;ctx.textAlign='right';
+    for(var h=0;h<=maxHP;h+=10){
+      var y=padT+(1-h/maxHP)*pH;ctx.fillText(h+'%',padL-8,y+4);
+      if(h>0&&h%20===0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(padL,y);ctx.lineTo(padL+pW,y);ctx.stroke();}
+    }
+    ctx.save();ctx.translate(14,padT+pH/2);ctx.rotate(-Math.PI/2);
+    ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.textAlign='center';
+    ctx.fillText('Existing HP% bonuses',0,0);ctx.restore();
+
+    var gdVal=(gDef(222)*100).toFixed(2);
+    var ghVal=(gHP(0.68)*100).toFixed(2);
+    var defLabel=defPct===0.12?'+12%':'+1%';
+    var hpLabel=hpPct===0.08?'+8%':'+1%';
+    document.getElementById(unitId).innerHTML='222 DEF | 68% HP% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% EHP</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% EHP</strong>';
+
+    var hoverEl=document.getElementById(hoverId);
+    canvas.addEventListener('mousemove',function(e){
+      var rect=canvas.getBoundingClientRect();
+      var sx=W/rect.width;
+      var mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sx;
+      var def=Math.round(((mx-padL)/pW)*maxDef);
+      var hp=Math.round((1-(my-padT)/pH)*maxHP);
+      if(def<0||def>maxDef||hp<0||hp>maxHP){hoverEl.textContent='';return;}
+      var gd2=(gDef(def)*100).toFixed(2);
+      var gh2=(gHP(hp/100)*100).toFixed(2);
+      var w=gDef(def)>gHP(hp/100)?defLabel+' DEF':hpLabel+' HP';
+      hoverEl.textContent='DEF: '+def+' | HP%: '+hp+'% → '+defLabel+' DEF: +'+gd2+'% EHP, '+hpLabel+' HP: +'+gh2+'% EHP → '+w+' wins';
+    });
+    canvas.addEventListener('mouseleave',function(){hoverEl.textContent='';});
+  }
+
+  drawHeatmap('heat5','hover5','unit5detail',0.12,0.08);
+  drawHeatmap('heat6','hover6','unit6detail',0.01,0.01);
+
+  // Annex data
+  var rows=[
+    ['Damasque',41,54,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',42,55,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',43,55,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',44,56,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',45,57,44,44,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',46,58,44,44,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Lumeridon',46,142,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Mushgloomini',46,71,38,134,28,57,'Muscimmon',46,119,72,72,42,42],
+    ['Donnatallow',40,86,35,35,26,26,'Hugglebeary',46,98,223,83,69,46],
+    ['Donnatallow',40,95,38,38,28,28,'Hugglebeary',46,98,223,83,69,46],
+    ['Muscimmon',31,75,39,39,28,28,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',32,76,39,39,28,28,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',33,78,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',34,79,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',35,80,41,41,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',36,81,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',37,83,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',38,84,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',39,86,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',40,95,48,48,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',41,96,49,49,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',42,98,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',43,99,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',44,100,51,51,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',45,101,51,51,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',46,103,52,52,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',47,104,53,53,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',48,105,53,53,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',49,106,54,54,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',50,108,54,54,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',40,39,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',46,42,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',50,44,45,45,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',50,108,54,54,35,35,'Hugglebeary',41,85,199,74,67,43],
+    ['Lumeridon',46,142,50,50,33,33,'Bunmareen',31,44,114,40,53,29]
+  ];
+  var tb=document.getElementById('annexBody');
+  var prevUnit='';
+  rows.forEach(function(r){
+    var tr=document.createElement('tr');
+    var isNewGroup=r[0]!==prevUnit;
+    prevUnit=r[0];
+    if(isNewGroup) tr.style.borderTop='1px solid #252d3d';
+    r.forEach(function(v,i){
+      var td=document.createElement('td');
+      td.style.color=(i===0||i===7)?'#e6edf3':'#c9d1d9';
+      td.textContent=v;
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+})();
+</script>
+
+<script src="/eoddb_footer.js" defer></script>
+</body>
+</html>
