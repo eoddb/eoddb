@@ -292,6 +292,35 @@
     text-decoration: underline;
   }
 
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .slider-row label {
+    white-space: nowrap;
+    min-width: 180px;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--tc-1);
+    height: 4px;
+    cursor: pointer;
+  }
+
+  .slider-val {
+    font-weight: 600;
+    color: var(--header-text);
+    font-variant-numeric: tabular-nums;
+    min-width: 32px;
+    text-align: right;
+  }
+
   @media (max-width: 500px) {
     .tc-topic { flex-direction: column; text-align: center; gap: 10px; }
     .chart-container { height: 220px; }
@@ -348,7 +377,12 @@
 
   <div class="tc-section">
     <h2>+12% DEF vs +8% HP</h2>
-    <div class="formula-box">+12% DEF EHP gain = 0.12 &times; DEF / (DEF + 100)<br>+8% HP EHP gain&nbsp; = 0.08 / (1 + HP%)<br><br>Breakeven: HP% = 200 / (3 &times; DEF) &minus; 1/3</div>
+    <div class="formula-box">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.12 / (1 + existing DEF%)<br>+12% DEF EHP gain = effective perk &times; DEF / (DEF + 100)<br>+8% HP EHP gain&nbsp; = 0.08 / (1 + HP%)</div>
+    <div class="slider-row">
+      <label>Existing DEF% bonuses:</label>
+      <input type="range" id="defSlider5" min="0" max="100" value="0">
+      <span class="slider-val" id="defSliderVal5">0%</span>
+    </div>
     <div class="chart-legend">
       <span><span class="swatch" style="background:#717092;"></span>+12% DEF wins</span>
       <span><span class="swatch" style="background:#82A69C;"></span>+8% HP wins</span>
@@ -365,7 +399,12 @@
 
   <div class="tc-section">
     <h2>+1% DEF vs +1% HP</h2>
-    <div class="formula-box">+1% DEF EHP gain = 0.01 &times; DEF / (DEF + 100)<br>+1% HP EHP gain&nbsp; = 0.01 / (1 + HP%)<br><br>Breakeven: HP% = 100 / DEF &minus; 1</div>
+    <div class="formula-box">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.01 / (1 + existing DEF%)<br>+1% DEF EHP gain = effective perk &times; DEF / (DEF + 100)<br>+1% HP EHP gain&nbsp; = 0.01 / (1 + HP%)</div>
+    <div class="slider-row">
+      <label>Existing DEF% bonuses:</label>
+      <input type="range" id="defSlider6" min="0" max="100" value="0">
+      <span class="slider-val" id="defSliderVal6">0%</span>
+    </div>
     <div class="chart-legend">
       <span><span class="swatch" style="background:#717092;"></span>+1% DEF wins</span>
       <span><span class="swatch" style="background:#82A69C;"></span>+1% HP wins</span>
@@ -501,7 +540,7 @@
   });
 
   // Heatmap helper
-  function drawHeatmap(canvasId,hoverId,unitId,defPct,hpPct){
+  function setupHeatmap(canvasId,hoverId,unitId,defPct,hpPct,sliderId,sliderValId){
     var canvas=document.getElementById(canvasId);
     var ctx=canvas.getContext('2d');
     var W=canvas.width,H=canvas.height;
@@ -510,83 +549,91 @@
     var maxDef=1000,maxHP=100;
     var defR=100,defG=99,defB=140;
     var hpR=110,hpG=156,hpB=146;
-
-    function gDef(d){return((1+defPct)*d+100)/(d+100)-1;}
-    function gHP(h){return hpPct/(1+h);}
-
-    for(var dx=0;dx<=maxDef;dx+=5){
-      for(var hp=0;hp<=maxHP;hp+=1){
-        var diff=gDef(dx)-gHP(hp/100);
-        var intensity=Math.min(Math.abs(diff)/(defPct>0.05?0.08:0.008),1);
-        var alpha=0.15+intensity*0.7;
-        var px=padL+(dx/maxDef)*pW;
-        var py=padT+(1-hp/maxHP)*pH;
-        var bw=Math.ceil(5/maxDef*pW)+1;
-        var bh=Math.ceil(1/maxHP*pH)+1;
-        if(diff>0) ctx.fillStyle='rgba('+defR+','+defG+','+defB+','+alpha+')';
-        else ctx.fillStyle='rgba('+hpR+','+hpG+','+hpB+','+alpha+')';
-        ctx.fillRect(px,py,bw,bh);
-      }
-    }
-
-    ctx.beginPath();ctx.strokeStyle=tc3;ctx.lineWidth=2.5;
-    var first=true;
-    for(var dx=0;dx<=maxDef;dx+=2){
-      var gd=gDef(dx);if(gd<=0)continue;
-      var bHP=(hpPct/gd-1)*100;
-      if(bHP<0)bHP=0;if(bHP>maxHP)continue;
-      var px=padL+(dx/maxDef)*pW;
-      var py=padT+(1-bHP/maxHP)*pH;
-      if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
-    }
-    ctx.stroke();
-
-    var ux=padL+(222/maxDef)*pW,uy=padT+(1-68/maxHP)*pH;
-    ctx.beginPath();ctx.arc(ux,uy,8,0,Math.PI*2);ctx.fillStyle=sfc;ctx.fill();
-    ctx.beginPath();ctx.arc(ux,uy,6,0,Math.PI*2);ctx.fillStyle=tc3;ctx.fill();
-    ctx.beginPath();ctx.arc(ux,uy,7,0,Math.PI*2);ctx.strokeStyle=hdr;ctx.lineWidth=1.5;ctx.stroke();
-
-    var lx=ux+14;
-    var lines=['Lv.50 Hugglebeary','STR(5) Dominator','UGL(2) Mr Avocado Buff','222 DEF | 68% HP%'];
-    var lh=13,boxW=148,boxH=lines.length*lh+8;
-    var bx=lx-4,by=uy-lh-8;
-    if(bx+boxW>W-padR){lx=ux-14;bx=lx-boxW+4;ctx.textAlign='right';}else{ctx.textAlign='left';}
-    ctx.fillStyle=sfc;ctx.globalAlpha=0.92;ctx.fillRect(bx,by,boxW,boxH);ctx.globalAlpha=1;
-    ctx.strokeStyle='#252d3d';ctx.lineWidth=0.5;ctx.strokeRect(bx,by,boxW,boxH);
-    ctx.beginPath();ctx.strokeStyle=txtM;ctx.lineWidth=1;
-    ctx.moveTo(ux+(ctx.textAlign==='left'?9:-9),uy);ctx.lineTo(lx,uy);ctx.stroke();
-    var ty=uy-6;
-    lines.forEach(function(l,i){
-      ctx.font=i===0?'600 11px sans-serif':i===3?'500 10px sans-serif':'11px sans-serif';
-      ctx.fillStyle=i===0?hdr:txtM;
-      ctx.fillText(l,lx,ty);ty+=lh;
-    });
-
-    ctx.textAlign='center';ctx.fillStyle=txtM;ctx.font='11px sans-serif';
-    for(var d=0;d<=maxDef;d+=100){
-      var x=padL+(d/maxDef)*pW;ctx.fillText(d,x,padT+pH+18);
-      if(d>0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();}
-    }
-    ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText('DEF',padL+pW/2,padT+pH+38);
-
-    ctx.font='11px sans-serif';ctx.fillStyle=txtM;ctx.textAlign='right';
-    for(var h=0;h<=maxHP;h+=10){
-      var y=padT+(1-h/maxHP)*pH;ctx.fillText(h+'%',padL-8,y+4);
-      if(h>0&&h%20===0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(padL,y);ctx.lineTo(padL+pW,y);ctx.stroke();}
-    }
-    ctx.save();ctx.translate(14,padT+pH/2);ctx.rotate(-Math.PI/2);
-    ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.textAlign='center';
-    ctx.fillText('Existing HP% bonuses',0,0);ctx.restore();
-
-    var gdVal=(gDef(222)*100).toFixed(2);
-    var ghVal=(gHP(0.68)*100).toFixed(2);
     var defLabel=defPct===0.12?'+12%':'+1%';
     var hpLabel=hpPct===0.08?'+8%':'+1%';
-    document.getElementById(unitId).innerHTML='222 DEF | 68% HP% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% EHP</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% EHP</strong>';
-
-    drawWatermark(ctx,W,H,padL,padR,padT,padB);
-
     var hoverEl=document.getElementById(hoverId);
+    var slider=document.getElementById(sliderId);
+    var sliderValEl=document.getElementById(sliderValId);
+    var currentGDef,currentGHP;
+
+    function draw(existingDefPct){
+      var effPct=defPct/(1+existingDefPct);
+      currentGDef=function(d){return((1+effPct)*d+100)/(d+100)-1;};
+      currentGHP=function(h){return hpPct/(1+h);};
+
+      ctx.clearRect(0,0,W,H);
+
+      for(var dx=0;dx<=maxDef;dx+=5){
+        for(var hp=0;hp<=maxHP;hp+=1){
+          var diff=currentGDef(dx)-currentGHP(hp/100);
+          var intensity=Math.min(Math.abs(diff)/(defPct>0.05?0.08:0.008),1);
+          var alpha=0.15+intensity*0.7;
+          var px=padL+(dx/maxDef)*pW;
+          var py=padT+(1-hp/maxHP)*pH;
+          var bw=Math.ceil(5/maxDef*pW)+1;
+          var bh=Math.ceil(1/maxHP*pH)+1;
+          if(diff>0) ctx.fillStyle='rgba('+defR+','+defG+','+defB+','+alpha+')';
+          else ctx.fillStyle='rgba('+hpR+','+hpG+','+hpB+','+alpha+')';
+          ctx.fillRect(px,py,bw,bh);
+        }
+      }
+
+      ctx.beginPath();ctx.strokeStyle=tc3;ctx.lineWidth=2.5;
+      var first=true;
+      for(var dx=0;dx<=maxDef;dx+=2){
+        var gd=currentGDef(dx);if(gd<=0)continue;
+        var bHP=(hpPct/gd-1)*100;
+        if(bHP<0)bHP=0;if(bHP>maxHP)continue;
+        var px=padL+(dx/maxDef)*pW;
+        var py=padT+(1-bHP/maxHP)*pH;
+        if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+
+      var ux=padL+(222/maxDef)*pW,uy=padT+(1-68/maxHP)*pH;
+      ctx.beginPath();ctx.arc(ux,uy,8,0,Math.PI*2);ctx.fillStyle=sfc;ctx.fill();
+      ctx.beginPath();ctx.arc(ux,uy,6,0,Math.PI*2);ctx.fillStyle=tc3;ctx.fill();
+      ctx.beginPath();ctx.arc(ux,uy,7,0,Math.PI*2);ctx.strokeStyle=hdr;ctx.lineWidth=1.5;ctx.stroke();
+
+      var lx=ux+14;
+      var lines=['Lv.50 Hugglebeary','STR(5) Dominator','UGL(2) Mr Avocado Buff','222 DEF | 68% HP%'];
+      var lh=13,boxW=148,boxH=lines.length*lh+8;
+      var bx=lx-4,by=uy-lh-8;
+      if(bx+boxW>W-padR){lx=ux-14;bx=lx-boxW+4;ctx.textAlign='right';}else{ctx.textAlign='left';}
+      ctx.fillStyle=sfc;ctx.globalAlpha=0.92;ctx.fillRect(bx,by,boxW,boxH);ctx.globalAlpha=1;
+      ctx.strokeStyle='#252d3d';ctx.lineWidth=0.5;ctx.strokeRect(bx,by,boxW,boxH);
+      ctx.beginPath();ctx.strokeStyle=txtM;ctx.lineWidth=1;
+      ctx.moveTo(ux+(ctx.textAlign==='left'?9:-9),uy);ctx.lineTo(lx,uy);ctx.stroke();
+      var ty=uy-6;
+      lines.forEach(function(l,i){
+        ctx.font=i===0?'600 11px sans-serif':i===3?'500 10px sans-serif':'11px sans-serif';
+        ctx.fillStyle=i===0?hdr:txtM;
+        ctx.fillText(l,lx,ty);ty+=lh;
+      });
+
+      ctx.textAlign='center';ctx.fillStyle=txtM;ctx.font='11px sans-serif';
+      for(var d=0;d<=maxDef;d+=100){
+        var x=padL+(d/maxDef)*pW;ctx.fillText(d,x,padT+pH+18);
+        if(d>0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();}
+      }
+      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText('DEF',padL+pW/2,padT+pH+38);
+
+      ctx.font='11px sans-serif';ctx.fillStyle=txtM;ctx.textAlign='right';
+      for(var h=0;h<=maxHP;h+=10){
+        var y=padT+(1-h/maxHP)*pH;ctx.fillText(h+'%',padL-8,y+4);
+        if(h>0&&h%20===0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(padL,y);ctx.lineTo(padL+pW,y);ctx.stroke();}
+      }
+      ctx.save();ctx.translate(14,padT+pH/2);ctx.rotate(-Math.PI/2);
+      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.textAlign='center';
+      ctx.fillText('Existing HP% bonuses',0,0);ctx.restore();
+
+      var gdVal=(currentGDef(222)*100).toFixed(2);
+      var ghVal=(currentGHP(0.68)*100).toFixed(2);
+      document.getElementById(unitId).innerHTML='222 DEF | 68% HP% | '+Math.round(existingDefPct*100)+'% DEF% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% EHP</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% EHP</strong>';
+
+      drawWatermark(ctx,W,H,padL,padR,padT,padB);
+    }
+
     canvas.addEventListener('mousemove',function(e){
       var rect=canvas.getBoundingClientRect();
       var sx=W/rect.width;
@@ -594,16 +641,24 @@
       var def=Math.round(((mx-padL)/pW)*maxDef);
       var hp=Math.round((1-(my-padT)/pH)*maxHP);
       if(def<0||def>maxDef||hp<0||hp>maxHP){hoverEl.textContent='';return;}
-      var gd2=(gDef(def)*100).toFixed(2);
-      var gh2=(gHP(hp/100)*100).toFixed(2);
-      var w=gDef(def)>gHP(hp/100)?defLabel+' DEF':hpLabel+' HP';
+      var gd2=(currentGDef(def)*100).toFixed(2);
+      var gh2=(currentGHP(hp/100)*100).toFixed(2);
+      var w=currentGDef(def)>currentGHP(hp/100)?defLabel+' DEF':hpLabel+' HP';
       hoverEl.textContent='DEF: '+def+' | HP%: '+hp+'% → '+defLabel+' DEF: +'+gd2+'% EHP, '+hpLabel+' HP: +'+gh2+'% EHP → '+w+' wins';
     });
     canvas.addEventListener('mouseleave',function(){hoverEl.textContent='';});
+
+    slider.addEventListener('input',function(){
+      var val=parseInt(slider.value);
+      sliderValEl.textContent=val+'%';
+      draw(val/100);
+    });
+
+    draw(0);
   }
 
-  drawHeatmap('heat5','hover5','unit5detail',0.12,0.08);
-  drawHeatmap('heat6','hover6','unit6detail',0.01,0.01);
+  setupHeatmap('heat5','hover5','unit5detail',0.12,0.08,'defSlider5','defSliderVal5');
+  setupHeatmap('heat6','hover6','unit6detail',0.01,0.01,'defSlider6','defSliderVal6');
 
   // Annex data
   var rows=[
