@@ -5,6 +5,7 @@ const EODDB_NAV_PAGES = [
   { label: 'Eidos', href: '/hna/eidos' },
   { label: 'Aspects', href: '/hna/aspects' },
   { label: 'Team Planner', href: '/hna/teamplanner' },
+  { label: 'Theorycrafting', href: '/hna/theorycrafting' },
   { label: 'Tier List', href: '/hna/tierlist' },
 ];
 
