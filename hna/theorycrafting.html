@@ -574,8 +574,8 @@
 
   <div class="tc-section">
     <h2>Equal TTK: stat equivalence</h2>
-    <div class="formula-box">For the same +12% TTK increase:<br><br>HP% = 12%<br>DR = 1 &minus; 1/1.12 = 10.71%<br>DEF% = 12% &times; (Base DEF + 100) / Base DEF</div>
-    <p>To get the same survivability as +12% HP, you need only 10.71% DR &mdash; DR is more efficient point-for-point because of its accelerating curve. DEF% requires more than 12% because its slope is always less than 1 (it depends on base DEF).</p>
+    <div class="formula-box">For the same +8% TTK increase:<br><br>HP% = 8%<br>DR = 1 &minus; 1/1.08 = 7.41%<br>DEF% = 8% &times; (Base DEF + 100) / Base DEF</div>
+    <p>To get the same survivability as +8% HP, you need only 7.41% DR &mdash; DR is more efficient point-for-point because of its accelerating curve. DEF% requires more than 8% because its slope is always less than 1 (it depends on base DEF).</p>
     <div id="equivGauges" style="display:flex;flex-direction:column;gap:14px;margin:16px 0;">
       <div class="gauge-row">
         <div class="gauge-label">HP%</div>
@@ -615,7 +615,7 @@
         <span id="equivDRSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">0%</span>
       </div>
     </div>
-    <p style="margin-top:12px;">DR is always 10.71% regardless of existing bonuses &mdash; it scales independently. HP% and DEF% both need more the higher your existing bonuses are. This demonstrates why DR is the most efficient survivability stat to stack.</p>
+    <p style="margin-top:12px;">DR is always 7.41% regardless of existing bonuses &mdash; it scales independently. HP% and DEF% both need more the higher your existing bonuses are. This demonstrates why DR is the most efficient survivability stat to stack.</p>
   </div>
 
   <div class="tc-section">
@@ -971,18 +971,18 @@
     var existHP=parseInt(equivHPSlider.value);
     var existDEF=parseInt(equivDEFSlider.value);
     var existDR=parseInt(equivDRSlider.value);
-    // HP% needed for +12% TTK: X = 12 × (1 + existHP/100)
-    var hp=Math.round(12*(1+existHP/100)*100)/100;
-    // DR needed: always 10.71% (multiplicative, independent of existing DR)
-    var dr=10.71;
-    // DEF% needed: X = 12 × (baseDEF × (1 + existDEF/100) + 100) / baseDEF
-    var def=bd>0?Math.round(12*(bd*(1+existDEF/100)+100)/bd*100)/100:999;
+    // HP% needed for +8% TTK: X = 8 × (1 + existHP/100)
+    var hp=Math.round(8*(1+existHP/100)*100)/100;
+    // DR needed: always 7.41% (multiplicative, independent of existing DR)
+    var dr=7.41;
+    // DEF% needed: X = 8 × (baseDEF × (1 + existDEF/100) + 100) / baseDEF
+    var def=bd>0?Math.round(8*(bd*(1+existDEF/100)+100)/bd*100)/100:999;
     var maxVal=Math.max(hp,dr,def,30);
     gaugeHP.style.width=(hp/maxVal*100)+'%';
     gaugeDR.style.width=(dr/maxVal*100)+'%';
     gaugeDEF.style.width=(Math.min(def,maxVal)/maxVal*100)+'%';
     gaugeHPVal.textContent=hp.toFixed(2)+'%';
-    gaugeDRVal.textContent='10.71%';
+    gaugeDRVal.textContent='7.41%';
     gaugeDEFVal.textContent=def>999?'∞':def.toFixed(2)+'%';
   }
   updateGauges();
