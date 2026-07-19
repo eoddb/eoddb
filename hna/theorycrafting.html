@@ -522,16 +522,29 @@
 
   <div class="tc-section">
     <h2>Stacking DR: multiple sources vs one</h2>
-    <div class="formula-box">EHP gain from X% DR = 1 / (1 &minus; X%) &minus; 1<br>This is constant regardless of existing DR sources</div>
+    <div class="formula-box">Two sources of X%: multiplier = (1&minus;X%)&sup2;<br>One source of 2X%: multiplier = (1&minus;2X%)<br><br>One larger source always wins &mdash; splitting loses to multiplicative stacking penalty</div>
     <div class="chart-container"><canvas id="chartDR1"></canvas></div>
-    <p>Because DR sources multiply independently, each one gives the <strong>same EHP boost regardless of how much DR you already have</strong>. A 20% DR source always extends TTK by 25% &mdash; whether you have 0% or 50% existing DR. Compare this to HP% bonuses, which give diminishing returns as you stack more. This makes DR the only survivability stat with no diminishing returns for EHP.</p>
+    <p>Because DR stacks multiplicatively, two 10% sources give 19% total DR (0.9&times;0.9 = 0.81), not 20%. A single 20% source is strictly better &mdash; it gives the full 20% reduction. The gap widens with larger values: two 15% sources give 27.75% total, while one 30% source gives the full 30%. <strong>Always prefer one large DR source over two smaller ones that add up to the same value.</strong></p>
   </div>
 
   <div class="tc-section">
-    <h2>DR vs DEF vs HP: marginal EHP per perk</h2>
-    <div class="formula-box">EHP = HP &times; (DEF + 100) / 100 &times; 1 / &Pi;(1 &minus; DR&#7522;)<br><br>+20% DR: always +25.0% EHP<br>+8% HP at 68% existing: +4.8% EHP<br>+12% DEF at 222 DEF: +8.3% EHP</div>
+    <h2>DR vs DEF% vs HP%: TTK scaling</h2>
+    <div class="formula-box">HP%: TTK increase = HP% (linear)<br>DEF%: TTK increase = Base DEF &times; DEF% / (Base DEF + 100) (linear, slope &lt; 1)<br>DR: TTK increase = 1 / (1 &minus; DR) &minus; 1 (accelerating)</div>
     <div class="chart-container"><canvas id="chartDR2"></canvas></div>
-    <p>All three survivability stats &mdash; DEF, HP, and DR &mdash; multiply together. This means each one amplifies the others. The chart shows the marginal EHP gain from adding one more perk of each type as existing bonuses grow. DR stays flat (no diminishing returns), while HP% and DEF% both decline. In practice, stack every DR source available first, then choose between DEF% and HP% based on your existing stat line.</p>
+    <p>HP% gives a 1:1 linear TTK increase &mdash; +50% HP means +50% TTK. DEF% is also linear but with a weaker slope that depends on base DEF (at 222 base: slope &asymp; 0.69). DR is the outlier &mdash; it accelerates. Each additional % of DR gives <strong>more</strong> TTK than the last, making it the only survivability stat with increasing returns.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Equal TTK: stat equivalence</h2>
+    <div class="formula-box">For the same +12% TTK increase:<br><br>HP% = 12%<br>DR = 1 &minus; 1/1.12 = 10.71%<br>DEF% = 12% &times; (Base DEF + 100) / Base DEF</div>
+    <p>To get the same survivability as +12% HP, you need only 10.71% DR &mdash; DR is more efficient point-for-point because of its accelerating curve. DEF% requires more than 12% because its slope is always less than 1 (it depends on base DEF).</p>
+    <div class="chart-container"><canvas id="chartEquiv"></canvas></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
+      <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;">Base DEF:</label>
+      <input type="range" id="equivSlider" min="0" max="1000" value="222" style="flex:1;accent-color:var(--accent1);">
+      <span id="equivSliderVal" style="font-size:13px;color:var(--header-text);min-width:36px;">222</span>
+    </div>
+    <p>DR is always 10.71% regardless of base stats &mdash; it scales independently. DEF% converges toward 12% as base DEF increases (slope approaches 1), but never reaches it. At 222 base DEF, you need 17.41% DEF% to match what 12% HP gives for free.</p>
   </div>
 
   <div class="tc-section">
@@ -807,52 +820,98 @@
   setupHeatmap('heat5','hover5','unit5detail',0.12,0.08,'defSlider5','defSliderVal5');
   setupHeatmap('heat6','hover6','unit6detail',0.01,0.01,'defSlider6','defSliderVal6');
 
-  // Chart DR1: EHP gain per DR source vs HP% perk — constant vs diminishing
-  var drSources=[3,5,10,15,20,25,30];
-  var drEHP=drSources.map(function(d){return{x:d,y:Math.round((1/(1-d/100)-1)*10000)/100};});
-  var hpExisting=[0,10,20,30,40,50,60,70,80,90,100];
-  var hpMarginal=hpExisting.map(function(h){return{x:h,y:Math.round(8/(1+h/100)*100)/100};});
+  // Chart DR1: Split sources vs single source — multiplicative stacking penalty
+  var drHalf=[5,7.5,10,12.5,15];
+  var drFull=drHalf.map(function(d){return d*2;});
+  var splitEHP=drHalf.map(function(d){return Math.round((1/Math.pow(1-d/100,2)-1)*10000)/100;});
+  var singleEHP=drFull.map(function(d){return Math.round((1/(1-d/100)-1)*10000)/100;});
   new Chart(document.getElementById('chartDR1'),{
     type:'bar',
     data:{
-      labels:['3%','5%','10%','15%','20%','25%','30%'],
+      labels:drFull.map(function(d){return d+'% total';}),
       datasets:[{
-        label:'EHP gain per DR source',
-        data:drSources.map(function(d){return Math.round((1/(1-d/100)-1)*10000)/100;}),
+        label:'2× split sources (each half)',
+        data:splitEHP,
+        backgroundColor:'rgba(138,137,176,0.7)',
+        borderColor:tc1,
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.8,
+        categoryPercentage:0.7
+      },{
+        label:'1 single source',
+        data:singleEHP,
         backgroundColor:'rgba(130,166,156,0.7)',
         borderColor:tc2,
         borderWidth:1,
         borderRadius:4,
-        barPercentage:0.7
+        barPercentage:0.8,
+        categoryPercentage:0.7
       }]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label+' DR source';},label:function(i){return'EHP gain: +'+i.raw.toFixed(2)+'%';}}})},
-      scales:{x:{title:{display:true,text:'DR source size',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11}},grid:{display:false},border:{color:axs}},
+      plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'rect',padding:16}},
+        tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label;},label:function(i){return i.dataset.label+': +'+i.raw.toFixed(2)+'% EHP';}}})},
+      scales:{x:{title:{display:true,text:'Target total DR',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11}},grid:{display:false},border:{color:axs}},
         y:{min:0,title:{display:true,text:'EHP gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',intersect:true}},
     plugins:[wmPlugin]
   });
 
-  // Chart DR2: Marginal EHP gain comparison — DR vs HP% vs DEF% as existing bonuses grow
-  var compX=[];for(var i=0;i<=100;i+=5)compX.push(i);
-  var drLine=compX.map(function(x){return{x:x,y:Math.round((1/(1-0.20)-1)*10000)/100};});
-  var hpLine=compX.map(function(x){return{x:x,y:Math.round(8/(1+x/100)*100)/100};});
-  var defLine=compX.map(function(x){return{x:x,y:Math.round(12/(1+x/100+100/222)*10000)/100};});
+  // Chart DR2: TTK scaling — % increase in TTK vs % gain in DR/DEF%/HP%
+  var ttkX=[];for(var i=0;i<=80;i+=2)ttkX.push(i);
+  var baseDEF=222;
+  var drTTK=ttkX.map(function(x){return{x:x,y:Math.round((1/(1-x/100)-1)*10000)/100};});
+  var hpTTK=ttkX.map(function(x){return{x:x,y:x};});
+  var defTTK=ttkX.map(function(x){return{x:x,y:Math.round(baseDEF*x/100/(baseDEF+100)*10000)/100};});
   new Chart(document.getElementById('chartDR2'),{
     type:'line',
     data:{datasets:[
-      {label:'+20% DR',data:drLine,borderColor:tc2,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,borderDash:[8,4],tension:0},
-      {label:'+8% HP',data:hpLine,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3},
-      {label:'+12% DEF (222 base)',data:defLine,borderColor:tc3,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc3,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0.3}
+      {label:'DR',data:drTTK,borderColor:tc2,backgroundColor:'rgba(146,182,172,0.08)',borderWidth:2.5,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3},
+      {label:'HP%',data:hpTTK,borderColor:tc1,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0},
+      {label:'DEF% (222 base)',data:defTTK,borderColor:tc3,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc3,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0}
     ]},
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
       plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'line',padding:16}},
-        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Existing bonuses: '+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(2)+'% EHP';}}})},
-      scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'Existing bonus % (HP% or DEF%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
-        y:{min:0,title:{display:true,text:'Marginal EHP gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Total bonus: +'+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(1)+'% TTK';}}})},
+      scales:{x:{type:'linear',min:0,max:80,title:{display:true,text:'% gain in stat (DR / DEF% / HP%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'% increase in Time To Kill',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',axis:'x',intersect:false}},
     plugins:[wmPlugin]
+  });
+
+  // Chart Equiv: equal TTK bar chart with base DEF slider
+  var equivCtx=document.getElementById('chartEquiv');
+  var equivChart=new Chart(equivCtx,{
+    type:'bar',
+    data:{
+      labels:['HP%','DR','DEF%'],
+      datasets:[{
+        data:[12,10.71,Math.round(12*(222+100)/222*100)/100],
+        backgroundColor:['rgba(138,137,176,0.7)','rgba(146,182,172,0.7)','rgba(138,138,132,0.7)'],
+        borderColor:[tc1,tc2,tc3],
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:Object.assign({},ttip,{callbacks:{label:function(i){return i.label+': '+i.raw.toFixed(2)+'%';}}})},
+      scales:{x:{ticks:{color:hdr,font:{size:13,weight:600}},grid:{display:false},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'% needed for same +12% TTK',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',intersect:true}},
+    plugins:[wmPlugin]
+  });
+  var equivSlider=document.getElementById('equivSlider');
+  var equivSliderVal=document.getElementById('equivSliderVal');
+  equivSlider.addEventListener('input',function(){
+    var bd=parseInt(this.value);
+    equivSliderVal.textContent=bd;
+    var defNeeded=bd>0?Math.round(12*(bd+100)/bd*100)/100:Infinity;
+    equivChart.data.datasets[0].data=[12,10.71,defNeeded>200?200:defNeeded];
+    equivChart.options.scales.y.max=defNeeded>100?undefined:undefined;
+    equivChart.update();
   });
 
   // Annex data
