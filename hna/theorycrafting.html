@@ -486,9 +486,9 @@
   </div>
 
   <div class="tc-section">
-    <h2>How damage reduction works</h2>
-    <div class="formula-box">Final Damage = ATK &times; 100 / (DEF + 100) &times; Crit &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip;</div>
-    <p>Damage in HNA passes through three multiplicative layers. First, the attacker's ATK is reduced by the target's DEF via the familiar DEF/(DEF+100) formula. Then each source of damage reduction multiplies independently &mdash; a 5% and a 20% DR source give 1&minus;(0.95&times;0.80)&nbsp;=&nbsp;24% total, not 25%. Crits also multiply in as a &times;1.30 factor. Everything resolves in a single calculation.</p>
+    <h2>Adding Damage reduction as another variable</h2>
+    <div class="formula-box">Final Damage = ATK &times; 100 / (DEF + 100) &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip; + k</div>
+    <p>Simple Defense in HNA passes through three multiplicative layers. First, the attacker's ATK is reduced by the target's DEF via the familiar DEF/(DEF+100) formula. Then each source of damage reduction multiplies independently &mdash; a 5% and a 20% DR source give 1&minus;(0.95&times;0.80)&nbsp;=&nbsp;24% total, not 25%. k represents other variables, which we will explore in a seperate subsection</p>
     <div class="annex-table-wrap" style="margin-top:16px;">
       <table class="annex-def-table">
         <caption>Damage reduction test data</caption>
@@ -517,7 +517,7 @@
         </tbody>
       </table>
     </div>
-    <p style="margin-top:12px;">The highlighted rows confirm multiplicative stacking: 3%+20% gives 22.4% total DR (not 23%), and 5%+30% gives 33.5% (not 35%). Crits do not bypass DEF or DR &mdash; they multiply within the same formula as a &times;1.30 factor.</p>
+    <p style="margin-top:12px;">Damage Reduction sources are 3%/5% Aspect Synegies for Pride(2)/Pride(3) and Apollinis 20% Damage Reduction while skill is active, Nomnom 30% Damage Reduction while skill is active.</p>
   </div>
 
   <div class="tc-section">
@@ -528,7 +528,7 @@
   </div>
 
   <div class="tc-section">
-    <h2>DR vs DEF% vs HP%: TTK scaling</h2>
+    <h2>DR vs DEF% vs HP%: Time To Kill (TTK) scaling</h2>
     <div class="formula-box">HP%: TTK increase = HP% (linear)<br>DEF%: TTK increase = Base DEF &times; DEF% / (Base DEF + 100) (linear, slope &lt; 1)<br>DR: TTK increase = 1 / (1 &minus; DR) &minus; 1 (accelerating)</div>
     <div class="chart-container"><canvas id="chartDR2"></canvas></div>
     <p>HP% gives a 1:1 linear TTK increase &mdash; +50% HP means +50% TTK. DEF% is also linear but with a weaker slope that depends on base DEF (at 222 base: slope &asymp; 0.69). DR is the outlier &mdash; it accelerates. Each additional % of DR gives <strong>more</strong> TTK than the last, making it the only survivability stat with increasing returns.</p>
