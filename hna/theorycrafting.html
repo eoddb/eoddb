@@ -730,9 +730,9 @@
     var hpStr=hpGain.toFixed(2);
     var defStr=defGain.toFixed(2);
     var winner='';
-    if(defGain>hpGain+0.005)winner='<span style="color:#92b6ac;font-weight:700;">+12% DEF wins</span> (+'+defStr+'% vs +'+hpStr+'% EHP)';
-    else if(hpGain>defGain+0.005)winner='<span style="color:#8a89b0;font-weight:700;">+8% HP wins</span> (+'+hpStr+'% vs +'+defStr+'% EHP)';
-    else winner='<span style="color:#e6edf3;font-weight:700;">Roughly equal</span> (~'+hpStr+'% EHP each)';
+    if(defGain>hpGain+0.005)winner='<span style="color:#92b6ac;font-weight:700;">+12% DEF wins</span>';
+    else if(hpGain>defGain+0.005)winner='<span style="color:#8a89b0;font-weight:700;">+8% HP wins</span>';
+    else winner='<span style="color:#e6edf3;font-weight:700;">Roughly equal</span>';
     calcResult.innerHTML=winner+'<br><span style="font-size:12px;color:#6e7a8a;">+8% HP: +'+hpStr+'% EHP &nbsp;|&nbsp; +12% DEF: +'+defStr+'% EHP</span>';
   }
   runCalc();
