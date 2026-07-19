@@ -292,6 +292,44 @@
     text-decoration: underline;
   }
 
+  /* ── Gauge meters ── */
+  .gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .gauge-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--header-text);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .gauge-track {
+    flex: 1;
+    height: 20px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .gauge-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.2s ease;
+  }
+
+  .gauge-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-text);
+    min-width: 56px;
+    font-variant-numeric: tabular-nums;
+  }
+
   .slider-row {
     display: flex;
     align-items: center;
@@ -538,11 +576,27 @@
     <h2>Equal TTK: stat equivalence</h2>
     <div class="formula-box">For the same +12% TTK increase:<br><br>HP% = 12%<br>DR = 1 &minus; 1/1.12 = 10.71%<br>DEF% = 12% &times; (Base DEF + 100) / Base DEF</div>
     <p>To get the same survivability as +12% HP, you need only 10.71% DR &mdash; DR is more efficient point-for-point because of its accelerating curve. DEF% requires more than 12% because its slope is always less than 1 (it depends on base DEF).</p>
-    <div class="chart-container"><canvas id="chartEquiv"></canvas></div>
+    <div id="equivGauges" style="display:flex;flex-direction:column;gap:14px;margin:16px 0;">
+      <div class="gauge-row">
+        <div class="gauge-label">HP%</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeHP" style="width:40%;background:var(--tc-1);"></div></div>
+        <div class="gauge-value" id="gaugeHPVal">12%</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-label">DR</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeDR" style="width:35.7%;background:var(--tc-2);"></div></div>
+        <div class="gauge-value" id="gaugeDRVal">10.71%</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-label">DEF%</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeDEF" style="width:58%;background:var(--tc-3);"></div></div>
+        <div class="gauge-value" id="gaugeDEFVal">17.41%</div>
+      </div>
+    </div>
     <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
       <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;">Base DEF:</label>
-      <input type="range" id="equivSlider" min="0" max="1000" value="222" style="flex:1;accent-color:var(--accent1);">
-      <span id="equivSliderVal" style="font-size:13px;color:var(--header-text);min-width:36px;">222</span>
+      <input type="range" id="equivSlider" min="1" max="2000" value="222" style="flex:1;accent-color:var(--accent1);">
+      <span id="equivSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;">222</span>
     </div>
     <p>DR is always 10.71% regardless of base stats &mdash; it scales independently. DEF% converges toward 12% as base DEF increases (slope approaches 1), but never reaches it. At 222 base DEF, you need 17.41% DEF% to match what 12% HP gives for free.</p>
   </div>
@@ -880,38 +934,32 @@
     plugins:[wmPlugin]
   });
 
-  // Chart Equiv: equal TTK bar chart with base DEF slider
-  var equivCtx=document.getElementById('chartEquiv');
-  var equivChart=new Chart(equivCtx,{
-    type:'bar',
-    data:{
-      labels:['HP%','DR','DEF%'],
-      datasets:[{
-        data:[12,10.71,Math.round(12*(222+100)/222*100)/100],
-        backgroundColor:['rgba(138,137,176,0.7)','rgba(146,182,172,0.7)','rgba(138,138,132,0.7)'],
-        borderColor:[tc1,tc2,tc3],
-        borderWidth:1,
-        borderRadius:4,
-        barPercentage:0.6
-      }]
-    },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:Object.assign({},ttip,{callbacks:{label:function(i){return i.label+': '+i.raw.toFixed(2)+'%';}}})},
-      scales:{x:{ticks:{color:hdr,font:{size:13,weight:600}},grid:{display:false},border:{color:axs}},
-        y:{min:0,title:{display:true,text:'% needed for same +12% TTK',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
-      interaction:{mode:'nearest',intersect:true}},
-    plugins:[wmPlugin]
-  });
+  // Gauge meters: equal TTK with base DEF slider
   var equivSlider=document.getElementById('equivSlider');
   var equivSliderVal=document.getElementById('equivSliderVal');
+  var gaugeHP=document.getElementById('gaugeHP');
+  var gaugeDR=document.getElementById('gaugeDR');
+  var gaugeDEF=document.getElementById('gaugeDEF');
+  var gaugeHPVal=document.getElementById('gaugeHPVal');
+  var gaugeDRVal=document.getElementById('gaugeDRVal');
+  var gaugeDEFVal=document.getElementById('gaugeDEFVal');
+  function updateGauges(bd){
+    var hp=12;
+    var dr=10.71;
+    var def=bd>0?Math.round(12*(bd+100)/bd*100)/100:999;
+    var maxVal=Math.max(hp,dr,def,30);
+    gaugeHP.style.width=(hp/maxVal*100)+'%';
+    gaugeDR.style.width=(dr/maxVal*100)+'%';
+    gaugeDEF.style.width=(Math.min(def,maxVal)/maxVal*100)+'%';
+    gaugeHPVal.textContent='12%';
+    gaugeDRVal.textContent='10.71%';
+    gaugeDEFVal.textContent=def>999?'∞':def.toFixed(2)+'%';
+  }
+  updateGauges(222);
   equivSlider.addEventListener('input',function(){
     var bd=parseInt(this.value);
     equivSliderVal.textContent=bd;
-    var defNeeded=bd>0?Math.round(12*(bd+100)/bd*100)/100:Infinity;
-    equivChart.data.datasets[0].data=[12,10.71,defNeeded>200?200:defNeeded];
-    equivChart.options.scales.y.max=defNeeded>100?undefined:undefined;
-    equivChart.update();
+    updateGauges(bd);
   });
 
   // Annex data
