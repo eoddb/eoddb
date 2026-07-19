@@ -486,6 +486,55 @@
   </div>
 
   <div class="tc-section">
+    <h2>How damage reduction works</h2>
+    <div class="formula-box">Final Damage = ATK &times; 100 / (DEF + 100) &times; Crit &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip;</div>
+    <p>Damage in HNA passes through three multiplicative layers. First, the attacker's ATK is reduced by the target's DEF via the familiar DEF/(DEF+100) formula. Then each source of damage reduction multiplies independently &mdash; a 5% and a 20% DR source give 1&minus;(0.95&times;0.80)&nbsp;=&nbsp;24% total, not 25%. Crits also multiply in as a &times;1.30 factor. Everything resolves in a single calculation.</p>
+    <div class="annex-table-wrap" style="margin-top:16px;">
+      <table class="annex-def-table">
+        <caption>Damage reduction test data</caption>
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th>Attacker</th>
+            <th>Target</th>
+            <th>DR%</th>
+            <th>Formula</th>
+            <th>Expected</th>
+            <th>Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>0%</td><td>119&times;100/261</td><td>46</td><td>46</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>3%</td><td>&times;0.97</td><td>44</td><td>44</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>5%</td><td>&times;0.95</td><td>43</td><td>43</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>20%</td><td>&times;0.80</td><td>36</td><td>36</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>0%</td><td>204&times;100/261</td><td>78</td><td>78</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>20%</td><td>&times;0.80</td><td>63</td><td>63</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>3%+20%</td><td>&times;0.97&times;0.80</td><td>61</td><td>61</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>0%</td><td>204&times;100/155</td><td>131</td><td>131</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>5%</td><td>&times;0.95</td><td>125</td><td>125</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>30%</td><td>&times;0.70</td><td>92</td><td>92</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>5%+30%</td><td>&times;0.95&times;0.70</td><td>87</td><td>87</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;">The highlighted rows confirm multiplicative stacking: 3%+20% gives 22.4% total DR (not 23%), and 5%+30% gives 33.5% (not 35%). Crits do not bypass DEF or DR &mdash; they multiply within the same formula as a &times;1.30 factor.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Stacking DR: multiple sources vs one</h2>
+    <div class="formula-box">EHP gain from X% DR = 1 / (1 &minus; X%) &minus; 1<br>This is constant regardless of existing DR sources</div>
+    <div class="chart-container"><canvas id="chartDR1"></canvas></div>
+    <p>Because DR sources multiply independently, each one gives the <strong>same EHP boost regardless of how much DR you already have</strong>. A 20% DR source always extends TTK by 25% &mdash; whether you have 0% or 50% existing DR. Compare this to HP% bonuses, which give diminishing returns as you stack more. This makes DR the only survivability stat with no diminishing returns for EHP.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>DR vs DEF vs HP: marginal EHP per perk</h2>
+    <div class="formula-box">EHP = HP &times; (DEF + 100) / 100 &times; 1 / &Pi;(1 &minus; DR&#7522;)<br><br>+20% DR: always +25.0% EHP<br>+8% HP at 68% existing: +4.8% EHP<br>+12% DEF at 222 DEF: +8.3% EHP</div>
+    <div class="chart-container"><canvas id="chartDR2"></canvas></div>
+    <p>All three survivability stats &mdash; DEF, HP, and DR &mdash; multiply together. This means each one amplifies the others. The chart shows the marginal EHP gain from adding one more perk of each type as existing bonuses grow. DR stays flat (no diminishing returns), while HP% and DEF% both decline. In practice, stack every DR source available first, then choose between DEF% and HP% based on your existing stat line.</p>
+  </div>
+
+  <div class="tc-section">
     <details>
       <summary>Annex: test data</summary>
       <div class="annex-table-wrap" style="margin-top:12px;">
@@ -757,6 +806,54 @@
 
   setupHeatmap('heat5','hover5','unit5detail',0.12,0.08,'defSlider5','defSliderVal5');
   setupHeatmap('heat6','hover6','unit6detail',0.01,0.01,'defSlider6','defSliderVal6');
+
+  // Chart DR1: EHP gain per DR source vs HP% perk — constant vs diminishing
+  var drSources=[3,5,10,15,20,25,30];
+  var drEHP=drSources.map(function(d){return{x:d,y:Math.round((1/(1-d/100)-1)*10000)/100};});
+  var hpExisting=[0,10,20,30,40,50,60,70,80,90,100];
+  var hpMarginal=hpExisting.map(function(h){return{x:h,y:Math.round(8/(1+h/100)*100)/100};});
+  new Chart(document.getElementById('chartDR1'),{
+    type:'bar',
+    data:{
+      labels:['3%','5%','10%','15%','20%','25%','30%'],
+      datasets:[{
+        label:'EHP gain per DR source',
+        data:drSources.map(function(d){return Math.round((1/(1-d/100)-1)*10000)/100;}),
+        backgroundColor:'rgba(130,166,156,0.7)',
+        borderColor:tc2,
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.7
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label+' DR source';},label:function(i){return'EHP gain: +'+i.raw.toFixed(2)+'%';}}})},
+      scales:{x:{title:{display:true,text:'DR source size',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11}},grid:{display:false},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'EHP gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',intersect:true}},
+    plugins:[wmPlugin]
+  });
+
+  // Chart DR2: Marginal EHP gain comparison — DR vs HP% vs DEF% as existing bonuses grow
+  var compX=[];for(var i=0;i<=100;i+=5)compX.push(i);
+  var drLine=compX.map(function(x){return{x:x,y:Math.round((1/(1-0.20)-1)*10000)/100};});
+  var hpLine=compX.map(function(x){return{x:x,y:Math.round(8/(1+x/100)*100)/100};});
+  var defLine=compX.map(function(x){return{x:x,y:Math.round(12/(1+x/100+100/222)*10000)/100};});
+  new Chart(document.getElementById('chartDR2'),{
+    type:'line',
+    data:{datasets:[
+      {label:'+20% DR',data:drLine,borderColor:tc2,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,borderDash:[8,4],tension:0},
+      {label:'+8% HP',data:hpLine,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3},
+      {label:'+12% DEF (222 base)',data:defLine,borderColor:tc3,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc3,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0.3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'line',padding:16}},
+        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Existing bonuses: '+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(2)+'% EHP';}}})},
+      scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'Existing bonus % (HP% or DEF%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'Marginal EHP gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
+  });
 
   // Annex data
   var rows=[
