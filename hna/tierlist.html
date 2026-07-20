@@ -19,13 +19,21 @@
   :root {
     --bg: #0d1117;
     --surface: #161b25;
+    --surface-hover: #1c2233;
     --border: #252d3d;
     --text: #c9d1d9;
     --text-muted: #6e7a8a;
     --header-text: #e6edf3;
+    --header-bg: #111821;
     --accent1: #6366f1;
-    --discord: #5865F2;
-    --discord-dim: rgba(88,101,242,0.12);
+    --r3: #8ac4e0;
+    --r4: #b89adb;
+    --r5: #dfc86a;
+    --tier-top: #717092;
+    --tier-s: #b05050;
+    --tier-a: #d4918f;
+    --tier-b: #82A69C;
+    --tier-unrated: #D4D4CC;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,65 +68,398 @@
     letter-spacing: 0.04em;
   }
 
-  .coming-soon {
+  .legend {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .legend-item.active {
+    background: var(--surface);
+    border-color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.r3 { background: var(--r3); }
+  .legend-dot.r4 { background: var(--r4); }
+  .legend-dot.r5 { background: var(--r5); }
+
+  .table-wrap {
     max-width: 1400px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 4rem 2rem;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .table-wrap.filter-r3 .unit.r4,
+  .table-wrap.filter-r3 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r4 .unit.r3,
+  .table-wrap.filter-r4 .unit.r5 { opacity: 0.12; }
+  .table-wrap.filter-r5 .unit.r3,
+  .table-wrap.filter-r5 .unit.r4 { opacity: 0.12; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+    min-width: 900px;
+  }
+
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  thead th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 100px;
+    max-width: 130px;
+  }
+
+  thead th:last-child {
+    border-left: 2px solid var(--border);
+  }
+
+  tbody td {
+    padding: 0.6rem 0.8rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    min-width: 130px;
+  }
+
+  tbody td:last-child {
+    border-right: none;
+    border-left: 2px solid var(--border);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--header-bg);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-left: 4px solid var(--tier-color, var(--border));
+    padding-left: 0.7rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover td { background: var(--surface-hover); }
+  tbody tr:hover td:first-child { background: #192030; }
+
+  .tier-label {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    display: block;
+  }
+
+  .tier-sublabel {
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    display: block;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  .unit { display: inline-block; vertical-align: top; }
+  .unit.r3 { color: var(--r3); }
+  .unit.r4 { color: var(--r4); }
+  .unit.r5 { color: var(--r5); }
+  .unit.has-img { display: inline-block; position: relative; margin: 2px; }
+  .unit.has-img img {
+    width: 42px; height: 42px;
+    border-radius: 6px;
+    border: 2px solid;
+    object-fit: cover;
+    transition: transform 0.15s;
+  }
+  .unit.has-img:hover img { transform: scale(1.15); z-index: 2; }
+  .unit.has-img .unit-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .unit.has-img:hover .unit-tip { display: block; }
+  .unit.r3 img { border-color: var(--r3); }
+  .unit.r4 img { border-color: var(--r4); }
+  .unit.r5 img { border-color: var(--r5); }
+
+  .unit.eidos-unit img {
+    border-radius: 50%;
+  }
+
+  .unit-note {
+    display: block;
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: var(--text-muted);
     text-align: center;
+    line-height: 1.1;
+    margin-top: 1px;
   }
 
-  .coming-soon-badge {
+  .empty-cell {
+    color: var(--text-muted);
+    opacity: 0.3;
     font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent1);
-    background: rgba(99,102,241,0.12);
-    padding: 5px 14px;
-    border-radius: 20px;
+    font-style: italic;
   }
 
-  .coming-soon h2 {
-    font-size: 1.3rem;
+  .table-credit {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 400;
+    color: #8b95a5;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-top: 3px;
+  }
+
+  .error-msg {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 20px;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    color: #f87171;
+    text-align: center;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .unit.has-img img { width: 34px; height: 34px; border-radius: 4px; }
+    .unit.eidos-unit img { border-radius: 50%; }
+    .tier-label { font-size: 0.95rem; }
+  }
+
+  .aspect-filters {
+    max-width: 1400px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    align-items: center;
+  }
+
+  .aspect-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 0.72rem;
+    font-family: inherit;
+  }
+
+  .aspect-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+  }
+
+  .aspect-btn.active {
+    background: var(--surface);
+    color: var(--header-text);
+  }
+
+  .table-wrap.aspect-filtering .unit.aspect-hidden {
+    opacity: 0.12;
+  }
+
+  .info-section {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .info-section h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tier-top);
+    margin-bottom: 12px;
+  }
+
+  .info-section p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .info-section p:last-child { margin-bottom: 0; }
+  .info-section strong { color: var(--header-text); }
+
+  .picks-section {
+    max-width: 1400px;
+    margin: 1.4rem auto 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+
+  .picks-section h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tier-top);
+    margin-bottom: 16px;
+  }
+
+  .pick-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .pick-card:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .pick-img {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    border: 2px solid;
+    object-fit: cover;
+  }
+
+  .pick-img.r4 { border-color: var(--r4); }
+  .pick-img.r5 { border-color: var(--r5); }
+
+  .pick-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pick-name {
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--header-text);
   }
 
-  .coming-soon p {
-    font-size: 0.88rem;
-    line-height: 1.7;
+  .pick-type {
+    font-size: 0.72rem;
     color: var(--text-muted);
-    max-width: 500px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 6px;
   }
 
-  .discord-btn {
+  .pick-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-top: 4px;
+  }
+
+  .yt-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 22px;
-    background: var(--discord);
+    padding: 10px 20px;
+    background: var(--tier-s);
     color: #fff;
     font-size: 0.82rem;
     font-weight: 600;
     border-radius: 6px;
     text-decoration: none;
     transition: opacity 0.15s;
-    margin-top: 0.5rem;
+    margin-top: 16px;
   }
 
-  .discord-btn:hover { opacity: 0.85; }
+  .yt-link:hover { opacity: 0.85; }
 
-  .discord-btn svg {
+  .yt-link svg {
     width: 18px;
     height: 18px;
     fill: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .pick-img { width: 52px; height: 52px; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem 0.8rem; }
+    .info-section, .picks-section { padding: 16px; }
+    .pick-card { gap: 12px; }
+    .pick-img { width: 48px; height: 48px; }
   }
 </style>
 </head>
@@ -127,19 +468,313 @@
 
 <div class="page-header">
   <h1>Honkai: Nexus Anima Tier List &mdash; Nexus Anima &amp; Eidos Ranked</h1>
-  <span class="subtitle">Tier list ranking every Nexus Anima and Eidos by strength, versatility, and team value. Eidos rankings coming soon. Data based on closed beta &mdash; will be updated if there are any changes.</span>
+  <span class="subtitle">Tier list ranking every Nexus Anima and Eidos by strength, versatility, and team value. Eidos shown in the rightmost column. Data based on closed beta &mdash; will be updated if there are any changes.</span>
 </div>
 
-<div class="coming-soon">
-  <span class="coming-soon-badge">Coming Soon</span>
-  <h2>Tier List &amp; Community Tier List</h2>
-  <p>We're building a community-driven tier list where your votes decide the rankings. Join the Discord to participate in shaping the tier lists and discuss the meta.</p>
-  <a href="https://discord.gg/9trXVCZh7N" class="discord-btn" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    Join Discord
-  </a>
+<div class="legend">
+  <span style="color:var(--text-muted);">Rarity:</span>
+  <span class="legend-item" data-rarity="5"><span class="legend-dot r5"></span> <span style="color:var(--r5)">5-Star</span></span>
+  <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
+  <span class="legend-item" data-rarity="3"><span class="legend-dot r3"></span> <span style="color:var(--r3)">3-Star</span></span>
 </div>
 
+<div class="aspect-filters" id="aspectFilters">
+  <span style="color:var(--text-muted);">Aspect:</span>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead id="thead"></thead>
+    <tbody id="grid"></tbody>
+  </table>
+</div>
+
+<div class="error-msg" id="error"></div>
+
+<div class="info-section">
+  <h2>Tier List Weight</h2>
+  <p>Tier List is weighted heavily for early game lack of resources, small/no 5 star Eidos pool for new players and heavily prioritizes units that are <strong>versatile</strong> and can fit into a large array of rosters rather than other tier lists. If you have every unit in the game, the Top picks will still be relevant, but the tiers below may be more subjective as you can push pure aspect teams with enough resources.</p>
+</div>
+
+<div class="picks-section">
+  <h2>EOD Top Picks</h2>
+
+  <div class="pick-card">
+    <img class="pick-img r5" src="/hna/img/nexusanima/camcorgi.webp" alt="Camcorgi">
+    <div class="pick-body">
+      <span class="pick-name">Camcorgi</span><span class="pick-type">Blaster</span>
+      <p class="pick-desc">All round top pick. Solid damage, crowd control and flexibly plays as solo memory or into Memory (3) teams. Herocrates memory and companion synergy plus 4 star Shilian memory buffs. Available for free completing Apex Club quests.</p>
+    </div>
+  </div>
+
+  <div class="pick-card">
+    <img class="pick-img r4" src="/hna/img/nexusanima/starspine.webp" alt="Starspine">
+    <div class="pick-body">
+      <span class="pick-name">Starspine</span><span class="pick-type">Mastermind</span>
+      <p class="pick-desc">4 star unit with great magic damage, Armour/Magic Def shred and stun for crowd control. Light aspect synergy is easy to proc, only needing 2 and has a wide 2nd choice available. Rarely played solo light.</p>
+    </div>
+  </div>
+
+  <div class="pick-card">
+    <img class="pick-img r5" src="/hna/img/nexusanima/cinechel.webp" alt="Cinechel">
+    <div class="pick-body">
+      <span class="pick-name">Cinechel</span><span class="pick-type">Protector</span>
+      <p class="pick-desc">Top tier tank that is a physical specialist. Shreds enemy physical armour from the frontline and has great self sustain regen &mdash; healing based on damage taken plus a flat amount while skill is active. Camcorgi + Cinechel flexibly plays into most rosters without detriment, last slot for Memory (3) either a dps or tank. Available to catch for free in the overworld in CBT.</p>
+    </div>
+  </div>
+
+  <div class="pick-card">
+    <img class="pick-img r4" src="/hna/img/nexusanima/apollinis.webp" alt="Apollinis">
+    <div class="pick-body">
+      <span class="pick-name">Apollinis</span><span class="pick-type">Protector</span>
+      <p class="pick-desc">Best 4 star unit. Top pick to deserve a nerf for official launch, heals based off max health (28%) and gaining more healing the more health lost. Also heals one ally with the lowest HP. Light (2) often super easy to proc with another 4 star &mdash; Starspine. Upside potential if there is a great Light Eidos.</p>
+    </div>
+  </div>
+
+  <div class="pick-card">
+    <img class="pick-img r5" src="/hna/img/nexusanima/dragamour.webp" alt="Dragamour">
+    <div class="pick-body">
+      <span class="pick-name">Dragamour</span><span class="pick-type">Mascot</span>
+      <p class="pick-desc">Heals, damages, shields and is relatively bulky for a mascot. Scales excellently with Rapport (additional copies) and is the best flex solo pick. Usually fits into almost all team comps except full Hate. Little alternatives from 4/3 star roster makes me recommend this as the best 5 star to pick up if they make it limited &mdash; was able to get for free from guidebook in CBT.</p>
+    </div>
+  </div>
+
+  <div class="pick-card">
+    <img class="pick-img r5" src="/hna/img/eidos/herocrates.webp" alt="Herocrates">
+    <div class="pick-body">
+      <span class="pick-name">Herocrates</span><span class="pick-type">Eidos &middot; Memory</span>
+      <p class="pick-desc">Cost efficiency, flexibility and versatility makes us rank Herocrates as our top pick. Companion is one of the best units in the game and he buffs its damage as well as giving memory units more damage. Skill funnels large amounts of energy to a single unit and procs Echo. Pairs well with 4 star Shilian to offer better Memory strength while leaving roster well open for future units and building specialist teams (Hate/Dark).</p>
+    </div>
+  </div>
+
+  <p style="margin-top:8px;">
+    <a class="yt-link" href="https://www.youtube.com/@EODGamer" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      For more commentary, check out our YouTube channel
+    </a>
+  </p>
+</div>
+
+<script>
+const TYPE_ORDER = ["Blaster","Mastermind","Explorer","Protector","Mascot"];
+
+const TIER_ORDER = [
+  { id: "EOD Top Picks", label: "EOD", sublabel: "Top Picks", color: "#717092" },
+  { id: "S", label: "S", sublabel: "", color: "#b05050" },
+  { id: "A", label: "A", sublabel: "", color: "#d4918f" },
+  { id: "B", label: "B", sublabel: "", color: "#82A69C" },
+  { id: "Unrated", label: "?", sublabel: "Unrated", color: "#D4D4CC" }
+];
+
+const COLUMNS = [...TYPE_ORDER, "Eidos"];
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function loadJSON(filename) {
+  const resp = await fetch('/hna/' + filename);
+  if (!resp.ok) throw new Error('Failed to load ' + filename);
+  return resp.json();
+}
+
+function getTierEntries(tierData, name) {
+  const val = tierData[name];
+  if (!val) return [{tier: 'Unrated', note: ''}];
+  if (typeof val === 'string') return [{tier: val, note: ''}];
+  if (Array.isArray(val)) return val.map(v => ({tier: v.tier, note: v.note || ''}));
+  return [{tier: 'Unrated', note: ''}];
+}
+
+function makeUnit(name, rarity, imgPath, isEidos, note, aspect) {
+  const span = document.createElement('span');
+  span.className = 'unit r' + rarity;
+  if (isEidos) span.classList.add('eidos-unit');
+  if (aspect) span.dataset.aspect = aspect;
+  span.textContent = name;
+
+  const img = new Image();
+  img.alt = name;
+  img.onload = () => {
+    span.classList.add('has-img');
+    span.textContent = '';
+    span.appendChild(img);
+    const tip = document.createElement('span');
+    tip.className = 'unit-tip';
+    tip.textContent = name + (note ? ' (' + note + ')' : '');
+    span.appendChild(tip);
+    if (note) {
+      const noteEl = document.createElement('span');
+      noteEl.className = 'unit-note';
+      noteEl.textContent = note;
+      span.appendChild(noteEl);
+    }
+  };
+  img.src = imgPath;
+  return span;
+}
+
+async function init() {
+  let units, eidos, tierData;
+  try {
+    [units, eidos, tierData] = await Promise.all([
+      loadJSON('eoddb_hna_nexus_anima_units.json'),
+      loadJSON('eoddb_hna_eidos.json'),
+      loadJSON('eoddb_hna_tierlist.json')
+    ]);
+  } catch (e) {
+    showError('Could not load data files.');
+    return;
+  }
+
+  const unitMap = {};
+  units.forEach(u => {
+    unitMap[u.Name] = { name: u.Name, rarity: u.Rarity, type: u.Type, aspect: u.Aspect, isEidos: false };
+  });
+
+  const eidosMap = {};
+  eidos.forEach(e => {
+    eidosMap[e.Name] = { name: e.Name, rarity: e.Rarity, aspect: e.Aspect, isEidos: true };
+  });
+
+  const thead = document.getElementById('thead');
+  const headRow = document.createElement('tr');
+  headRow.innerHTML = '<th style="color:#8b95a5;text-transform:none">EODdb.com<span class="table-credit">Tier List</span></th>' +
+    COLUMNS.map(c => '<th>' + c + '</th>').join('');
+  thead.appendChild(headRow);
+
+  const tbody = document.getElementById('grid');
+
+  TIER_ORDER.forEach(tier => {
+    const tr = document.createElement('tr');
+    tr.style.setProperty('--tier-color', tier.color);
+
+    const labelTd = document.createElement('td');
+    labelTd.style.setProperty('--tier-color', tier.color);
+    labelTd.innerHTML =
+      '<span class="tier-label" style="color:' + tier.color + '">' + tier.label + '</span>' +
+      (tier.sublabel ? '<span class="tier-sublabel">' + tier.sublabel + '</span>' : '');
+    tr.appendChild(labelTd);
+
+    TYPE_ORDER.forEach(type => {
+      const td = document.createElement('td');
+      const matching = [];
+      units.forEach(u => {
+        if (u.Type !== type) return;
+        getTierEntries(tierData, u.Name).forEach(entry => {
+          if (entry.tier === tier.id) matching.push({unit: u, note: entry.note});
+        });
+      });
+      matching.sort((a, b) => b.unit.Rarity - a.unit.Rarity);
+
+      if (matching.length === 0) {
+        td.innerHTML = '<span class="empty-cell">&mdash;</span>';
+      } else {
+        matching.forEach(m => {
+          const slug = m.unit.Name.toLowerCase().replace(/[ .']/g, '');
+          td.appendChild(makeUnit(m.unit.Name, m.unit.Rarity, '/hna/img/nexusanima/' + slug + '.webp', false, m.note, m.unit.Aspect));
+        });
+      }
+      tr.appendChild(td);
+    });
+
+    const eidosTd = document.createElement('td');
+    const matchingEidos = [];
+    eidos.forEach(e => {
+      getTierEntries(tierData, e.Name).forEach(entry => {
+        if (entry.tier === tier.id) matchingEidos.push({unit: e, note: entry.note});
+      });
+    });
+    matchingEidos.sort((a, b) => b.unit.Rarity - a.unit.Rarity);
+
+    if (matchingEidos.length === 0) {
+      eidosTd.innerHTML = '<span class="empty-cell">&mdash;</span>';
+    } else {
+      matchingEidos.forEach(m => {
+        const slug = m.unit.Name.toLowerCase().replace(/ /g, '');
+        eidosTd.appendChild(makeUnit(m.unit.Name, m.unit.Rarity, '/hna/img/eidos/' + slug + '.webp', true, m.note, m.unit.Aspect));
+      });
+    }
+    tr.appendChild(eidosTd);
+
+    tbody.appendChild(tr);
+  });
+
+  // Rarity filter
+  const tableWrap = document.querySelector('.table-wrap');
+  const legendItems = document.querySelectorAll('.legend-item');
+
+  function clearFilter() {
+    tableWrap.classList.remove('filter-r3', 'filter-r4', 'filter-r5');
+    legendItems.forEach(li => li.classList.remove('active'));
+  }
+
+  function applyFilter(rarity) {
+    const filterClass = 'filter-r' + rarity;
+    if (tableWrap.classList.contains(filterClass)) {
+      clearFilter();
+    } else {
+      clearFilter();
+      tableWrap.classList.add(filterClass);
+      legendItems.forEach(li => { if (li.dataset.rarity === rarity) li.classList.add('active'); });
+    }
+  }
+
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => applyFilter(item.dataset.rarity));
+  });
+
+  // Aspect filters
+  const ASPECT_COLORS = {
+    "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
+    "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
+    "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
+    "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
+  };
+  const ASPECT_ORDER = [
+    "Light","Dark","Reality","Oblivion","Love","Hate",
+    "Beauty","Ugliness","Joy","Pride","Strength","Competition",
+    "Satiation","Insatiability","Change","Memory"
+  ];
+
+  const aspectFiltersEl = document.getElementById('aspectFilters');
+  let activeAspect = null;
+  const aspectBtns = [];
+
+  ASPECT_ORDER.forEach(aspect => {
+    const btn = document.createElement('button');
+    btn.className = 'aspect-btn';
+    btn.textContent = aspect;
+    btn.dataset.aspect = aspect;
+    btn.style.borderColor = 'var(--border)';
+    aspectFiltersEl.appendChild(btn);
+    aspectBtns.push(btn);
+
+    btn.addEventListener('click', () => {
+      if (activeAspect === aspect) {
+        activeAspect = null;
+        btn.classList.remove('active');
+        btn.style.borderColor = 'var(--border)';
+        tableWrap.classList.remove('aspect-filtering');
+        tableWrap.querySelectorAll('.unit').forEach(u => u.classList.remove('aspect-hidden'));
+      } else {
+        aspectBtns.forEach(b => { b.classList.remove('active'); b.style.borderColor = 'var(--border)'; });
+        activeAspect = aspect;
+        btn.classList.add('active');
+        btn.style.borderColor = ASPECT_COLORS[aspect] || 'var(--text-muted)';
+        tableWrap.classList.add('aspect-filtering');
+        tableWrap.querySelectorAll('.unit').forEach(u => {
+          u.classList.toggle('aspect-hidden', u.dataset.aspect !== aspect);
+        });
+      }
+    });
+  });
+}
+
+init();
+</script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
 </html>
