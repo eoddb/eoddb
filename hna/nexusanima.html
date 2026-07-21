@@ -485,18 +485,25 @@
   tr.skill-row { display: none; }
   tr.skill-row.visible { display: table-row; }
 
+  /* This row's single cell is a td:first-child, so it picks up the sticky
+     aspect-label styling (nowrap, bold, header background). Undo all of it. */
   tr.skill-row td {
     padding: 0 !important;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     background: var(--bg) !important;
     position: static;
+    white-space: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    min-width: 0;
+    max-width: none;
   }
 
   /* The row spans the whole (scrollable) table, so pin the content to the left
      edge and cap its width instead of letting text run the full table width. */
   .skill-inner {
     padding: 14px 18px;
-    max-width: 980px;
+    max-width: min(980px, calc(100vw - 4rem));
     position: sticky;
     left: 0;
     word-wrap: break-word;
