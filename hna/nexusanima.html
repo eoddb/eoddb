@@ -1072,7 +1072,7 @@ async function buildDispositions(units, types) {
       const slug = d.name.toLowerCase().replace(/[ .']/g, '');
       nameTd.innerHTML =
         `<span class="disp-name"><span class="caret">▶</span>` +
-        `<img src="/hna/img/dispositions/${slug}.webp" alt="${d.name}" ` +
+        `<img src="/hna/img/dispositions/${slug}.webp?v=1" alt="${d.name}" ` +
         `onerror="this.style.display='none'">` +
         `<span>${d.name}</span>` +
         (d.tier !== 'III' ? `<span class="tier">${d.tier}</span>` : '') +
