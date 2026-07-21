@@ -1,0 +1,576 @@
+[
+  {
+    "No.": "001",
+    "Name": "Puddlipup",
+    "Ability Name": "Puddlipup's Survival Rules",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "002",
+    "Name": "Taileep",
+    "Ability Name": "Tail Sweep-and-Bounce",
+    "Ability Tags": null,
+    "EODdb Tags": "Shield (R2)"
+  },
+  {
+    "No.": "003",
+    "Name": "Batnyss",
+    "Ability Name": "Spellbinding Sleepwave",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "004",
+    "Name": "Bunmareen",
+    "Ability Name": "Nexus Pearl Ward",
+    "Ability Tags": null,
+    "EODdb Tags": "Healing (R2)"
+  },
+  {
+    "No.": "005",
+    "Name": "Inkifoal",
+    "Ability Name": "Singing in the Ink",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing"
+  },
+  {
+    "No.": "006",
+    "Name": "Cumulon",
+    "Ability Name": "Wandering Cloud Waltz",
+    "Ability Tags": "Terminate",
+    "EODdb Tags": "Terminate, Pierce (R6)"
+  },
+  {
+    "No.": "007",
+    "Name": "Apollinis",
+    "Ability Name": "Immaculate Sun",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing"
+  },
+  {
+    "No.": "008",
+    "Name": "Felinoxie",
+    "Ability Name": "Brightmoon Cascade",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield, Healing (R2)"
+  },
+  {
+    "No.": "009",
+    "Name": "Lumeridon",
+    "Ability Name": "Tsunami of the Ancient Sea",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R6)"
+  },
+  {
+    "No.": "010",
+    "Name": "Inkicorn",
+    "Ability Name": "Vanguard's Horn",
+    "Ability Tags": "Control",
+    "EODdb Tags": "Control, Shield (R2)"
+  },
+  {
+    "No.": "011",
+    "Name": "Heartcease",
+    "Ability Name": "Drizzle of Love and Hate",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Pierce (R2)"
+  },
+  {
+    "No.": "012",
+    "Name": "Dragamour",
+    "Ability Name": "Heart's Benediction",
+    "Ability Tags": "AoE, Shield, Healing",
+    "EODdb Tags": "AoE, Shield, Healing, Control (R6)"
+  },
+  {
+    "No.": "013",
+    "Name": "Corvariatio",
+    "Ability Name": "Nexus' Capricious Nature",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "014",
+    "Name": "Vulberry",
+    "Ability Name": "Cream Ice Cream Cake",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "015",
+    "Name": "Noctumbra",
+    "Ability Name": "Proud Shade's Passing",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "017",
+    "Name": "Mushgloomini",
+    "Ability Name": "Hallucinogenic Spores",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing, Deep Wounds (R2)"
+  },
+  {
+    "No.": "018",
+    "Name": "Faeflux",
+    "Ability Name": "Fate's Hourglass",
+    "Ability Tags": "AoE, Control",
+    "EODdb Tags": "AoE, Control"
+  },
+  {
+    "No.": "019",
+    "Name": "Lepinamel",
+    "Ability Name": "Porcelain Pearl Surge",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "020",
+    "Name": "Donubi",
+    "Ability Name": "Bowel-Blaster Donuts",
+    "Ability Tags": null,
+    "EODdb Tags": "Deep Wounds (R2)"
+  },
+  {
+    "No.": "021",
+    "Name": "Olivesper",
+    "Ability Name": "Olive Branchomancy",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "022",
+    "Name": "Squarel",
+    "Ability Name": "Pinecone Throwdown",
+    "Ability Tags": null,
+    "EODdb Tags": "Support* (R0)"
+  },
+  {
+    "No.": "023",
+    "Name": "Furrari",
+    "Ability Name": "Furrari Speed Racer",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield, Control (R2)"
+  },
+  {
+    "No.": "024",
+    "Name": "Magisdrake",
+    "Ability Name": "Gavel of Justice",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Healing (R2)"
+  },
+  {
+    "No.": "025",
+    "Name": "Nomnom",
+    "Ability Name": "Please Eat a Huge Apple",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing, AoE (R6)"
+  },
+  {
+    "No.": "026",
+    "Name": "Pupanoo",
+    "Ability Name": "Fried Egg Ordnance",
+    "Ability Tags": null,
+    "EODdb Tags": "AoE (R2), Pierce (R6)"
+  },
+  {
+    "No.": "027",
+    "Name": "Bobabirb",
+    "Ability Name": "Boba Barrage",
+    "Ability Tags": null,
+    "EODdb Tags": "AoE (R2)"
+  },
+  {
+    "No.": "028",
+    "Name": "Eggnok",
+    "Ability Name": "Jawbreaker",
+    "Ability Tags": "Control",
+    "EODdb Tags": "Control, Shield (R2)"
+  },
+  {
+    "No.": "029",
+    "Name": "Rosfurcate",
+    "Ability Name": "Midnight Rose's Sharp Thorn",
+    "Ability Tags": null,
+    "EODdb Tags": null
+  },
+  {
+    "No.": "030",
+    "Name": "Glampa",
+    "Ability Name": "Oi! Shaddup!",
+    "Ability Tags": "Control, AoE",
+    "EODdb Tags": "Control, AoE"
+  },
+  {
+    "No.": "031",
+    "Name": "Chowpownd",
+    "Ability Name": "Megamunch",
+    "Ability Tags": "Shield, Control",
+    "EODdb Tags": "Shield, Control, Terminate (R6)"
+  },
+  {
+    "No.": "032",
+    "Name": "Damasque",
+    "Ability Name": "Phantasmagoric Trio",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield, Support* (R0)"
+  },
+  {
+    "No.": "033",
+    "Name": "Cublade",
+    "Ability Name": "Charged Chop",
+    "Ability Tags": null,
+    "EODdb Tags": null
+  },
+  {
+    "No.": "034",
+    "Name": "Marshalbird",
+    "Ability Name": "Plumeshadow Lumina",
+    "Ability Tags": null,
+    "EODdb Tags": "Pierce (R6)"
+  },
+  {
+    "No.": "035",
+    "Name": "Plumelune",
+    "Ability Name": "Plumelune's Zephyr",
+    "Ability Tags": "Shield, AoE",
+    "EODdb Tags": "Shield, AoE, Support* (R2)"
+  },
+  {
+    "No.": "036",
+    "Name": "Mimoo",
+    "Ability Name": "Milky Cyclone",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "037",
+    "Name": "Rimechime",
+    "Ability Name": "Swishy Snow Comet",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "038",
+    "Name": "Vixemourne",
+    "Ability Name": "Shadowbloom",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Terminate (R6)"
+  },
+  {
+    "No.": "039",
+    "Name": "Bladehound",
+    "Ability Name": "Blighted Bonespikes",
+    "Ability Tags": "AoE, Control",
+    "EODdb Tags": "AoE, Control"
+  },
+  {
+    "No.": "040",
+    "Name": "Eggluvs",
+    "Ability Name": "Shellbreaker",
+    "Ability Tags": null,
+    "EODdb Tags": "Control (R6)"
+  },
+  {
+    "No.": "041",
+    "Name": "Chimaura",
+    "Ability Name": "Like Giving Tigers Wings",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "043",
+    "Name": "Donnatallow",
+    "Ability Name": "Sallow Tallow's Pallid Flame",
+    "Ability Tags": null,
+    "EODdb Tags": "Deep Wounds (R2), Pierce (R6)"
+  },
+  {
+    "No.": "044",
+    "Name": "Frigull",
+    "Ability Name": "Go Get Some Fries",
+    "Ability Tags": "Energy Jam, AoE",
+    "EODdb Tags": "Energy Jam, AoE"
+  },
+  {
+    "No.": "045",
+    "Name": "Starspine",
+    "Ability Name": "Twinkle Twinkle Little Starlight",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R6), Pierce (R2)"
+  },
+  {
+    "No.": "046",
+    "Name": "Camcorgi",
+    "Ability Name": "Cheese!",
+    "Ability Tags": "AoE, Control",
+    "EODdb Tags": "AoE, Control"
+  },
+  {
+    "No.": "047",
+    "Name": "Kaffiend",
+    "Ability Name": "Espresso",
+    "Ability Tags": null,
+    "EODdb Tags": "Shield (R2), Support* (R0)"
+  },
+  {
+    "No.": "048",
+    "Name": "Foalhardy",
+    "Ability Name": "Colt Peacemaker",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing"
+  },
+  {
+    "No.": "049",
+    "Name": "Octopourri",
+    "Ability Name": "Heart To Heart",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield, Support* (R0)"
+  },
+  {
+    "No.": "050",
+    "Name": "Hoppelon",
+    "Ability Name": "Pocket Bastion",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "051",
+    "Name": "Mr. Avocado",
+    "Ability Name": "Mr. Avocagrow",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "052",
+    "Name": "Cinechel",
+    "Ability Name": "Rewind",
+    "Ability Tags": "Healing, Pierce",
+    "EODdb Tags": "Healing, Pierce"
+  },
+  {
+    "No.": "053",
+    "Name": "C'locked",
+    "Ability Name": "Saudade",
+    "Ability Tags": null,
+    "EODdb Tags": "Shield (R2), Support* (R0)"
+  },
+  {
+    "No.": "054",
+    "Name": "Catnapir",
+    "Ability Name": "Nightmare Ripple",
+    "Ability Tags": "Taunt, Shield",
+    "EODdb Tags": "Taunt, Shield"
+  },
+  {
+    "No.": "055",
+    "Name": "Framamba",
+    "Ability Name": "Focus",
+    "Ability Tags": null,
+    "EODdb Tags": null
+  },
+  {
+    "No.": "056",
+    "Name": "Chocllamour",
+    "Ability Name": "Ram",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield, Control (R2)"
+  },
+  {
+    "No.": "057",
+    "Name": "Capybunner",
+    "Ability Name": "Little Star",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "058",
+    "Name": "Waxula",
+    "Ability Name": "It and Its Cat",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "059",
+    "Name": "Pomparrot",
+    "Ability Name": "Festival of Fireworks",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Deep Wounds (R2)"
+  },
+  {
+    "No.": "060",
+    "Name": "Hamburgoof",
+    "Ability Name": "Burger Disassembly",
+    "Ability Tags": "Pierce",
+    "EODdb Tags": "Pierce"
+  },
+  {
+    "No.": "061",
+    "Name": "Magisaki",
+    "Ability Name": "It's Raining Hats",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "062",
+    "Name": "Beaubeanie",
+    "Ability Name": "Luminescent Flash",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Pierce (R6)"
+  },
+  {
+    "No.": "063",
+    "Name": "Lumehart",
+    "Ability Name": "Stag's Call",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Pierce (R2)"
+  },
+  {
+    "No.": "064",
+    "Name": "Hugglebeary",
+    "Ability Name": "Savage Bear Charge",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "065",
+    "Name": "Derpydile",
+    "Ability Name": "Enthusiastic Soundwave",
+    "Ability Tags": "AoE, Shield",
+    "EODdb Tags": "AoE, Shield"
+  },
+  {
+    "No.": "066",
+    "Name": "Umpurrella",
+    "Ability Name": "Der Sturm Sonate",
+    "Ability Tags": "Healing, AoE",
+    "EODdb Tags": "Healing, AoE, Control (R6)"
+  },
+  {
+    "No.": "067",
+    "Name": "Sharkalaka",
+    "Ability Name": "Acrobatic Diving",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Pierce (R2)"
+  },
+  {
+    "No.": "068",
+    "Name": "Ugglewing",
+    "Ability Name": "Through Bough and Leaf Shower",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Deep Wounds (R2)"
+  },
+  {
+    "No.": "069",
+    "Name": "Goldfogey",
+    "Ability Name": "Forgetful Strike",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing"
+  },
+  {
+    "No.": "070",
+    "Name": "Mariminnow",
+    "Ability Name": "Wavebreaker's Voyage",
+    "Ability Tags": null,
+    "EODdb Tags": "Healing (R2)"
+  },
+  {
+    "No.": "071",
+    "Name": "Muscimmon",
+    "Ability Name": "Wastelands",
+    "Ability Tags": "Healing, AoE",
+    "EODdb Tags": "Healing, AoE, Control (R2)"
+  },
+  {
+    "No.": "072",
+    "Name": "Sunspottie",
+    "Ability Name": "Photosynthesis",
+    "Ability Tags": "AoE, Healing",
+    "EODdb Tags": "AoE, Healing"
+  },
+  {
+    "No.": "073",
+    "Name": "Pumpkimp",
+    "Ability Name": "Crazy Pumpkin",
+    "Ability Tags": "Burning, Deep Wounds",
+    "EODdb Tags": "Burning, Deep Wounds"
+  },
+  {
+    "No.": "074",
+    "Name": "Jerboranj",
+    "Ability Name": "Carbonation Bomb",
+    "Ability Tags": "AoE, Pierce",
+    "EODdb Tags": "AoE, Pierce, Deep Wounds (R2)"
+  },
+  {
+    "No.": "075",
+    "Name": "Sootsie",
+    "Ability Name": "Starlight Support",
+    "Ability Tags": "Healing",
+    "EODdb Tags": "Healing"
+  },
+  {
+    "No.": "076",
+    "Name": "Broomba",
+    "Ability Name": "Purifying Lesson",
+    "Ability Tags": "Shield",
+    "EODdb Tags": "Shield"
+  },
+  {
+    "No.": "077",
+    "Name": "Famishade",
+    "Ability Name": "Gluttonous Spirit",
+    "Ability Tags": null,
+    "EODdb Tags": null
+  },
+  {
+    "No.": "079",
+    "Name": "Hoggit",
+    "Ability Name": "A Moveable Feast",
+    "Ability Tags": "Control, AoE",
+    "EODdb Tags": "Control, AoE, Healing (R2)"
+  },
+  {
+    "No.": "080",
+    "Name": "Fyrklor",
+    "Ability Name": "Everlasting Flames",
+    "Ability Tags": "Control",
+    "EODdb Tags": "Control, Burning (R2), Deep Wounds (R2), Healing (R6)"
+  },
+  {
+    "No.": "081",
+    "Name": "Seroplumanth",
+    "Ability Name": "Swirling Wind of White",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "082",
+    "Name": "Mesmerith",
+    "Ability Name": "Bats Across the Bloodrain Night",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE"
+  },
+  {
+    "No.": "083",
+    "Name": "Atragasus",
+    "Ability Name": "Inkclouds Underhoof",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R2)"
+  },
+  {
+    "No.": "084",
+    "Name": "Shampoco",
+    "Ability Name": "Biggliest Bubble",
+    "Ability Tags": "AoE",
+    "EODdb Tags": "AoE, Control (R6)"
+  },
+  {
+    "No.": "085",
+    "Name": "Baggle",
+    "Ability Name": "Windy Waltz",
+    "Ability Tags": null,
+    "EODdb Tags": "Support* (R0)"
+  }
+]

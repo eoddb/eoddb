@@ -481,6 +481,84 @@
     .analysis { padding: 16px; }
   }
 
+  /* ── Skill / Rapport detail (opens under an aspect row) ── */
+  tr.skill-row { display: none; }
+  tr.skill-row.visible { display: table-row; }
+
+  tr.skill-row td {
+    padding: 0 !important;
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
+    background: var(--bg) !important;
+    position: static;
+  }
+
+  /* The row spans the whole (scrollable) table, so pin the content to the left
+     edge and cap its width instead of letting text run the full table width. */
+  .skill-inner {
+    padding: 14px 18px;
+    max-width: 980px;
+    position: sticky;
+    left: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .skill-block { display: none; margin-bottom: 18px; }
+  .skill-block.show-block { display: block; }
+  .skill-block:last-child { margin-bottom: 0; }
+
+  .skill-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .skill-head img { width: 44px; height: 44px; border-radius: 6px; border: 2px solid; }
+  .skill-head.r3 img { border-color: var(--r3); }
+  .skill-head.r4 img { border-color: var(--r4); }
+  .skill-head.r5 img { border-color: var(--r5); }
+  .skill-head .skill-unit-name { font-size: 0.95rem; font-weight: 700; color: var(--header-text); }
+
+  .skill-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+  .skill-meta .chip {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+  .skill-meta .chip strong { color: var(--text); font-weight: 600; }
+
+  .skill-name {
+    font-size: 0.85rem; font-weight: 700; color: var(--header-text);
+    margin-bottom: 6px;
+  }
+
+  .rank-list { display: flex; flex-direction: column; gap: 4px; }
+  .rank-item {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 10px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .rank-item.base { border-left: var(--accent-stripe) solid var(--accent1); }
+  .rank-item .rank-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding-top: 2px;
+  }
+  .rank-item.base .rank-label { color: var(--accent1); }
+
+  .unit.has-img { cursor: pointer; }
+  .unit.active-unit img { outline: 2px solid var(--accent1); outline-offset: 1px; }
+
+  @media (max-width: 640px) {
+    .rank-item { grid-template-columns: 58px 1fr; gap: 8px; font-size: 0.78rem; }
+  }
+
   /* ── Dispositions ── */
   .disp-section { max-width: 1400px; margin: 1.4rem auto 0; }
 
@@ -627,17 +705,30 @@ async function loadJSON(filename) {
 }
 
 async function init() {
-  let units, typesData, tagsData;
+  let units, typesData, skillTagData;
   try {
-    [units, typesData, tagsData] = await Promise.all([
+    [units, typesData, skillTagData] = await Promise.all([
       loadJSON('eoddb_hna_nexus_anima_units.json'),
       loadJSON('eoddb_hna_types.json'),
-      loadJSON('eoddb_hna_tags.json')
+      loadJSON('eoddb_hna_nexus_anima_skill_tag.json')
     ]);
   } catch (e) {
     showError('Could not load data files.');
     return;
   }
+
+  // Tags come straight from the skill sheet's "EODdb Tags" column
+  // ("AoE, Control (R2)"), so a new Nexus Anima picks up its filters with no
+  // extra file to maintain.
+  const tagsData = skillTagData.map(t => ({
+    Name: t.Name,
+    Tags: String(t['EODdb Tags'] || '').split(',').map(s => s.trim()).filter(Boolean)
+      .map(part => {
+        const m = part.match(/^(.*?)\s*\(R(\d+)\)$/);
+        const tag = (m ? m[1] : part).replace(/\*+$/, '').trim();
+        return m ? { tag, rank: Number(m[2]) } : { tag };
+      })
+  }));
 
   const tagMap = {};
   tagsData.forEach(t => { tagMap[t.Name] = t.Tags || []; });
@@ -724,6 +815,7 @@ async function init() {
   );
 
   const tbody = document.getElementById('grid');
+  const skillRows = {};
   aspects.forEach(aspect => {
     const tr = document.createElement('tr');
     const acColor = ASPECT_COLORS[aspect] || 'var(--border)';
@@ -746,6 +838,7 @@ async function init() {
           const unitTags = tagMap[u.name] || [];
           const span = document.createElement('span');
           span.className = 'unit r' + u.rarity;
+          span.dataset.unitName = u.name;
           span.dataset.tags = unitTags.map(t => t.tag).join(',');
           span.dataset.tagsRaw = JSON.stringify(unitTags);
           const img = new Image();
@@ -776,6 +869,17 @@ async function init() {
     });
 
     tbody.appendChild(tr);
+
+    // Empty row that skill/rapport detail blocks get dropped into on click
+    const skillTr = document.createElement('tr');
+    skillTr.className = 'skill-row';
+    skillTr.style.setProperty('--aspect-color', acColor);
+    const skillTd = document.createElement('td');
+    skillTd.colSpan = types.length + 1;
+    skillTd.innerHTML = '<div class="skill-inner"></div>';
+    skillTr.appendChild(skillTd);
+    tbody.appendChild(skillTr);
+    skillRows[aspect] = { row: skillTr, inner: skillTd.firstElementChild };
   });
 
   function ac(name) {
@@ -971,8 +1075,103 @@ async function init() {
     });
   }
 
+  // ── Skill / Rapport detail on portrait click ──
+  buildSkillDetails(units, skillTagData, skillRows);
+
   // ── Dispositions ──
   buildDispositions(units, types);
+}
+
+// Clicking a portrait in the grid opens that unit's skill and rapport ranks in
+// a detail row under its aspect. Blocks are built on first open.
+async function buildSkillDetails(units, skillTagData, skillRows) {
+  let rapportData, eidosData;
+  try {
+    [rapportData, eidosData] = await Promise.all([
+      loadJSON('eoddb_hna_nexus_anima_skill_rapport.json'),
+      loadJSON('eoddb_hna_eidos.json')
+    ]);
+  } catch (e) {
+    return;   // grid stays usable without the skill data
+  }
+
+  const unitBy = {};
+  units.forEach(u => { unitBy[u.Name] = u; });
+
+  const skillBy = {};
+  skillTagData.forEach(s => { skillBy[s.Name] = s; });
+
+  const rapportBy = {};
+  rapportData.forEach(r => { rapportBy[r.Name] = r; });
+
+  // Eidos list their companion, so invert it to look up by Nexus Anima
+  const companionOf = {};
+  eidosData.forEach(e => { if (e.Companion) companionOf[e.Companion] = e.Name; });
+
+  const esc = s => String(s).replace(/[&<>"]/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function buildBlock(name) {
+    const u = unitBy[name] || {};
+    const skill = skillBy[name] || {};
+    const rapport = rapportBy[name] || {};
+    const block = document.createElement('div');
+    block.className = 'skill-block';
+    block.dataset.unitName = name;
+
+    const chips = [
+      u.Aspect ? `<span class="chip">Aspect <strong>${esc(u.Aspect)}</strong></span>` : '',
+      u.Type ? `<span class="chip">Type <strong>${esc(u.Type)}</strong></span>` : '',
+      companionOf[name] ? `<span class="chip">Eidos Companion <strong>${esc(companionOf[name])}</strong></span>` : '',
+      skill['Ability Tags'] ? `<span class="chip">In-game Tags <strong>${esc(skill['Ability Tags'])}</strong></span>` : '',
+      skill['EODdb Tags'] ? `<span class="chip">EODdb Tags <strong>${esc(skill['EODdb Tags'])}</strong></span>` : ''
+    ].join('');
+
+    const ranks = [];
+    if (rapport['Ability Description']) {
+      ranks.push(`<div class="rank-item base"><span class="rank-label">Base</span>` +
+                 `<span>${esc(rapport['Ability Description'])}</span></div>`);
+    }
+    for (let i = 1; i <= 6; i++) {
+      const text = rapport['Rank ' + i];
+      if (!text) continue;
+      ranks.push(`<div class="rank-item"><span class="rank-label">Rank ${i}</span>` +
+                 `<span>${esc(text)}</span></div>`);
+    }
+
+    const slug = name.toLowerCase().replace(/[ .']/g, '');
+    block.innerHTML =
+      `<div class="skill-head r${u.Rarity}">` +
+        `<img src="/hna/img/nexusanima/${slug}.webp" alt="${esc(name)}" onerror="this.style.display='none'">` +
+        `<span class="skill-unit-name">${esc(name)}</span>` +
+        (u.Rarity ? `<span class="rarity-tag r${u.Rarity}">${u.Rarity}-Star</span>` : '') +
+      `</div>` +
+      `<div class="skill-meta">${chips}</div>` +
+      (skill['Ability Name'] ? `<div class="skill-name">${esc(skill['Ability Name'])}</div>` : '') +
+      (ranks.length ? `<div class="rank-list">${ranks.join('')}</div>`
+                    : `<div class="rank-item">No skill data recorded yet.</div>`);
+    return block;
+  }
+
+  document.querySelectorAll('#grid .unit').forEach(span => {
+    const name = span.dataset.unitName;
+    const aspect = (unitBy[name] || {}).Aspect;
+    const target = skillRows[aspect];
+    if (!name || !target) return;
+
+    span.addEventListener('click', () => {
+      let block = target.inner.querySelector(`.skill-block[data-unit-name="${CSS.escape(name)}"]`);
+      if (!block) {
+        block = buildBlock(name);
+        target.inner.appendChild(block);
+      }
+      const opening = !block.classList.contains('show-block');
+      block.classList.toggle('show-block', opening);
+      span.classList.toggle('active-unit', opening);
+      target.row.classList.toggle('visible',
+        target.inner.querySelectorAll('.skill-block.show-block').length > 0);
+    });
+  });
 }
 
 // Builds the Disposition reference tables. Runs after the main grid so a
