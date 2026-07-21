@@ -521,10 +521,6 @@
   }
   .disp-name .caret { color: var(--text-muted); font-size: 0.65rem; width: 8px; }
   .disp-row.open .caret { color: var(--accent1); }
-  .disp-name .tier {
-    font-size: 0.6rem; color: var(--text-muted); border: 1px solid var(--border);
-    border-radius: 3px; padding: 0 3px; letter-spacing: 0.04em;
-  }
 
   .disp-effect { font-size: 0.8rem; line-height: 1.5; color: var(--text); }
   .disp-qty { text-align: right; font-weight: 700; color: var(--header-text); width: 48px; }
@@ -998,14 +994,9 @@ async function buildDispositions(units, types) {
   // Sheet names carry the captured tier ("Timid III"); the mapping sheet uses
   // bare names, so split the numeral off and join on the bare name.
   const baseName = s => String(s).replace(/\s+(I{1,3})$/, '').trim();
-  const tierOf = s => (String(s).match(/\s+(I{1,3})$/) || [null, 'I'])[1];
 
-  const effects = {}, tiers = {};
-  dispData.forEach(d => {
-    const n = baseName(d.Disposition);
-    effects[n] = d.Effect || '';
-    tiers[n] = tierOf(d.Disposition);
-  });
+  const effects = {};
+  dispData.forEach(d => { effects[baseName(d.Disposition)] = d.Effect || ''; });
 
   const holders = {};
   Object.keys(effects).forEach(n => { holders[n] = []; });
@@ -1019,7 +1010,6 @@ async function buildDispositions(units, types) {
   const list = Object.keys(effects).map(name => ({
     name,
     effect: effects[name],
-    tier: tiers[name],
     units: holders[name]
   }));
 
@@ -1027,14 +1017,10 @@ async function buildDispositions(units, types) {
   const pair = document.getElementById('dispPair');
   const section = document.getElementById('dispSection');
   const totalHolders = list.reduce((sum, d) => sum + d.units.length, 0);
-  const lowTier = list.filter(d => d.tier !== 'III').map(d => d.name);
 
   document.getElementById('dispNote').innerHTML =
     `Every Nexus Anima has <strong>4 dispositions</strong>. Click a row to see which Nexus Anima carry it. ` +
-    `<strong>${list.length} dispositions</strong> across <strong>${totalHolders} slots</strong>.` +
-    (lowTier.length
-      ? ` Effects are shown at max tier (III) except ${lowTier.join(', ')}, recorded at tier I.`
-      : ' Effects are shown at max tier (III).');
+    `<strong>${list.length} dispositions</strong> across <strong>${totalHolders} slots</strong>.`;
 
   function render() {
     const sorted = list.slice().sort((a, b) =>
@@ -1074,9 +1060,7 @@ async function buildDispositions(units, types) {
         `<span class="disp-name"><span class="caret">▶</span>` +
         `<img src="/hna/img/dispositions/${slug}.webp?v=1" alt="${d.name}" ` +
         `onerror="this.style.display='none'">` +
-        `<span>${d.name}</span>` +
-        (d.tier !== 'III' ? `<span class="tier">${d.tier}</span>` : '') +
-        `</span>`;
+        `<span>${d.name}</span></span>`;
       tr.appendChild(nameTd);
 
       const effTd = document.createElement('td');
