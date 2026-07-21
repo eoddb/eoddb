@@ -18,7 +18,7 @@
     --r5: #dfc86a;
     --header-bg: #111821;
     --header-text: #e6edf3;
-    --accent1: #6366f1;
+    --accent1: #717D92;
     --hex-size: 64px;
     --hex-gap: 4px;
   }
@@ -129,7 +129,7 @@
     overflow: hidden;
   }
 
-  .hex-cell.selected .hex-cell-inner { background: rgba(99, 102, 241, 0.3); }
+  .hex-cell.selected .hex-cell-inner { background: rgba(113, 125, 146, 0.35); }
   .hex-cell.occupied .hex-cell-inner { background: transparent; }
 
   .hex-cell img {
@@ -412,8 +412,8 @@
   }
 
   .ctrl-btn.danger:hover {
-    border-color: #c44d4d;
-    color: #f87171;
+    border-color: #a65b5f;
+    color: #d4918f;
   }
 
   /* ── Roster ── */
@@ -619,7 +619,7 @@
 </head>
 <body>
 
-<script src="/hna/eoddb_hna_nav.js?v=2"></script>
+<script src="/hna/eoddb_hna_nav.js?v=3"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima Team Comp Planner</h1>
   <span class="subtitle">Visualize your dream team and share it with friends. Click a Nexus Anima and click on any Hex Grid to begin.</span>
@@ -680,9 +680,9 @@ const ASPECT_MAX = {};
 let activeTab = 'na';
 
 const HEX_INTERACTIONS = [
-  {aspect:"Strength", units:1, hexes:["1D"], color:"#e8e0a0", desc:"Hex applies Dominator"},
-  {aspect:"Dark", units:3, hexes:["1A","1D","1G","4A","4G"], color:"#7a8bc4", desc:"Hex applies ASPD buff"},
-  {aspect:"Dark", units:6, hexes:["1A","1B","1C","1D","1E","1F","1G","4A","4D","4G"], color:"#7a8bc4", desc:"Hex applies ASPD buff"}
+  {aspect:"Strength", units:1, hexes:["1D"], color:"#d6c583", desc:"Hex applies Dominator"},
+  {aspect:"Dark", units:3, hexes:["1A","1D","1G","4A","4G"], color:"#8c8496", desc:"Hex applies ASPD buff"},
+  {aspect:"Dark", units:6, hexes:["1A","1B","1C","1D","1E","1F","1G","4A","4D","4G"], color:"#8c8496", desc:"Hex applies ASPD buff"}
 ];
 
 function parseHexId(id) {

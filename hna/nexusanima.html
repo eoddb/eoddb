@@ -30,7 +30,7 @@
     --header-bg: #111821;
     --header-text: #e6edf3;
     --accent-stripe: 3px;
-    --accent1: #6366f1;
+    --accent1: #717D92;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -466,10 +466,10 @@
     max-width: 1400px;
     margin: 2rem auto;
     padding: 20px;
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(166,91,95,0.12);
+    border: 1px solid rgba(166,91,95,0.4);
     border-radius: 8px;
-    color: #f87171;
+    color: #d4918f;
     text-align: center;
     font-size: 0.9rem;
     display: none;
@@ -626,7 +626,7 @@
 </head>
 <body>
 
-<script src="/hna/eoddb_hna_nav.js?v=2"></script>
+<script src="/hna/eoddb_hna_nav.js?v=3"></script>
 <div class="page-header">
   <h1>Honkai: Nexus Anima &mdash; All Nexus Anima by Aspect &amp; Type</h1>
   <span class="subtitle">Complete 3-star, 4-star &amp; 5-star Nexus Anima database with rarity breakdown and team-building reference. Data based on closed beta &mdash; will be updated if there are any changes.</span>
@@ -661,13 +661,8 @@
 
 <div class="error-msg" id="error"></div>
 
+<script src="/hna/eoddb_hna_aspect_colors.js?v=1"></script>
 <script>
-const ASPECT_COLORS = {
-  "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
-  "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
-  "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
-  "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
-};
 
 const ASPECT_ORDER = [
   "Light","Dark","Reality","Oblivion","Love","Hate",

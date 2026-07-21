@@ -74,7 +74,7 @@ const EODDB_NAV_PAGES = [
       transition: color 0.15s;
     }
     .eoddb-nav-brand:hover {
-      color: #6366f1;
+      color: #a9b4c6;
     }
     .eoddb-nav-sep {
       width: 1px;
@@ -99,7 +99,7 @@ const EODDB_NAV_PAGES = [
     }
     .eoddb-nav-link.eoddb-nav-active {
       color: #e6edf3;
-      border-bottom-color: #6366f1;
+      border-bottom-color: #717D92;
     }
     .eoddb-nav-home {
       font-weight: 700;

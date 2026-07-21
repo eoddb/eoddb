@@ -25,12 +25,12 @@
     --text-muted: #6e7a8a;
     --header-text: #e6edf3;
     --header-bg: #111821;
-    --accent1: #6366f1;
+    --accent1: #717D92;
     --r3: #8ac4e0;
     --r4: #b89adb;
     --r5: #dfc86a;
-    --tier-top: #717092;
-    --tier-s: #b05050;
+    --tier-top: #717D92;
+    --tier-s: #a65b5f;
     --tier-a: #d4918f;
     --tier-b: #82A69C;
     --tier-unrated: #D4D4CC;
@@ -281,10 +281,10 @@
     max-width: 1400px;
     margin: 2rem auto;
     padding: 20px;
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(166,91,95,0.12);
+    border: 1px solid rgba(166,91,95,0.4);
     border-radius: 8px;
-    color: #f87171;
+    color: #d4918f;
     text-align: center;
     font-size: 0.9rem;
     display: none;
@@ -464,7 +464,7 @@
 </style>
 </head>
 <body>
-<script src="/hna/eoddb_hna_nav.js?v=2"></script>
+<script src="/hna/eoddb_hna_nav.js?v=3"></script>
 
 <div class="page-header">
   <h1>Honkai: Nexus Anima Tier List &mdash; Nexus Anima &amp; Eidos Ranked</h1>
@@ -559,8 +559,8 @@
 const TYPE_ORDER = ["Blaster","Mastermind","Explorer","Protector","Mascot"];
 
 const TIER_ORDER = [
-  { id: "EOD Top Picks", label: "EOD", sublabel: "Top Picks", color: "#717092" },
-  { id: "S", label: "S", sublabel: "", color: "#b05050" },
+  { id: "EOD Top Picks", label: "EOD", sublabel: "Top Picks", color: "#717D92" },
+  { id: "S", label: "S", sublabel: "", color: "#a65b5f" },
   { id: "A", label: "A", sublabel: "", color: "#d4918f" },
   { id: "B", label: "B", sublabel: "", color: "#82A69C" },
   { id: "Unrated", label: "?", sublabel: "Unrated", color: "#D4D4CC" }
@@ -729,7 +729,7 @@ async function init() {
   // Aspect filters
   const ASPECT_COLORS = {
     "Reality":"#5b9bd5","Beauty":"#e88abf","Change":"#6dd497","Competition":"#e07a5f",
-    "Dark":"#7b6b9e","Hate":"#c44d4d","Insatiability":"#c97b3a","Joy":"#e6c84d",
+    "Dark":"#7b6b9e","Hate":"#a65b5f","Insatiability":"#c97b3a","Joy":"#e6c84d",
     "Light":"#f0d78c","Love":"#e06b8f","Memory":"#6fa8c9","Oblivion":"#8a8a9e",
     "Pride":"#d4a035","Satiation":"#7ec98a","Strength":"#d47a5b","Ugliness":"#8b7a6b"
   };
