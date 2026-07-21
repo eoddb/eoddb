@@ -1,0 +1,110 @@
+[
+  {
+    "Disposition": "Cautious III",
+    "Effect": "Gain 12% Armor. This effect doubles for 10s after the start of battle."
+  },
+  {
+    "Disposition": "Confident III",
+    "Effect": "Basic Attack DMG increases by 15%."
+  },
+  {
+    "Disposition": "Conservative",
+    "Effect": "For each defeated unit on both sides, increases DMG dealt by 3%, up to 18%."
+  },
+  {
+    "Disposition": "Enthusiastic III",
+    "Effect": "Gain 12% Attack SPD. The effect doubles when attacking opponents with less than 50% Health."
+  },
+  {
+    "Disposition": "Fiery III",
+    "Effect": "Regenerate 1 Energy/s."
+  },
+  {
+    "Disposition": "Focused",
+    "Effect": "Upon using a Basic Attack, gain 1% ATK and Attack SPD, up to 15%."
+  },
+  {
+    "Disposition": "Frisky",
+    "Effect": "For each hex traveled through movement or displacement, gain a 4% DMG Bonus, up to 24%."
+  },
+  {
+    "Disposition": "Gentle III",
+    "Effect": "Gain 30% outgoing Heal Amp."
+  },
+  {
+    "Disposition": "Greedy",
+    "Effect": "When participating in defeating an opponent, heal itself for 3% Max Health. When defeating an opponent, the Healing increases to 5%."
+  },
+  {
+    "Disposition": "Impulsive III",
+    "Effect": "Gain full Energy at the start of battle."
+  },
+  {
+    "Disposition": "Just",
+    "Effect": "When participating in defeating an opponent, regenerate 5 Energy to itself and the defeating unit."
+  },
+  {
+    "Disposition": "Meticulous III",
+    "Effect": "Gain 12% MR. The effect doubles for 10s after the start of battle."
+  },
+  {
+    "Disposition": "Moody III",
+    "Effect": "Increases DMG dealt to opponents with the Blaster or Mastermind Trait by 15%."
+  },
+  {
+    "Disposition": "Proud III",
+    "Effect": "Attack SPD increases by 20% while Shielded."
+  },
+  {
+    "Disposition": "Rash",
+    "Effect": "When Controlling an opponent for the first time, deal bonus Magic DMG equal to 5% of the target's Max Health."
+  },
+  {
+    "Disposition": "Reckless III",
+    "Effect": "Gain 10% ATK. This effect doubles when Health is above 50%."
+  },
+  {
+    "Disposition": "Reserved III",
+    "Effect": "Gain 10% MP. This effect doubles when Health is above 50%."
+  },
+  {
+    "Disposition": "Resilient III",
+    "Effect": "Gain 30% outgoing Shield Amp."
+  },
+  {
+    "Disposition": "Restless III",
+    "Effect": "Increase the first Skill DMG by 60%."
+  },
+  {
+    "Disposition": "Sacrifice III",
+    "Effect": "After being defeated, restore Health equal to 7% Max Health to all allied units."
+  },
+  {
+    "Disposition": "Slow-witted",
+    "Effect": "Upon taking DMG, gain 1% Armor and MR, up to 20%."
+  },
+  {
+    "Disposition": "Steady III",
+    "Effect": "Increases Max Health by 8%. When Health drops below 50% for the first time, increase it by an additional 8%."
+  },
+  {
+    "Disposition": "Stubborn III",
+    "Effect": "Increases DMG dealt to opponents with the Protector Trait by 15%."
+  },
+  {
+    "Disposition": "Timid III",
+    "Effect": "Restore 8% missing Health every 3s."
+  },
+  {
+    "Disposition": "Voracious III",
+    "Effect": "Gain 10% Omnileech. The effect doubles the first time Health drops below 50%."
+  },
+  {
+    "Disposition": "Warm-Hearted III",
+    "Effect": "While the Disposition owner is alive, all allied units gain 8% Attack SPD."
+  },
+  {
+    "Disposition": "Wary III",
+    "Effect": "When battle starts, gain Shield equal to 40% Max Health that decays over 6s."
+  }
+]

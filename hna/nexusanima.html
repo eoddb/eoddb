@@ -436,54 +436,27 @@
   .analysis .hl-r4 { color: var(--r4); font-weight: 600; }
   .analysis .hl-r5 { color: var(--r5); font-weight: 600; }
 
-  .tag-defs {
+  /* Commentary shown under the tag buttons while tags are active */
+  .tag-desc {
     max-width: 1400px;
-    margin: 1.4rem auto 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .tag-defs table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 0;
-  }
-
-  .tag-defs thead th {
-    background: var(--header-bg);
-    color: var(--header-text);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 10px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    position: static;
-  }
-
-  .tag-defs tbody td {
-    padding: 6px 14px;
-    font-size: 0.82rem;
-    border-bottom: 1px solid var(--border);
+    margin: -0.5rem auto 1.2rem;
     background: var(--surface);
-    min-width: 0;
-    position: static;
+    border: 1px solid var(--border);
+    border-left: var(--accent-stripe) solid var(--accent1);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    line-height: 1.6;
   }
 
-  .tag-defs tbody td:first-child {
-    font-weight: 600;
-    white-space: nowrap;
-    color: var(--header-text);
-    border-left: none;
-  }
+  .tag-desc .tag-desc-item + .tag-desc-item { margin-top: 4px; }
+  .tag-desc .tag-desc-name { font-weight: 700; color: var(--header-text); }
+  .tag-desc .tag-desc-count { color: var(--text-muted); }
 
-  .tag-defs tbody tr:last-child td { border-bottom: none; }
-  .tag-defs tbody tr:hover td { background: var(--surface-hover); }
-
-  .tag-defs-note {
-    max-width: 1400px;
-    margin: 8px auto 0;
+  .tag-desc .tag-desc-note {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
     font-size: 0.7rem;
     color: var(--text-muted);
     line-height: 1.5;
@@ -507,6 +480,67 @@
     .stat-box .num { font-size: 22px; }
     .analysis { padding: 16px; }
   }
+
+  /* ── Dispositions ── */
+  .disp-section { max-width: 1400px; margin: 1.4rem auto 0; }
+
+  .disp-section h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .disp-section .disp-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .disp-pair { display: flex; gap: 12px; align-items: flex-start; }
+  .disp-pair .table-wrap { flex: 1; margin: 0; min-width: 0; }
+  .disp-pair table { min-width: 0; }
+  .disp-pair thead th:first-child { position: static; min-width: 0; max-width: none; }
+  .disp-pair thead th { padding: 0.55rem 0.75rem; }
+
+  .disp-pair th.sortable { cursor: pointer; user-select: none; }
+  .disp-pair th.sortable:hover { color: var(--accent1); }
+  .disp-pair th .sort-arrow { opacity: 0.5; font-size: 0.7rem; margin-left: 3px; }
+
+  .disp-pair td { padding: 0.4rem 0.75rem; vertical-align: middle; }
+  .disp-row { cursor: pointer; }
+  .disp-row:hover { background: var(--surface-hover); }
+  .disp-row.open { background: var(--surface-hover); }
+
+  .disp-name { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .disp-name img {
+    width: 30px; height: 30px; border-radius: 6px;
+    background: var(--bg); flex-shrink: 0;
+  }
+  .disp-name .caret { color: var(--text-muted); font-size: 0.65rem; width: 8px; }
+  .disp-row.open .caret { color: var(--accent1); }
+  .disp-name .tier {
+    font-size: 0.6rem; color: var(--text-muted); border: 1px solid var(--border);
+    border-radius: 3px; padding: 0 3px; letter-spacing: 0.04em;
+  }
+
+  .disp-effect { font-size: 0.8rem; line-height: 1.5; color: var(--text); }
+  .disp-qty { text-align: right; font-weight: 700; color: var(--header-text); width: 48px; }
+
+  .disp-detail > td { background: var(--bg); padding: 8px 12px 10px; }
+  .disp-detail .type-group { margin-top: 6px; }
+  .disp-detail .type-group:first-child { margin-top: 0; }
+  .disp-detail .type-label {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); margin-bottom: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .disp-pair { flex-direction: column; }
+    .disp-pair .table-wrap { width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -527,6 +561,7 @@
 </div>
 
 <div class="tag-filters" id="tagFilters"></div>
+<div class="tag-desc" id="tagDesc" hidden></div>
 
 <div class="table-wrap">
   <table>
@@ -535,27 +570,13 @@
   </table>
 </div>
 
-<div class="tag-defs">
-  <table>
-    <thead><tr><th colspan="2" style="text-transform:none">EODdb Tags*</th></tr></thead>
-    <tbody>
-      <tr><td>AoE</td><td>Deals damage to multiple opponents in an area</td></tr>
-      <tr><td>Burning</td><td>Applies Burning, dealing True DMG based on Max Health per second</td></tr>
-      <tr><td>Control</td><td>Applies crowd control effects (Stun, Freeze, Imprison, Launch)</td></tr>
-      <tr><td>Deep Wounds</td><td>Reduces healing received by the target</td></tr>
-      <tr><td>Energy Jam</td><td>Increases the Energy cost of the opponent's next Skill</td></tr>
-      <tr><td>Healing</td><td>Restores Health to self or allies</td></tr>
-      <tr><td>Pierce</td><td>Attacks that penetrate through enemies or apply Armor/MR Shred</td></tr>
-      <tr><td>Shield</td><td>Grants a protective barrier that absorbs damage</td></tr>
-      <tr><td>Support</td><td>Buffs allied units (Attack SPD, ATK, MP)</td></tr>
-      <tr><td>Taunt</td><td>Forces nearby opponents to target this unit</td></tr>
-      <tr><td>Terminate</td><td>Targets or deals bonus damage to low-Health opponents</td></tr>
-    </tbody>
-  </table>
-</div>
-<p class="tag-defs-note">*Tags can be subjective and should act merely as a quick filter. (R1 — represents that the unit gains this tag at a particular additional copy)</p>
-
 <div class="analysis" id="analysis"></div>
+
+<div class="disp-section" id="dispSection" hidden>
+  <h2>Dispositions</h2>
+  <p class="disp-note" id="dispNote"></p>
+  <div class="disp-pair" id="dispPair"></div>
+</div>
 
 <div class="error-msg" id="error"></div>
 
@@ -574,6 +595,24 @@ const ASPECT_ORDER = [
 ];
 
 const TYPE_ORDER = ["Blaster","Mastermind","Explorer","Protector","Mascot"];
+
+// Shown under the tag buttons when a tag is active
+const TAG_DEFS = {
+  "AoE": "Deals damage to multiple opponents in an area",
+  "Burning": "Applies Burning, dealing True DMG based on Max Health per second",
+  "Control": "Applies crowd control effects (Stun, Freeze, Imprison, Launch)",
+  "Deep Wounds": "Reduces healing received by the target",
+  "Energy Jam": "Increases the Energy cost of the opponent's next Skill",
+  "Healing": "Restores Health to self or allies",
+  "Pierce": "Attacks that penetrate through enemies or apply Armor/MR Shred",
+  "Shield": "Grants a protective barrier that absorbs damage",
+  "Support": "Buffs allied units (Attack SPD, ATK, MP)",
+  "Taunt": "Forces nearby opponents to target this unit",
+  "Terminate": "Targets or deals bonus damage to low-Health opponents"
+};
+
+const TAG_NOTE = "Tags can be subjective and should act merely as a quick filter. " +
+  "(R1 — represents that the unit gains this tag at a particular additional copy)";
 
 function showError(msg) {
   const el = document.getElementById('error');
@@ -885,7 +924,22 @@ async function init() {
     applyTagFilter();
   });
 
+  const tagDescEl = document.getElementById('tagDesc');
+
+  function renderTagDesc() {
+    if (activeTags.size === 0) { tagDescEl.hidden = true; tagDescEl.innerHTML = ''; return; }
+    const items = allTags.filter(t => activeTags.has(t)).map(tag => {
+      const matches = tagsData.filter(t => (t.Tags || []).some(e => e.tag === tag)).length;
+      return `<div class="tag-desc-item"><span class="tag-desc-name">${tag}</span> — ` +
+             `${TAG_DEFS[tag] || 'No description yet.'} ` +
+             `<span class="tag-desc-count">(${matches} Nexus Anima)</span></div>`;
+    });
+    tagDescEl.innerHTML = items.join('') + `<div class="tag-desc-note">${TAG_NOTE}</div>`;
+    tagDescEl.hidden = false;
+  }
+
   function applyTagFilter() {
+    renderTagDesc();
     const allUnits = tableWrap.querySelectorAll('.unit');
     if (activeTags.size === 0) {
       tableWrap.classList.remove('tag-filtering');
@@ -920,6 +974,189 @@ async function init() {
       }
     });
   }
+
+  // ── Dispositions ──
+  buildDispositions(units, types);
+}
+
+// Builds the Disposition reference tables. Runs after the main grid so a
+// missing/failed JSON leaves the rest of the page intact.
+async function buildDispositions(units, types) {
+  let dispData, mapData;
+  try {
+    [dispData, mapData] = await Promise.all([
+      loadJSON('eoddb_hna_dispositions.json'),
+      loadJSON('eoddb_hna_disposition_nexusanima.json')
+    ]);
+  } catch (e) {
+    return;
+  }
+
+  const unitInfo = {};
+  units.forEach(u => { unitInfo[u.Name] = { type: u.Type, rarity: u.Rarity }; });
+
+  // Sheet names carry the captured tier ("Timid III"); the mapping sheet uses
+  // bare names, so split the numeral off and join on the bare name.
+  const baseName = s => String(s).replace(/\s+(I{1,3})$/, '').trim();
+  const tierOf = s => (String(s).match(/\s+(I{1,3})$/) || [null, 'I'])[1];
+
+  const effects = {}, tiers = {};
+  dispData.forEach(d => {
+    const n = baseName(d.Disposition);
+    effects[n] = d.Effect || '';
+    tiers[n] = tierOf(d.Disposition);
+  });
+
+  const holders = {};
+  Object.keys(effects).forEach(n => { holders[n] = []; });
+  mapData.forEach(row => {
+    [1, 2, 3, 4].forEach(i => {
+      const d = row['Disposition ' + i];
+      if (d && holders[d]) holders[d].push(row.Name);
+    });
+  });
+
+  const list = Object.keys(effects).map(name => ({
+    name,
+    effect: effects[name],
+    tier: tiers[name],
+    units: holders[name]
+  }));
+
+  let sortAsc = true;   // rarest first
+  const pair = document.getElementById('dispPair');
+  const section = document.getElementById('dispSection');
+  const totalHolders = list.reduce((sum, d) => sum + d.units.length, 0);
+  const lowTier = list.filter(d => d.tier !== 'III').map(d => d.name);
+
+  document.getElementById('dispNote').innerHTML =
+    `Every Nexus Anima has <strong>4 dispositions</strong>. Click a row to see which Nexus Anima carry it. ` +
+    `<strong>${list.length} dispositions</strong> across <strong>${totalHolders} slots</strong>.` +
+    (lowTier.length
+      ? ` Effects are shown at max tier (III) except ${lowTier.join(', ')}, recorded at tier I.`
+      : ' Effects are shown at max tier (III).');
+
+  function render() {
+    const sorted = list.slice().sort((a, b) =>
+      (sortAsc ? a.units.length - b.units.length : b.units.length - a.units.length)
+      || a.name.localeCompare(b.name));
+    const half = Math.ceil(sorted.length / 2);
+    pair.innerHTML = '';
+    [sorted.slice(0, half), sorted.slice(half)].forEach(chunk => {
+      pair.appendChild(buildTable(chunk));
+    });
+  }
+
+  function buildTable(chunk) {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    const table = document.createElement('table');
+
+    const thead = document.createElement('thead');
+    const arrow = sortAsc ? '▲' : '▼';
+    thead.innerHTML =
+      '<tr><th>Disposition</th><th>Description</th>' +
+      `<th class="sortable disp-qty">Qty<span class="sort-arrow">${arrow}</span></th></tr>`;
+    thead.querySelector('.sortable').addEventListener('click', () => {
+      sortAsc = !sortAsc;
+      render();
+    });
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    chunk.forEach(d => {
+      const tr = document.createElement('tr');
+      tr.className = 'disp-row';
+
+      const nameTd = document.createElement('td');
+      const slug = d.name.toLowerCase().replace(/[ .']/g, '');
+      nameTd.innerHTML =
+        `<span class="disp-name"><span class="caret">▶</span>` +
+        `<img src="/hna/img/dispositions/${slug}.webp" alt="${d.name}" ` +
+        `onerror="this.style.display='none'">` +
+        `<span>${d.name}</span>` +
+        (d.tier !== 'III' ? `<span class="tier">${d.tier}</span>` : '') +
+        `</span>`;
+      tr.appendChild(nameTd);
+
+      const effTd = document.createElement('td');
+      effTd.className = 'disp-effect';
+      effTd.textContent = d.effect;
+      tr.appendChild(effTd);
+
+      const qtyTd = document.createElement('td');
+      qtyTd.className = 'disp-qty';
+      qtyTd.textContent = d.units.length;
+      tr.appendChild(qtyTd);
+
+      const detail = document.createElement('tr');
+      detail.className = 'disp-detail';
+      detail.hidden = true;
+      const detailTd = document.createElement('td');
+      detailTd.colSpan = 3;
+      detail.appendChild(detailTd);
+
+      // Portraits are built on first expand — building all 27 panels up front
+      // would fire 328 image requests on page load.
+      let built = false;
+      tr.addEventListener('click', () => {
+        if (!built) { detailTd.appendChild(unitPanel(d.units)); built = true; }
+        detail.hidden = !detail.hidden;
+        tr.classList.toggle('open', !detail.hidden);
+        tr.querySelector('.caret').textContent = detail.hidden ? '▶' : '▼';
+      });
+
+      tbody.appendChild(tr);
+      tbody.appendChild(detail);
+    });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  // Portraits grouped by Type, reusing the grid's .unit styling.
+  function unitPanel(names) {
+    const frag = document.createDocumentFragment();
+    types.forEach(type => {
+      const inType = names
+        .filter(n => unitInfo[n] && unitInfo[n].type === type)
+        .sort((a, b) => unitInfo[b].rarity - unitInfo[a].rarity || a.localeCompare(b));
+      if (!inType.length) return;
+
+      const group = document.createElement('div');
+      group.className = 'type-group';
+      const label = document.createElement('div');
+      label.className = 'type-label';
+      label.textContent = `${type} (${inType.length})`;
+      group.appendChild(label);
+
+      inType.forEach(name => {
+        const info = unitInfo[name];
+        const span = document.createElement('span');
+        span.className = 'unit r' + info.rarity;
+        const img = new Image();
+        img.src = '/hna/img/nexusanima/' + name.toLowerCase().replace(/[ .']/g, '') + '.webp';
+        img.alt = name;
+        img.onload = () => {
+          span.classList.add('has-img');
+          span.innerHTML = '';
+          span.appendChild(img);
+          const tip = document.createElement('span');
+          tip.className = 'unit-tip';
+          tip.textContent = name;
+          span.appendChild(tip);
+        };
+        img.onerror = () => { span.textContent = name; };
+        group.appendChild(span);
+      });
+      frag.appendChild(group);
+    });
+    return frag;
+  }
+
+  section.hidden = false;
+  render();
 }
 
 init();

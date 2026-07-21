@@ -1,0 +1,740 @@
+[
+  {
+    "No.": "001",
+    "Name": "Puddlipup",
+    "Aspect": "Satiation",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Fiery",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "002",
+    "Name": "Taileep",
+    "Aspect": "Hate",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Sacrifice",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "003",
+    "Name": "Batnyss",
+    "Aspect": "Hate",
+    "Disposition 1": "Impulsive",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "004",
+    "Name": "Bunmareen",
+    "Aspect": "Light",
+    "Disposition 1": "Cautious",
+    "Disposition 2": "Steady",
+    "Disposition 3": "Gentle",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "005",
+    "Name": "Inkifoal",
+    "Aspect": "Reality",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "006",
+    "Name": "Cumulon",
+    "Aspect": "Pride",
+    "Disposition 1": "Conservative",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Moody",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "007",
+    "Name": "Apollinis",
+    "Aspect": "Light",
+    "Disposition 1": "Cautious",
+    "Disposition 2": "Steady",
+    "Disposition 3": "Gentle",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "008",
+    "Name": "Felinoxie",
+    "Aspect": "Dark",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Impulsive",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "009",
+    "Name": "Lumeridon",
+    "Aspect": "Dark",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Voracious",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "010",
+    "Name": "Inkicorn",
+    "Aspect": "Oblivion",
+    "Disposition 1": "Timid",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "011",
+    "Name": "Heartcease",
+    "Aspect": "Love",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "012",
+    "Name": "Dragamour",
+    "Aspect": "Love",
+    "Disposition 1": "Slow-witted",
+    "Disposition 2": "Resilient",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "013",
+    "Name": "Corvariatio",
+    "Aspect": "Change",
+    "Disposition 1": "Conservative",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Restless",
+    "Disposition 4": "Voracious"
+  },
+  {
+    "No.": "014",
+    "Name": "Vulberry",
+    "Aspect": "Satiation",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "015",
+    "Name": "Noctumbra",
+    "Aspect": "Dark",
+    "Disposition 1": "Frisky",
+    "Disposition 2": "Voracious",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "017",
+    "Name": "Mushgloomini",
+    "Aspect": "Dark",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Confident"
+  },
+  {
+    "No.": "018",
+    "Name": "Faeflux",
+    "Aspect": "Change",
+    "Disposition 1": "Impulsive",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "019",
+    "Name": "Lepinamel",
+    "Aspect": "Beauty",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Warm-Hearted",
+    "Disposition 3": "Meticulous",
+    "Disposition 4": "Voracious"
+  },
+  {
+    "No.": "020",
+    "Name": "Donubi",
+    "Aspect": "Hate",
+    "Disposition 1": "Fiery",
+    "Disposition 2": "Sacrifice",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "021",
+    "Name": "Olivesper",
+    "Aspect": "Strength",
+    "Disposition 1": "Warm-Hearted",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Restless",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "022",
+    "Name": "Squarel",
+    "Aspect": "Competition",
+    "Disposition 1": "Warm-Hearted",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Reckless",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "023",
+    "Name": "Furrari",
+    "Aspect": "Competition",
+    "Disposition 1": "Timid",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Reckless",
+    "Disposition 4": "Fiery"
+  },
+  {
+    "No.": "024",
+    "Name": "Magisdrake",
+    "Aspect": "Pride",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Restless"
+  },
+  {
+    "No.": "025",
+    "Name": "Nomnom",
+    "Aspect": "Satiation",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "026",
+    "Name": "Pupanoo",
+    "Aspect": "Satiation",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "027",
+    "Name": "Bobabirb",
+    "Aspect": "Insatiability",
+    "Disposition 1": "Enthusiastic",
+    "Disposition 2": "Warm-Hearted",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "028",
+    "Name": "Eggnok",
+    "Aspect": "Competition",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Voracious",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "029",
+    "Name": "Rosfurcate",
+    "Aspect": "Hate",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Moody",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "030",
+    "Name": "Glampa",
+    "Aspect": "Light",
+    "Disposition 1": "Greedy",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Wary",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "031",
+    "Name": "Chowpownd",
+    "Aspect": "Insatiability",
+    "Disposition 1": "Resilient",
+    "Disposition 2": "Slow-witted",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "032",
+    "Name": "Damasque",
+    "Aspect": "Change",
+    "Disposition 1": "Fiery",
+    "Disposition 2": "Resilient",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "033",
+    "Name": "Cublade",
+    "Aspect": "Strength",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "034",
+    "Name": "Marshalbird",
+    "Aspect": "Competition",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Restless",
+    "Disposition 4": "Sacrifice"
+  },
+  {
+    "No.": "035",
+    "Name": "Plumelune",
+    "Aspect": "Beauty",
+    "Disposition 1": "Fiery",
+    "Disposition 2": "Resilient",
+    "Disposition 3": "Stubborn",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "036",
+    "Name": "Mimoo",
+    "Aspect": "Reality",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Meticulous",
+    "Disposition 4": "Impulsive"
+  },
+  {
+    "No.": "037",
+    "Name": "Rimechime",
+    "Aspect": "Love",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "038",
+    "Name": "Vixemourne",
+    "Aspect": "Dark",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "039",
+    "Name": "Bladehound",
+    "Aspect": "Strength",
+    "Disposition 1": "Greedy",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Wary"
+  },
+  {
+    "No.": "040",
+    "Name": "Eggluvs",
+    "Aspect": "Competition",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Warm-Hearted",
+    "Disposition 3": "Meticulous",
+    "Disposition 4": "Timid"
+  },
+  {
+    "No.": "041",
+    "Name": "Chimaura",
+    "Aspect": "Light",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Confident",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "043",
+    "Name": "Donnatallow",
+    "Aspect": "Dark",
+    "Disposition 1": "Warm-Hearted",
+    "Disposition 2": "Impulsive",
+    "Disposition 3": "Sacrifice",
+    "Disposition 4": "Confident"
+  },
+  {
+    "No.": "044",
+    "Name": "Frigull",
+    "Aspect": "Satiation",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Sacrifice",
+    "Disposition 3": "Confident",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "045",
+    "Name": "Starspine",
+    "Aspect": "Light",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Restless",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "046",
+    "Name": "Camcorgi",
+    "Aspect": "Memory",
+    "Disposition 1": "Conservative",
+    "Disposition 2": "Impulsive",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "047",
+    "Name": "Kaffiend",
+    "Aspect": "Insatiability",
+    "Disposition 1": "Meticulous",
+    "Disposition 2": "Sacrifice",
+    "Disposition 3": "Proud",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "048",
+    "Name": "Foalhardy",
+    "Aspect": "Pride",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Sacrifice",
+    "Disposition 4": "Stubborn"
+  },
+  {
+    "No.": "049",
+    "Name": "Octopourri",
+    "Aspect": "Love",
+    "Disposition 1": "Resilient",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "050",
+    "Name": "Hoppelon",
+    "Aspect": "Competition",
+    "Disposition 1": "Greedy",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "051",
+    "Name": "Mr. Avocado",
+    "Aspect": "Ugliness",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Stubborn"
+  },
+  {
+    "No.": "052",
+    "Name": "Cinechel",
+    "Aspect": "Memory",
+    "Disposition 1": "Slow-witted",
+    "Disposition 2": "Timid",
+    "Disposition 3": "Gentle",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "053",
+    "Name": "C'locked",
+    "Aspect": "Memory",
+    "Disposition 1": "Fiery",
+    "Disposition 2": "Gentle",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "054",
+    "Name": "Catnapir",
+    "Aspect": "Memory",
+    "Disposition 1": "Impulsive",
+    "Disposition 2": "Steady",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Sacrifice"
+  },
+  {
+    "No.": "055",
+    "Name": "Framamba",
+    "Aspect": "Memory",
+    "Disposition 1": "Confident",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Voracious",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "056",
+    "Name": "Chocllamour",
+    "Aspect": "Love",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Meticulous",
+    "Disposition 3": "Stubborn",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "057",
+    "Name": "Capybunner",
+    "Aspect": "Light",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Reserved",
+    "Disposition 4": "Voracious"
+  },
+  {
+    "No.": "058",
+    "Name": "Waxula",
+    "Aspect": "Dark",
+    "Disposition 1": "Conservative",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "059",
+    "Name": "Pomparrot",
+    "Aspect": "Competition",
+    "Disposition 1": "Focused",
+    "Disposition 2": "Stubborn",
+    "Disposition 3": "Voracious",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "060",
+    "Name": "Hamburgoof",
+    "Aspect": "Ugliness",
+    "Disposition 1": "Focused",
+    "Disposition 2": "Confident",
+    "Disposition 3": "Voracious",
+    "Disposition 4": "Warm-Hearted"
+  },
+  {
+    "No.": "061",
+    "Name": "Magisaki",
+    "Aspect": "Change",
+    "Disposition 1": "Sacrifice",
+    "Disposition 2": "Steady",
+    "Disposition 3": "Resilient",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "062",
+    "Name": "Beaubeanie",
+    "Aspect": "Beauty",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Restless",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "063",
+    "Name": "Lumehart",
+    "Aspect": "Light",
+    "Disposition 1": "Conservative",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Moody",
+    "Disposition 4": "Warm-Hearted"
+  },
+  {
+    "No.": "064",
+    "Name": "Hugglebeary",
+    "Aspect": "Strength",
+    "Disposition 1": "Timid",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Reckless"
+  },
+  {
+    "No.": "065",
+    "Name": "Derpydile",
+    "Aspect": "Competition",
+    "Disposition 1": "Wary",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Reckless",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "066",
+    "Name": "Umpurrella",
+    "Aspect": "Beauty",
+    "Disposition 1": "Just",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "067",
+    "Name": "Sharkalaka",
+    "Aspect": "Reality",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "068",
+    "Name": "Ugglewing",
+    "Aspect": "Ugliness",
+    "Disposition 1": "Reckless",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "069",
+    "Name": "Goldfogey",
+    "Aspect": "Oblivion",
+    "Disposition 1": "Steady",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Voracious",
+    "Disposition 4": "Moody"
+  },
+  {
+    "No.": "070",
+    "Name": "Mariminnow",
+    "Aspect": "Reality",
+    "Disposition 1": "Timid",
+    "Disposition 2": "Cautious",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "071",
+    "Name": "Muscimmon",
+    "Aspect": "Strength",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "072",
+    "Name": "Sunspottie",
+    "Aspect": "Joy",
+    "Disposition 1": "Warm-Hearted",
+    "Disposition 2": "Gentle",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Stubborn"
+  },
+  {
+    "No.": "073",
+    "Name": "Pumpkimp",
+    "Aspect": "Joy",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "074",
+    "Name": "Jerboranj",
+    "Aspect": "Insatiability",
+    "Disposition 1": "Stubborn",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Voracious",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "075",
+    "Name": "Sootsie",
+    "Aspect": "Joy",
+    "Disposition 1": "Warm-Hearted",
+    "Disposition 2": "Sacrifice",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Reserved"
+  },
+  {
+    "No.": "076",
+    "Name": "Broomba",
+    "Aspect": "Reality",
+    "Disposition 1": "Cautious",
+    "Disposition 2": "Sacrifice",
+    "Disposition 3": "Resilient",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "077",
+    "Name": "Famishade",
+    "Aspect": "Joy",
+    "Disposition 1": "Confident",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Cautious",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "079",
+    "Name": "Hoggit",
+    "Aspect": "Satiation",
+    "Disposition 1": "Greedy",
+    "Disposition 2": "Steady",
+    "Disposition 3": "Reserved",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "080",
+    "Name": "Fyrklor",
+    "Aspect": "Strength",
+    "Disposition 1": "Voracious",
+    "Disposition 2": "Enthusiastic",
+    "Disposition 3": "Steady",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "081",
+    "Name": "Seroplumanth",
+    "Aspect": "Reality",
+    "Disposition 1": "Rash",
+    "Disposition 2": "Reserved",
+    "Disposition 3": "Restless",
+    "Disposition 4": "Meticulous"
+  },
+  {
+    "No.": "082",
+    "Name": "Mesmerith",
+    "Aspect": "Hate",
+    "Disposition 1": "Frisky",
+    "Disposition 2": "Impulsive",
+    "Disposition 3": "Enthusiastic",
+    "Disposition 4": "Steady"
+  },
+  {
+    "No.": "083",
+    "Name": "Atragasus",
+    "Aspect": "Oblivion",
+    "Disposition 1": "Greedy",
+    "Disposition 2": "Reckless",
+    "Disposition 3": "Confident",
+    "Disposition 4": "Cautious"
+  },
+  {
+    "No.": "084",
+    "Name": "Shampoco",
+    "Aspect": "Reality",
+    "Disposition 1": "Reserved",
+    "Disposition 2": "Fiery",
+    "Disposition 3": "Warm-Hearted",
+    "Disposition 4": "Enthusiastic"
+  },
+  {
+    "No.": "085",
+    "Name": "Baggle",
+    "Aspect": "Reality",
+    "Disposition 1": "Fiery",
+    "Disposition 2": "Warm-Hearted",
+    "Disposition 3": "Meticulous",
+    "Disposition 4": "Enthusiastic"
+  }
+]
