@@ -1160,6 +1160,16 @@ async function buildSkillDetails(units, skillTagData, skillRows) {
     return block;
   }
 
+  // Only one unit's detail is open at a time
+  function closeAll() {
+    document.querySelectorAll('.skill-block.show-block')
+      .forEach(b => b.classList.remove('show-block'));
+    document.querySelectorAll('#grid .unit.active-unit')
+      .forEach(u => u.classList.remove('active-unit'));
+    document.querySelectorAll('tr.skill-row.visible')
+      .forEach(r => r.classList.remove('visible'));
+  }
+
   document.querySelectorAll('#grid .unit').forEach(span => {
     const name = span.dataset.unitName;
     const aspect = (unitBy[name] || {}).Aspect;
@@ -1173,10 +1183,12 @@ async function buildSkillDetails(units, skillTagData, skillRows) {
         target.inner.appendChild(block);
       }
       const opening = !block.classList.contains('show-block');
-      block.classList.toggle('show-block', opening);
-      span.classList.toggle('active-unit', opening);
-      target.row.classList.toggle('visible',
-        target.inner.querySelectorAll('.skill-block.show-block').length > 0);
+      closeAll();
+      if (opening) {
+        block.classList.add('show-block');
+        span.classList.add('active-unit');
+        target.row.classList.add('visible');
+      }
     });
   });
 }
