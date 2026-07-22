@@ -1,0 +1,6 @@
+# Cloudflare Pages already serves 404.html in place, with a real 404 status,
+# for any unmatched path. This rewrite makes that same page reachable at a
+# stable URL as well: eoddb.com/nosuchpage
+# 200 = rewrite (serve this file), not a redirect — so the 404 status that
+# unmatched paths return is untouched.
+/nosuchpage  /404.html  200

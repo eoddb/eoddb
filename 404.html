@@ -62,50 +62,23 @@
   a { color: var(--accent1); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  h2 {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin: 2rem 0 0.8rem;
-  }
-
-  .links {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-  }
-
-  .link-card {
+  .home-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 11px 20px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    text-decoration: none;
-    color: var(--text);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--header-text);
     transition: border-color 0.2s, background 0.2s;
   }
 
-  .link-card:hover {
+  .home-btn:hover {
     border-color: var(--accent1);
     background: var(--surface-hover);
     text-decoration: none;
-  }
-
-  .link-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--header-text);
-    display: block;
-  }
-
-  .link-desc {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-    display: block;
-    margin-top: 3px;
   }
 
   .bug-box {
@@ -135,25 +108,7 @@
 
   <p>That page doesn't exist &mdash; it may have been renamed, moved, or never existed in the first place. Nothing is broken on your end.</p>
 
-  <h2>Try one of these</h2>
-  <div class="links">
-    <a class="link-card" href="/">
-      <span class="link-title">Home</span>
-      <span class="link-desc">All games covered on EODdb</span>
-    </a>
-    <a class="link-card" href="/hna">
-      <span class="link-title">Honkai: Nexus Anima</span>
-      <span class="link-desc">Units, Eidos, aspects, tier list</span>
-    </a>
-    <a class="link-card" href="/poe2">
-      <span class="link-title">Path of Exile 2</span>
-      <span class="link-desc">Economy and crafting reference</span>
-    </a>
-    <a class="link-card" href="/hsr">
-      <span class="link-title">Honkai: Star Rail</span>
-      <span class="link-desc">Top-up value and power creep</span>
-    </a>
-  </div>
+  <a class="home-btn" href="/">&larr; Back to EODdb.com</a>
 
   <div class="bug-box">
     <p><strong>Think you found a bug?</strong></p>
