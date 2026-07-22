@@ -1,16 +1,23 @@
-/*
-  Cache-Control: public, max-age=3600
+# Cloudflare Pages appends every matching rule's headers, so rules are kept
+# mutually exclusive: ":file" matches exactly one path segment (pages, JS,
+# JSON directly under a game dir), while the img/* splats catch the deeper
+# image paths. Content revalidates every load (cheap ETag 304s); images
+# cache for a day. Requires the zone's Browser Cache TTL to be "Respect
+# Existing Headers" (set 2026-07-22) or CF overrides the .js responses.
 
-# Game sections: pages, shared JS, and data JSONs change often — always
-# revalidate (ETag 304s keep this cheap). Rules lower in the file win on
-# conflict, so the img overrides below restore long caching for portraits.
-/hna/*
+/
   Cache-Control: no-cache
 
-/poe2/*
+/:page
   Cache-Control: no-cache
 
-/hsr/*
+/hna/:file
+  Cache-Control: no-cache
+
+/poe2/:file
+  Cache-Control: no-cache
+
+/hsr/:file
   Cache-Control: no-cache
 
 /hna/img/*
