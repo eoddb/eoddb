@@ -1,2 +1,23 @@
 /*
   Cache-Control: public, max-age=3600
+
+# Game sections: pages, shared JS, and data JSONs change often — always
+# revalidate (ETag 304s keep this cheap). Rules lower in the file win on
+# conflict, so the img overrides below restore long caching for portraits.
+/hna/*
+  Cache-Control: no-cache
+
+/poe2/*
+  Cache-Control: no-cache
+
+/hsr/*
+  Cache-Control: no-cache
+
+/hna/img/*
+  Cache-Control: public, max-age=86400
+
+/poe2/img/*
+  Cache-Control: public, max-age=86400
+
+/hsr/img/*
+  Cache-Control: public, max-age=86400
