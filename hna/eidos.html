@@ -400,6 +400,153 @@
   }
 
 
+  /* ── Skill / Eidothread node tracks ──
+     One row per skill: a big circle for the skill itself, then its
+     Eidognosis nodes as small circles running horizontally. Everything is
+     generated from eoddb_hna_eidos_skill.json, so new Eidos, extra nodes
+     or changed values need no edits here. */
+  .track-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin: 2px 0 10px;
+  }
+
+  .skill-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .track-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 220px;
+    flex-shrink: 0;
+  }
+
+  .track-name {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--header-text);
+    line-height: 1.3;
+  }
+
+  .track-name span {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .node {
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s;
+  }
+
+  .node:hover {
+    background: var(--surface-hover);
+    border-color: var(--text-muted);
+    color: var(--text);
+    transform: scale(1.06);
+  }
+
+  .node.active {
+    background: var(--surface-hover);
+    color: var(--header-text);
+    border-color: var(--aspect-color, var(--accent1));
+    box-shadow: 0 0 0 3px rgba(113, 125, 146, 0.2);
+  }
+
+  .node-main {
+    width: 54px;
+    height: 54px;
+    font-size: 0.8rem;
+    border-width: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .node-sub {
+    width: 38px;
+    height: 38px;
+    font-size: 0.6rem;
+  }
+
+  .node-rail {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    overflow-x: auto;
+    padding: 3px 1px;
+    position: relative;
+  }
+
+  /* connector line behind the small circles */
+  .node-rail::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 50%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .node-rail .node { position: relative; }
+
+  .node-panel {
+    display: none;
+    margin-top: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: var(--accent-stripe) solid var(--aspect-color, var(--accent1));
+    border-radius: 6px;
+    padding: 12px 15px;
+  }
+
+  .node-panel.show { display: block; }
+
+  .node-panel-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--header-text);
+  }
+
+  .node-panel-tag {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 2px 0 8px;
+  }
+
+  .node-panel-body {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  .node-panel-body strong { color: var(--header-text); }
+
   /* ── Energy Timing Table ── */
   .energy-section-header {
     max-width: 1400px;
@@ -550,6 +697,11 @@
     .eidos-entry { margin: 3px 4px; }
     .eidos-entry-name { font-size: 0.62rem; max-width: 56px; }
     .companion-name { font-size: 0.55rem; max-width: 56px; }
+    .track { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .track-head { width: auto; }
+    .node-rail { width: 100%; }
+    .node-main { width: 46px; height: 46px; font-size: 0.72rem; }
+    .node-sub { width: 34px; height: 34px; font-size: 0.55rem; }
   }
 </style>
 <script type="application/ld+json">
@@ -582,6 +734,11 @@
    "@type": "DataDownload",
    "encodingFormat": "application/json",
    "contentUrl": "https://eoddb.com/hna/eoddb_hna_eidos.json"
+  },
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://eoddb.com/hna/eoddb_hna_eidos_skill.json"
   }
  ]
 }
@@ -653,14 +810,141 @@ async function loadJSON(filename) {
   return resp.json();
 }
 
+const esc = s => String(s).replace(/[&<>"]/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// Escape, then bold the labels the game uses to head a paragraph.
+function fmtBody(t) {
+  return esc(t || '')
+    .replace(/^(Eidognosis Bonus:)/gm, '<strong>$1</strong>')
+    .replace(/^\[([^\]]+)\]:/gm, '<strong>[$1]:</strong>');
+}
+
+// Skill fields are stored as "Name\nDescription..." — split on the first line.
+function splitNamed(raw) {
+  const t = String(raw || '').trim();
+  if (!t) return { name: '', body: '' };
+  const i = t.indexOf('\n');
+  if (i < 0) return { name: t, body: '' };
+  return { name: t.slice(0, i).trim(), body: t.slice(i + 1).trim() };
+}
+
+// Roman numerals are read off the JSON keys, so a future ASVII just appears.
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+const SKILL_TRACKS = [
+  { prefix: 'AS', field: 'Aspect Skill',    label: 'Aspect Skill' },
+  { prefix: 'ES', field: 'Eidos Skill',     label: 'Eidos Skill' },
+  { prefix: 'CS', field: 'Companion Skill', label: 'Companion Skill' }
+];
+
+// Panel text lives here rather than in data-attributes, keyed "Name|NodeKey".
+const NODE_TEXT = {};
+
+function buildTracks(rec) {
+  if (!rec) return '';
+  const name = rec.Name;
+  let html = '<div class="track-hint">Click a circle to read it &mdash; big circle is the skill itself, small circles are its Eidognosis nodes.</div><div class="skill-tracks">';
+
+  SKILL_TRACKS.forEach(t => {
+    const base = splitNamed(rec[t.field]);
+    if (!base.name) return;
+    const mainKey = name + '|' + t.prefix;
+    NODE_TEXT[mainKey] = { title: base.name, tag: t.label + ' — base skill', body: fmtBody(base.body) };
+
+    let rail = '';
+    ROMAN.forEach(r => {
+      const v = rec[t.prefix + r];
+      if (!v) return;
+      const k = name + '|' + t.prefix + r;
+      NODE_TEXT[k] = {
+        title: base.name + ' ' + r,
+        tag: t.label + ' — Eidognosis node ' + t.prefix + r,
+        body: fmtBody(v)
+      };
+      rail += `<button type="button" class="node node-sub" data-node-key="${esc(k)}">${t.prefix}${r}</button>`;
+    });
+
+    html += `<div class="track">
+      <div class="track-head">
+        <button type="button" class="node node-main" data-node-key="${esc(mainKey)}">${t.prefix}</button>
+        <div class="track-name">${esc(base.name)}<span>${t.label}</span></div>
+      </div>
+      <div class="node-rail">${rail}</div>
+    </div>`;
+  });
+
+  // Eidothreads: one node per Eidos copy (E1-E6), root circle holds the terms.
+  const etKeys = Object.keys(rec)
+    .filter(k => /^Eidothread \d+$/.test(k) && rec[k])
+    .sort((a, b) => parseInt(a.match(/\d+/)[0], 10) - parseInt(b.match(/\d+/)[0], 10));
+
+  if (etKeys.length) {
+    let rail = '';
+    etKeys.forEach(k => {
+      const p = splitNamed(rec[k]);
+      const n = k.match(/\d+/)[0];
+      const key = name + '|' + k;
+      NODE_TEXT[key] = {
+        title: p.name || k,
+        tag: k + ' — unlocked at E' + n,
+        body: fmtBody(p.body)
+      };
+      rail += `<button type="button" class="node node-sub" data-node-key="${esc(key)}">${n}</button>`;
+    });
+
+    const termsKey = name + '|Eidothread Terms';
+    NODE_TEXT[termsKey] = {
+      title: 'Keyword Terms',
+      tag: 'Eidothread — term definitions',
+      body: fmtBody(rec['Eidothread Terms'] || 'No terms recorded.')
+    };
+
+    html += `<div class="track">
+      <div class="track-head">
+        <button type="button" class="node node-main" data-node-key="${esc(termsKey)}">ET</button>
+        <div class="track-name">Eidothread<span>Copies E1&ndash;E${etKeys.length}</span></div>
+      </div>
+      <div class="node-rail">${rail}</div>
+    </div>`;
+  }
+
+  return html + '</div><div class="node-panel"></div>';
+}
+
+// One node open at a time across the whole page; clicking the open one closes it.
+document.addEventListener('click', evt => {
+  const btn = evt.target.closest('.node');
+  if (!btn) return;
+  const wasActive = btn.classList.contains('active');
+  document.querySelectorAll('.node.active').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.node-panel.show').forEach(p => p.classList.remove('show'));
+  if (wasActive) return;
+
+  const d = NODE_TEXT[btn.dataset.nodeKey];
+  const panel = btn.closest('.eidos-detail-block').querySelector('.node-panel');
+  if (!d || !panel) return;
+  panel.innerHTML =
+    `<div class="node-panel-title">${esc(d.title)}</div>` +
+    `<div class="node-panel-tag">${esc(d.tag)}</div>` +
+    `<div class="node-panel-body">${d.body}</div>`;
+  panel.classList.add('show');
+  btn.classList.add('active');
+});
+
 async function init() {
-  let eidos;
+  let eidos, skillData;
   try {
-    eidos = await loadJSON('eoddb_hna_eidos.json');
+    // Skill data is optional — the grid stays usable if it fails to load.
+    [eidos, skillData] = await Promise.all([
+      loadJSON('eoddb_hna_eidos.json'),
+      loadJSON('eoddb_hna_eidos_skill.json').catch(() => [])
+    ]);
   } catch (e) {
     showError('Could not load data files. Make sure eoddb_hna_eidos.json is in the same folder.');
     return;
   }
+  const skillBy = {};
+  skillData.forEach(s => { skillBy[s.Name] = s; });
 
   const total = eidos.length;
   const r4 = eidos.filter(e => e.Rarity === 4);
@@ -745,6 +1029,7 @@ async function init() {
             <div class="energy-stat"><div class="energy-stat-label">Initial Energy (Max)</div><div class="energy-stat-value">${e['Initial Energy (Eidognosis)']}</div></div>
             <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
           </div>
+          ${buildTracks(skillBy[e.Name])}
         </div>`;
       });
       detailHTML += '</div>';
