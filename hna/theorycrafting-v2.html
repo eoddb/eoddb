@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
+<title>Honkai: Nexus Anima Theorycrafting by EODGamer (Preview) | EODdb.com</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://eoddb.com/hna/theorycrafting">
+<meta name="description" content="Honkai: Nexus Anima theorycrafting — DEF vs damage reduction, EHP analysis, TTK calculations, and perk breakpoint comparisons. Using math and data to optimise builds.">
+<meta name="keywords" content="Honkai Nexus Anima theorycrafting, HNA tank build, DEF damage reduction, EHP analysis, TTK calculator, Nexus Anima perk comparison, Nexus Anima build guide, Nexus Anima defence, Nexus Anima HP">
+<meta property="og:title" content="Honkai: Nexus Anima Theorycrafting by EODGamer | EODdb.com">
+<meta property="og:description" content="DEF vs damage reduction, EHP analysis, TTK curves, and perk breakpoint comparisons for Honkai: Nexus Anima.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Honkai: Nexus Anima Theorycrafting by EODGamer | EODdb.com">
+<meta name="twitter:description" content="Theorycrafting for Honkai: Nexus Anima — defence, HP, and perk analysis on EODdb.com.">
+
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --header-text: #e6edf3;
+    --accent1: #717D92;
+    --accent1-light: #a9b4c6;
+    --accent1-dim: rgba(113,125,146,0.15);
+    --tc-1: #8a89b0;
+    --tc-2: #92b6ac;
+    --tc-3: #8a8a84;
+    --tc-1-fill: rgba(138,137,176,0.12);
+    --tc-2-fill: rgba(146,182,172,0.12);
+    --tc-grid: #1e2430;
+    --tc-axis: #2a3040;
+    --def-win-rgb: 100,99,140;
+    --hp-win-rgb: 110,156,146;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Subsection box ── */
+  .tc-topic {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .tc-topic-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .tc-topic-text {
+    flex: 1;
+  }
+
+  .tc-topic-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 2px;
+  }
+
+  .tc-topic-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* ── Report content ── */
+  .tc-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .tc-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+  }
+
+  .tc-section h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--header-text);
+    margin-bottom: 12px;
+  }
+
+  .tc-section p {
+    font-size: 0.85rem;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .tc-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .formula-box {
+    background: rgba(113,125,146,0.10);
+    border-left: 3px solid var(--tc-1);
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--header-text);
+    border-radius: 0 6px 6px 0;
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    margin-bottom: 12px;
+  }
+
+  canvas.heatmap {
+    width: 100%;
+    border-radius: 4px;
+    cursor: crosshair;
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .chart-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .chart-legend .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .chart-legend .line-swatch {
+    width: 16px;
+    height: 2px;
+    flex-shrink: 0;
+  }
+
+  .hover-readout {
+    font-size: 11px;
+    color: var(--text-muted);
+    min-height: 16px;
+    margin-top: 6px;
+  }
+
+  .unit-card {
+    background: rgba(113,125,146,0.10);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .unit-card .unit-name {
+    font-weight: 600;
+    color: var(--header-text);
+    margin-bottom: 2px;
+  }
+
+  .unit-card .unit-detail {
+    color: var(--text);
+  }
+
+  /* ── Summary ── */
+  .summary-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .summary-list li {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .summary-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--tc-1);
+  }
+
+  .summary-list li strong {
+    color: var(--header-text);
+  }
+
+  /* ── Annex table ── */
+  .annex-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+
+  .annex-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .annex-table th {
+    padding: 4px 8px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .annex-table td {
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  /* ── Back to top ── */
+  .back-to-top {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: var(--accent1-light);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-to-top:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Gauge meters ── */
+  .gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .gauge-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--header-text);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .gauge-track {
+    flex: 1;
+    height: 20px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .gauge-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.2s ease;
+  }
+
+  .gauge-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--header-text);
+    min-width: 56px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .slider-row label {
+    white-space: nowrap;
+    min-width: 180px;
+  }
+
+  .slider-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--tc-1);
+    height: 4px;
+    cursor: pointer;
+  }
+
+  .slider-val {
+    font-weight: 600;
+    color: var(--header-text);
+    font-variant-numeric: tabular-nums;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .tc-section details summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--accent1-light);
+    font-weight: 500;
+    padding: 4px 0;
+    user-select: none;
+    list-style: none;
+  }
+
+  .tc-section details summary::-webkit-details-marker { display: none; }
+
+  .tc-section details summary::before {
+    content: '▸ ';
+    display: inline;
+    transition: transform 0.15s;
+  }
+
+  .tc-section details[open] summary::before {
+    content: '▾ ';
+  }
+
+  .annex-def-table {
+    width: auto;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .annex-def-table caption {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--header-text);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .annex-def-table th {
+    padding: 4px 12px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .annex-def-table td {
+    padding: 3px 12px;
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  .annex-def-table tr + tr { border-top: 1px solid var(--border); }
+
+  @media (max-width: 500px) {
+    .tc-topic { flex-direction: column; text-align: center; gap: 10px; }
+    .chart-container { height: 220px; }
+  }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "TechArticle",
+ "headline": "Honkai: Nexus Anima Theorycrafting",
+ "description": "Original math analysis: EHP, DEF vs damage reduction curves, TTK, and disposition breakpoint comparisons.",
+ "url": "https://eoddb.com/hna/theorycrafting",
+ "author": {
+  "@type": "Person",
+  "name": "EODGamer",
+  "url": "https://www.youtube.com/@EODGamerSG"
+ },
+ "about": {
+  "@type": "VideoGame",
+  "name": "Honkai: Nexus Anima",
+  "publisher": {
+   "@type": "Organization",
+   "name": "HoYoverse"
+  }
+ },
+ "isPartOf": {
+  "@type": "WebSite",
+  "name": "EODdb.com",
+  "url": "https://eoddb.com/"
+ },
+ "datePublished": "2026-07-21"
+}
+</script>
+</head>
+<body>
+<script src="/hna/eoddb_hna_nav.js?v=3"></script>
+
+<div class="page-header">
+  <h1>Honkai: Nexus Anima Theorycrafting by EODGamer</h1>
+  <span class="subtitle">Using math and data to optimise builds, compare gear/perks, and find breakpoints. <em>(Preview version &mdash; simplified wording.)</em></span>
+</div>
+
+<!-- ── Tank Theorycrafting topic box ── -->
+<div class="tc-topic" id="top">
+  <img src="/hna/img/nexusanima/hugglebeary.webp" alt="Hugglebeary" class="tc-topic-icon">
+  <div class="tc-topic-text">
+    <div class="tc-topic-title">Tank Theorycrafting</div>
+    <div class="tc-topic-desc">Defence scaling, EHP analysis, time-to-kill curves, and DEF vs HP perk breakpoints.</div>
+  </div>
+</div>
+
+<!-- ── Tank Theorycrafting content ── -->
+<div class="tc-content" id="tank-tc">
+
+  <div class="tc-section">
+    <h2>+8% HP vs +12% DEF Calculator</h2>
+    <p style="margin-bottom:14px;">Enter your unit's stats to see which perk makes it tougher. <span style="color:var(--text-muted);">&ldquo;Toughness&rdquo; on this page = effective HP &mdash; the total damage it takes to kill you.</span></p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:120px;">Base DEF:</label>
+        <input type="number" id="calcBaseDEF" value="222" min="1" max="9999" style="flex:1;max-width:100px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--header-text);font-size:13px;font-variant-numeric:tabular-nums;">
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:120px;">Existing HP%:</label>
+        <input type="number" id="calcExistHP" value="0" min="0" max="999" style="flex:1;max-width:100px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--header-text);font-size:13px;font-variant-numeric:tabular-nums;">
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:120px;">Existing DEF%:</label>
+        <input type="number" id="calcExistDEF" value="0" min="0" max="999" style="flex:1;max-width:100px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--header-text);font-size:13px;font-variant-numeric:tabular-nums;">
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);">HP% / DEF% = add up every % bonus the unit already has &mdash; aspect synergies, dispositions, skills, buffs.</div>
+    </div>
+    <div id="calcResult" style="background:rgba(113,125,146,0.10);border-radius:6px;padding:14px 18px;font-size:14px;line-height:1.8;"></div>
+    <details style="margin-top:16px;">
+      <summary style="font-size:13px;color:var(--accent1-light);cursor:pointer;">Steady III vs Cautious III</summary>
+      <div style="margin-top:12px;font-size:0.85rem;line-height:1.75;color:var(--text);">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;">
+          <div style="flex:1;min-width:240px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
+            <div style="font-weight:700;color:var(--tc-2);margin-bottom:4px;">Steady III</div>
+            <div style="font-size:12px;">Increases Max Health by <strong style="color:var(--header-text);">8%</strong>. When Health drops below 50% for the first time, increase it by an additional <strong style="color:var(--header-text);">8%</strong>.</div>
+          </div>
+          <div style="flex:1;min-width:240px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
+            <div style="font-weight:700;color:var(--tc-1);margin-bottom:4px;">Cautious III</div>
+            <div style="font-size:12px;">Gain <strong style="color:var(--header-text);">12%</strong> Armor. This effect doubles for <strong style="color:var(--header-text);">10s</strong> after the start of battle.</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">The base halves aren't equal for most tanks &mdash; above ~200 DEF the +12% Armor side is already ahead (check your unit in the calculator above). The bonus effects are what really separate them:</p>
+        <ul class="summary-list">
+          <li>Short fights / burst damage &rarr; <strong>Cautious III</strong> &mdash; its Armor doubles to 24% for the first 10 seconds, exactly when the burst lands</li>
+          <li>Long fights / steady damage &rarr; <strong>Steady III</strong> &mdash; the extra 8% HP arrives the moment you first drop below half health, right when you need it</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="tc-section">
+    <h2>TL;DR &mdash; what to actually do</h2>
+    <ul class="summary-list">
+      <li><strong>Over ~200 DEF &rarr; take the +12% DEF perk. Under ~200 &rarr; take +8% HP.</strong> Your existing bonuses shift the line, so check your unit in the calculator above.</li>
+      <li><strong>DEF does not have diminishing returns.</strong> The reduction % display slows down, but your real toughness climbs in a dead straight line &mdash; every point of DEF is worth as much as the last.</li>
+      <li><strong>Stacking one stat waters it down.</strong> The more HP% (or DEF%) you already have, the less each new perk of the same stat adds &mdash; spread your survivability across stats.</li>
+      <li><strong>Damage reduction (DR) is the best value point-for-point.</strong> About 7.4% DR matches a +8% HP perk, and DR never gets watered down by what you already own. Take it wherever the game offers it.</li>
+      <li><strong>Prefer one big DR source over several small ones.</strong> DR sources multiply instead of adding &mdash; two 10% sources give 19% total, not 20%.</li>
+    </ul>
+  </div>
+
+  <div class="tc-section">
+    <h2>DEF vs damage reduction</h2>
+    <div class="chart-container"><canvas id="chart1"></canvas></div>
+    <p>Your first 100 DEF halves the damage you take. After that, the display climbs slower and slower &mdash; 200 DEF reads 66.7%, and hitting 90% costs a full 900 DEF. Looks like classic diminishing returns, right? That's a trap &mdash; two sections down you'll see why the % display is misleading you.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">DMG_REDUCTION = DEF / (DEF + 100)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>+12% DEF perk: damage reduction gained</h2>
+    <div class="chart-container"><canvas id="chart2"></canvas></div>
+    <p>The +12% DEF perk isn't worth the same everywhere. It peaks around 100 DEF at roughly +2.8% damage reduction and falls off on both sides &mdash; at low DEF, 12% of a small number is still small; at high DEF, the reduction display has already flattened out.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Gain = f(1.12 &times; DEF) &minus; f(DEF)<br>where f(x) = x / (x + 100)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>DEF does NOT have diminishing returns</h2>
+    <div class="chart-container"><canvas id="chart3"></canvas></div>
+    <p>Plot real toughness instead of the reduction % and DEF is a dead straight line. Every point of DEF buys exactly as much survival time as the last &mdash; 100 DEF doubles it, 500 DEF is 6&times;, 900 DEF is 10&times;. The % display flattens; your survivability doesn't. Don't let the display fool you.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Toughness multiplier = 1 / (1 &minus; DR) = (DEF + 100) / 100</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>HP% bonuses water each other down</h2>
+    <div class="chart-container"><canvas id="chart4"></canvas></div>
+    <p>Your first +8% HP perk makes you a full 8% tougher. But every HP% bonus pours into the same pool, so the further along you are, the less each new one adds &mdash; at +100% existing HP bonuses, another +8% only makes you 4% tougher.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total HP = Base HP &times; (1 + &Sigma; HP% Bonuses)<br>Toughness multiplier from HP% = (1 + HP%)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>+12% DEF vs +8% HP</h2>
+    <p style="margin-bottom:12px;"><strong>Short version: above 200 DEF, take the DEF perk.</strong> The map shows the winner for every combination of DEF and existing HP% bonuses &mdash; hover to check any point, and drag the slider if you already have DEF% bonuses.</p>
+    <div class="slider-row">
+      <label>Existing DEF% bonuses:</label>
+      <input type="range" id="defSlider5" min="0" max="100" value="0">
+      <span class="slider-val" id="defSliderVal5">0%</span>
+    </div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#717D92;"></span>+12% DEF wins</span>
+      <span><span class="swatch" style="background:#82A69C;"></span>+8% HP wins</span>
+      <span><span class="line-swatch" style="background:#D4D4CC;"></span>Breakeven</span>
+    </div>
+    <canvas id="heat5" class="heatmap" width="660" height="400"></canvas>
+    <div class="hover-readout" id="hover5"></div>
+    <div class="unit-card">
+      <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
+      <div class="unit-detail" id="unit5detail">222 DEF | 68% HP%</div>
+    </div>
+    <p style="margin-top:12px;">With the game's real ratio of 12% DEF to 8% HP, the DEF perk wins for most tanks. At Hugglebeary's 222 DEF and 68% HP%, +12% DEF adds +8.27% toughness versus +4.76% from +8% HP &mdash; not close. And above 200 DEF, DEF wins even if you have zero HP% bonuses.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.12 / (1 + existing DEF%)<br>+12% DEF toughness gain = effective perk &times; DEF / (DEF + 100)<br>+8% HP toughness gain&nbsp; = 0.08 / (1 + HP%)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>Why the devs picked 12% vs 8%</h2>
+    <p style="margin-bottom:12px;">A thought experiment: if both perks were an equal +1%, HP would win almost everywhere &mdash; the +100 baked into the damage formula permanently waters DEF down, and you'd need 100 DEF just to break even. The devs clearly knew it: handing DEF the 1.5&times; bigger number (12% vs 8%) is the compensation. Here's the equal-ratio world they avoided:</p>
+    <div class="slider-row">
+      <label>Existing DEF% bonuses:</label>
+      <input type="range" id="defSlider6" min="0" max="100" value="0">
+      <span class="slider-val" id="defSliderVal6">0%</span>
+    </div>
+    <div class="chart-legend">
+      <span><span class="swatch" style="background:#717D92;"></span>+1% DEF wins</span>
+      <span><span class="swatch" style="background:#82A69C;"></span>+1% HP wins</span>
+      <span><span class="line-swatch" style="background:#D4D4CC;"></span>Breakeven</span>
+    </div>
+    <canvas id="heat6" class="heatmap" width="660" height="400"></canvas>
+    <div class="hover-readout" id="hover6"></div>
+    <div class="unit-card">
+      <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
+      <div class="unit-detail" id="unit6detail">222 DEF | 68% HP%</div>
+    </div>
+    <p style="margin-top:12px;">At Hugglebeary's stats the equal-ratio version is nearly a coin flip &mdash; which is exactly why the real game hands DEF the bigger number.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.01 / (1 + existing DEF%)<br>+1% DEF toughness gain = effective perk &times; DEF / (DEF + 100)<br>+1% HP toughness gain&nbsp; = 0.01 / (1 + HP%)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>How damage reduction (DR) fits in</h2>
+    <p>Every hit in HNA gets shrunk in layers that multiply. DEF shrinks it first, then each DR source shrinks what's left, one after another. That's why two DR sources don't simply add &mdash; a 5% and a 20% source give 24% total reduction, not 25%. Verified in-game below.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Final Damage = ATK &times; 100 / (DEF + 100) &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip;</div></details>
+    <div class="annex-table-wrap" style="margin-top:16px;">
+      <table class="annex-def-table">
+        <caption>Damage reduction test data</caption>
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th>Attacker</th>
+            <th>Target</th>
+            <th>DR%</th>
+            <th>Formula</th>
+            <th>Expected</th>
+            <th>Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>0%</td><td>119&times;100/261</td><td>46</td><td>46</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>3%</td><td>&times;0.97</td><td>44</td><td>44</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>5%</td><td>&times;0.95</td><td>43</td><td>43</td></tr>
+          <tr><td>Muscimmon (119 ATK)</td><td>Apollinis (161 DEF)</td><td>20%</td><td>&times;0.80</td><td>36</td><td>36</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>0%</td><td>204&times;100/261</td><td>78</td><td>78</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>20%</td><td>&times;0.80</td><td>63</td><td>63</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td>Bladehound (204 ATK)</td><td>Apollinis (161 DEF)</td><td>3%+20%</td><td>&times;0.97&times;0.80</td><td>61</td><td>61</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>0%</td><td>204&times;100/155</td><td>131</td><td>131</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>5%</td><td>&times;0.95</td><td>125</td><td>125</td></tr>
+          <tr><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>30%</td><td>&times;0.70</td><td>92</td><td>92</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td>Bladehound (204 ATK)</td><td>Nomnom (55 DEF)</td><td>5%+30%</td><td>&times;0.95&times;0.70</td><td>87</td><td>87</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;font-size:0.78rem;color:var(--text-muted);">DR sources tested: the 3%/5% Pride(2)/Pride(3) aspect synergies, Apollinis's 20% DR while its skill is active, and Nomnom's 30% DR while its skill is active.</p>
+  </div>
+
+  <div class="tc-section">
+    <h2>Stacking DR: multiple sources vs one</h2>
+    <div class="chart-container"><canvas id="chartDR1"></canvas></div>
+    <p>Because DR sources multiply, two 10% sources give 19% total DR (0.9&times;0.9 = 0.81), not 20%. A single 20% source is strictly better &mdash; it gives the full 20%. The gap widens as the numbers grow: two 15% sources give 27.75%, one 30% source gives the full 30%. <strong>Always prefer one large DR source over two smaller ones that add up to the same value.</strong></p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Two sources of X%: multiplier = (1&minus;X%)&sup2;<br>One source of 2X%: multiplier = (1&minus;2X%)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>DR vs DEF% vs HP%: which stat scales best?</h2>
+    <div class="chart-container"><canvas id="chartDR2"></canvas></div>
+    <p>HP% is one-for-one &mdash; +50% HP means +50% tougher. DEF% is also a straight line, but it only delivers about two-thirds of its sticker value at 222 base DEF (less on squishier units). DR is the outlier: its curve bends upward, so each extra % of DR is worth <strong>more</strong> than the last.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">HP%: toughness increase = HP% (linear)<br>DEF%: toughness increase = Base DEF &times; DEF% / (Base DEF + 100) (linear, slope &lt; 1)<br>DR: toughness increase = 1 / (1 &minus; DR) &minus; 1 (accelerating)</div></details>
+  </div>
+
+  <div class="tc-section">
+    <h2>What is +8% HP worth in other stats?</h2>
+    <p>To match the toughness of a +8% HP perk you need only about 7.4% DR &mdash; but more than 8% DEF% (how much more depends on your base DEF). Set your unit's numbers below and the gauges show the price of the same toughness in each stat.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;">For the same +8% toughness:<br><br>HP% = 8%<br>DR = 1 &minus; 1/1.08 = 7.41%<br>DEF% = 8% &times; (Base DEF + 100) / Base DEF</div></details>
+    <div id="equivGauges" style="display:flex;flex-direction:column;gap:14px;margin:16px 0;">
+      <div class="gauge-row">
+        <div class="gauge-label">HP%</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeHP" style="width:40%;background:var(--tc-1);"></div></div>
+        <div class="gauge-value" id="gaugeHPVal">12%</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-label">DR</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeDR" style="width:35.7%;background:var(--tc-2);"></div></div>
+        <div class="gauge-value" id="gaugeDRVal">10.71%</div>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge-label">DEF%</div>
+        <div class="gauge-track"><div class="gauge-fill" id="gaugeDEF" style="width:58%;background:var(--tc-3);"></div></div>
+        <div class="gauge-value" id="gaugeDEFVal">17.41%</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:110px;">Base DEF:</label>
+        <input type="range" id="equivSlider" min="1" max="2000" value="222" style="flex:1;accent-color:var(--text-muted);">
+        <span id="equivSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">222</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:110px;">Existing HP%:</label>
+        <input type="range" id="equivHPSlider" min="0" max="100" value="0" style="flex:1;accent-color:var(--text-muted);">
+        <span id="equivHPSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">0%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:110px;">Existing DEF%:</label>
+        <input type="range" id="equivDEFSlider" min="0" max="100" value="0" style="flex:1;accent-color:var(--text-muted);">
+        <span id="equivDEFSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">0%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:110px;">Existing DR%:</label>
+        <input type="range" id="equivDRSlider" min="0" max="100" value="0" style="flex:1;accent-color:var(--text-muted);">
+        <span id="equivDRSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">0%</span>
+      </div>
+    </div>
+    <p style="margin-top:12px;">Notice DR's price never moves &mdash; 7.41% no matter what you already have, because DR multiplies instead of pooling with itself. HP% and DEF% both get more expensive the more of them you already own. That's why DR is the best survivability value in the game.</p>
+  </div>
+
+  <div class="tc-section">
+    <details>
+      <summary>Annex: test data</summary>
+      <div class="annex-table-wrap" style="margin-top:12px;">
+        <table class="annex-table">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th colspan="7" style="color:var(--tc-1);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">My unit</th>
+              <th colspan="7" style="color:var(--tc-2);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;">Opponent</th>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="color:var(--text-muted);">Unit</th>
+              <th style="color:var(--text-muted);">Lv</th>
+              <th style="color:var(--text-muted);">ATK</th>
+              <th style="color:var(--text-muted);">DEF</th>
+              <th style="color:var(--text-muted);">MDEF</th>
+              <th style="color:var(--text-muted);">DEF%</th>
+              <th style="color:var(--text-muted);">MDEF%</th>
+              <th style="color:var(--text-muted);">Unit</th>
+              <th style="color:var(--text-muted);">Lv</th>
+              <th style="color:var(--text-muted);">ATK</th>
+              <th style="color:var(--text-muted);">DEF</th>
+              <th style="color:var(--text-muted);">MR</th>
+              <th style="color:var(--text-muted);">DEF%</th>
+              <th style="color:var(--text-muted);">MDEF%</th>
+            </tr>
+          </thead>
+          <tbody id="annexBody"></tbody>
+        </table>
+      </div>
+      <table class="annex-def-table" style="margin-top:20px;">
+        <caption>DEF% formula verification &mdash; Puddlipup (Base DEF: 63)</caption>
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th>Buffs active</th>
+            <th>&Sigma; DEF%</th>
+            <th>Expected</th>
+            <th>Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>12% disposition</td><td>12%</td><td>70.56</td><td>70</td></tr>
+          <tr><td>24% disposition</td><td>24%</td><td>78.12</td><td>78</td></tr>
+          <tr><td>12% disposition + 40% skill</td><td>52%</td><td>95.76</td><td>95</td></tr>
+          <tr><td>24% disposition + 40% skill</td><td>64%</td><td>103.32</td><td>103</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">Formula: Total DEF = Base DEF &times; (1 + &Sigma; DEF%). Values truncated to integer in-game.</p>
+      <table class="annex-def-table" style="margin-top:24px;">
+        <caption>HP% formula verification &mdash; Hugglebeary (Base HP: 1,914)</caption>
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th>Build</th>
+            <th>&Sigma; HP%</th>
+            <th>Expected</th>
+            <th>Actual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Aspect STR(1)</td><td>15%</td><td>2,201</td><td>2,201</td></tr>
+          <tr><td>DOM(1)</td><td>23%</td><td>2,354</td><td>2,345</td></tr>
+          <tr><td>STR(3)</td><td>24%</td><td>2,373</td><td>2,374</td></tr>
+          <tr><td>DOM(3)</td><td>36%</td><td>2,603</td><td>2,603</td></tr>
+          <tr><td>STR(5)</td><td>38%</td><td>2,639</td><td>2,632</td></tr>
+          <tr><td>DOM(5)</td><td>56%</td><td>2,986</td><td>2,991</td></tr>
+          <tr><td>DOM(5) + UGL(2) Mr Avocado Buff</td><td>68%</td><td>3,216</td><td>3,221</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--text-muted);">Formula: Total HP = Base HP &times; (1 + &Sigma; HP%). Minor variance (&le;5) likely from hidden decimal precision on base stats or buff values.</p>
+    </details>
+  </div>
+
+  <a href="#top" class="back-to-top">&uarr; Back to top</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  // Calculator: +8% HP vs +12% DEF
+  var calcBaseDEF=document.getElementById('calcBaseDEF');
+  var calcExistHP=document.getElementById('calcExistHP');
+  var calcExistDEF=document.getElementById('calcExistDEF');
+  var calcResult=document.getElementById('calcResult');
+  function runCalc(){
+    var bd=parseFloat(calcBaseDEF.value)||1;
+    var eHP=parseFloat(calcExistHP.value)||0;
+    var eDEF=parseFloat(calcExistDEF.value)||0;
+    var hpGain=Math.round(8/(1+eHP/100)*10000)/10000;
+    var defGain=Math.round(bd*12/(bd*(1+eDEF/100)+100)*10000)/10000;
+    var hpStr=hpGain.toFixed(2);
+    var defStr=defGain.toFixed(2);
+    var winner='';
+    if(defGain>hpGain+0.005)winner='<span style="color:#8a89b0;font-weight:700;">+12% DEF wins</span>';
+    else if(hpGain>defGain+0.005)winner='<span style="color:#92b6ac;font-weight:700;">+8% HP wins</span>';
+    else winner='<span style="color:#e6edf3;font-weight:700;">Roughly equal</span>';
+    calcResult.innerHTML=winner+'<br><span style="font-size:12px;color:#6e7a8a;">+8% HP: +'+hpStr+'% toughness &nbsp;|&nbsp; +12% DEF: +'+defStr+'% toughness</span>';
+  }
+  runCalc();
+  calcBaseDEF.addEventListener('input',runCalc);
+  calcExistHP.addEventListener('input',runCalc);
+  calcExistDEF.addEventListener('input',runCalc);
+
+  var tc1='#8a89b0',tc2='#92b6ac',tc3='#8a8a84';
+  var f1='rgba(138,137,176,0.12)',f2='rgba(146,182,172,0.12)';
+  var txt='#c9d1d9',txtM='#6e7a8a',hdr='#e6edf3';
+  var grd='#1e2430',axs='#2a3040',sfc='#161b25';
+
+  var ttip={backgroundColor:'#161b25',titleColor:hdr,bodyColor:txt,borderColor:'#252d3d',borderWidth:1,padding:10,displayColors:false};
+
+  var wmPlugin={id:'watermark',afterDraw:function(chart){var ctx=chart.ctx;var w=chart.chartArea.width;var h=chart.chartArea.height;var cx=chart.chartArea.left+w/2;var cy=chart.chartArea.top+h/2;ctx.save();ctx.font='700 14px sans-serif';ctx.fillStyle='rgba(201,209,217,0.12)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.letterSpacing='1.5px';ctx.fillText('EODdb.com',cx,cy);ctx.restore();}};
+
+  function drawWatermark(ctx,W,H,padL,padR,padT,padB){var cx=padL+(W-padL-padR)/2;var cy=padT+(H-padT-padB)/2;ctx.save();ctx.font='700 14px sans-serif';ctx.fillStyle='rgba(201,209,217,0.12)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.letterSpacing='1.5px';ctx.fillText('EODdb.com',cx,cy);ctx.restore();}
+
+  function xDef(max){
+    return{type:'linear',min:0,max:max,
+      title:{display:true,text:'DEF',color:hdr,font:{size:13,weight:500}},
+      ticks:{stepSize:25,color:txtM,font:{size:11},callback:function(v){return v%(max<=100?25:100)===0?v:'';},autoSkip:false},
+      grid:{color:function(ctx){return ctx.tick.value%(max<=100?25:100)===0?grd:'transparent';},lineWidth:1},
+      border:{color:axs}};
+  }
+
+  // Chart 1: DEF vs DR
+  var d1=[];
+  for(var d=0;d<=1000;d+=5) d1.push({x:d,y:Math.round(d/(d+100)*10000)/100});
+  new Chart(document.getElementById('chart1'),{
+    type:'line',
+    data:{datasets:[{data:d1,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'Reduction: '+i.raw.y.toFixed(1)+'%';}}})},
+      scales:{x:xDef(1000),y:{min:0,max:100,title:{display:true,text:'Damage reduction (%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
+  });
+
+  // Chart 2: +12% DEF perk gain
+  var d2=[],peakV=0,peakD=0;
+  for(var d=0;d<=1000;d+=5){var gdr=d*1.12/(d*1.12+100)*100-d/(d+100)*100;d2.push({x:d,y:Math.round(gdr*1000)/1000});if(gdr>peakV){peakV=gdr;peakD=d;}}
+  new Chart(document.getElementById('chart2'),{
+    type:'line',
+    data:{datasets:[{data:d2,borderColor:tc1,backgroundColor:f1,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){return'DR gain: +'+i.raw.y.toFixed(2)+'%';}}})},
+      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'DR gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v.toFixed(1)+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin,{afterDraw:function(chart){var meta=chart.getDatasetMeta(0);var idx=Math.round(peakD/5);if(!meta.data[idx])return;var pt=meta.data[idx];var ctx=chart.ctx;ctx.save();ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle=txtM;ctx.lineWidth=1;ctx.moveTo(pt.x,chart.scales.y.bottom);ctx.lineTo(pt.x,pt.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=hdr;ctx.font='500 11px sans-serif';ctx.textAlign='center';ctx.fillText('Peak ~'+peakD+' DEF',pt.x,pt.y-10);ctx.restore();}}]
+  });
+
+  // Chart 3: TTK vs DEF
+  var d3=[];
+  for(var d=0;d<=1000;d+=5) d3.push({x:d,y:Math.round((d+100)/100*100)/100});
+  new Chart(document.getElementById('chart3'),{
+    type:'line',
+    data:{datasets:[{data:d3,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){var dr=(i.raw.x/(i.raw.x+100)*100).toFixed(1);return'Survives '+i.raw.y.toFixed(1)+'× longer ('+dr+'% DR)';}}})},
+      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'Toughness (× survival time)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
+  });
+
+  // Chart 4: TTK vs HP%
+  var d4=[];
+  for(var h=0;h<=100;h+=1) d4.push({x:h,y:Math.round((1+h/100)*100)/100});
+  new Chart(document.getElementById('chart4'),{
+    type:'line',
+    data:{datasets:[{data:d4,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'HP%: +'+i[0].raw.x+'%';},label:function(i){return'Survives '+i.raw.y.toFixed(2)+'× longer';}}})},
+      scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'HP% bonuses',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
+        y:{min:1,max:2,title:{display:true,text:'Toughness (× survival time)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:0.25,color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
+  });
+
+  // Heatmap helper
+  function setupHeatmap(canvasId,hoverId,unitId,defPct,hpPct,sliderId,sliderValId){
+    var canvas=document.getElementById(canvasId);
+    var ctx=canvas.getContext('2d');
+    var W=canvas.width,H=canvas.height;
+    var padL=55,padR=15,padT=10,padB=45;
+    var pW=W-padL-padR,pH=H-padT-padB;
+    var maxDef=1000,maxHP=100;
+    var defR=100,defG=99,defB=140;
+    var hpR=110,hpG=156,hpB=146;
+    var defLabel=defPct===0.12?'+12%':'+1%';
+    var hpLabel=hpPct===0.08?'+8%':'+1%';
+    var hoverEl=document.getElementById(hoverId);
+    var slider=document.getElementById(sliderId);
+    var sliderValEl=document.getElementById(sliderValId);
+    var currentGDef,currentGHP;
+
+    function draw(existingDefPct){
+      var effPct=defPct/(1+existingDefPct);
+      currentGDef=function(d){return((1+effPct)*d+100)/(d+100)-1;};
+      currentGHP=function(h){return hpPct/(1+h);};
+
+      ctx.clearRect(0,0,W,H);
+
+      for(var dx=0;dx<=maxDef;dx+=5){
+        for(var hp=0;hp<=maxHP;hp+=1){
+          var diff=currentGDef(dx)-currentGHP(hp/100);
+          var intensity=Math.min(Math.abs(diff)/(defPct>0.05?0.08:0.008),1);
+          var alpha=0.15+intensity*0.7;
+          var px=padL+(dx/maxDef)*pW;
+          var py=padT+(1-hp/maxHP)*pH;
+          var bw=Math.ceil(5/maxDef*pW)+1;
+          var bh=Math.ceil(1/maxHP*pH)+1;
+          if(diff>0) ctx.fillStyle='rgba('+defR+','+defG+','+defB+','+alpha+')';
+          else ctx.fillStyle='rgba('+hpR+','+hpG+','+hpB+','+alpha+')';
+          ctx.fillRect(px,py,bw,bh);
+        }
+      }
+
+      ctx.beginPath();ctx.strokeStyle=tc3;ctx.lineWidth=2.5;
+      var first=true;
+      for(var dx=0;dx<=maxDef;dx+=2){
+        var gd=currentGDef(dx);if(gd<=0)continue;
+        var bHP=(hpPct/gd-1)*100;
+        if(bHP<0)bHP=0;if(bHP>maxHP)continue;
+        var px=padL+(dx/maxDef)*pW;
+        var py=padT+(1-bHP/maxHP)*pH;
+        if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+
+      var ux=padL+(222/maxDef)*pW,uy=padT+(1-68/maxHP)*pH;
+      ctx.beginPath();ctx.arc(ux,uy,8,0,Math.PI*2);ctx.fillStyle=sfc;ctx.fill();
+      ctx.beginPath();ctx.arc(ux,uy,6,0,Math.PI*2);ctx.fillStyle=tc3;ctx.fill();
+      ctx.beginPath();ctx.arc(ux,uy,7,0,Math.PI*2);ctx.strokeStyle=hdr;ctx.lineWidth=1.5;ctx.stroke();
+
+      var lx=ux+14;
+      var lines=['Lv.50 Hugglebeary','STR(5) Dominator','UGL(2) Mr Avocado Buff','222 DEF | 68% HP%'];
+      var lh=13,boxW=148,boxH=lines.length*lh+8;
+      var bx=lx-4,by=uy-lh-8;
+      if(bx+boxW>W-padR){lx=ux-14;bx=lx-boxW+4;ctx.textAlign='right';}else{ctx.textAlign='left';}
+      ctx.fillStyle=sfc;ctx.globalAlpha=0.92;ctx.fillRect(bx,by,boxW,boxH);ctx.globalAlpha=1;
+      ctx.strokeStyle='#252d3d';ctx.lineWidth=0.5;ctx.strokeRect(bx,by,boxW,boxH);
+      ctx.beginPath();ctx.strokeStyle=txtM;ctx.lineWidth=1;
+      ctx.moveTo(ux+(ctx.textAlign==='left'?9:-9),uy);ctx.lineTo(lx,uy);ctx.stroke();
+      var ty=uy-6;
+      lines.forEach(function(l,i){
+        ctx.font=i===0?'600 11px sans-serif':i===3?'500 10px sans-serif':'11px sans-serif';
+        ctx.fillStyle=i===0?hdr:txtM;
+        ctx.fillText(l,lx,ty);ty+=lh;
+      });
+
+      ctx.textAlign='center';ctx.fillStyle=txtM;ctx.font='11px sans-serif';
+      for(var d=0;d<=maxDef;d+=100){
+        var x=padL+(d/maxDef)*pW;ctx.fillText(d,x,padT+pH+18);
+        if(d>0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();}
+      }
+      var defPctLabel=Math.round(existingDefPct*100);
+      var axisLabel=defPctLabel>0?'DEF (Existing DEF bonus of '+defPctLabel+'%)':'DEF';
+      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.fillText(axisLabel,padL+pW/2,padT+pH+38);
+
+      ctx.font='11px sans-serif';ctx.fillStyle=txtM;ctx.textAlign='right';
+      for(var h=0;h<=maxHP;h+=10){
+        var y=padT+(1-h/maxHP)*pH;ctx.fillText(h+'%',padL-8,y+4);
+        if(h>0&&h%20===0){ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.moveTo(padL,y);ctx.lineTo(padL+pW,y);ctx.stroke();}
+      }
+      ctx.save();ctx.translate(14,padT+pH/2);ctx.rotate(-Math.PI/2);
+      ctx.font='13px sans-serif';ctx.fillStyle=hdr;ctx.textAlign='center';
+      ctx.fillText('Existing HP% bonuses',0,0);ctx.restore();
+
+      var gdVal=(currentGDef(222)*100).toFixed(2);
+      var ghVal=(currentGHP(0.68)*100).toFixed(2);
+      document.getElementById(unitId).innerHTML='222 DEF | 68% HP% | '+Math.round(existingDefPct*100)+'% DEF% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% toughness</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% toughness</strong>';
+
+      drawWatermark(ctx,W,H,padL,padR,padT,padB);
+    }
+
+    canvas.addEventListener('mousemove',function(e){
+      var rect=canvas.getBoundingClientRect();
+      var sx=W/rect.width;
+      var mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sx;
+      var def=Math.round(((mx-padL)/pW)*maxDef);
+      var hp=Math.round((1-(my-padT)/pH)*maxHP);
+      if(def<0||def>maxDef||hp<0||hp>maxHP){hoverEl.textContent='';return;}
+      var gd2=(currentGDef(def)*100).toFixed(2);
+      var gh2=(currentGHP(hp/100)*100).toFixed(2);
+      var w=currentGDef(def)>currentGHP(hp/100)?defLabel+' DEF':hpLabel+' HP';
+      hoverEl.textContent='DEF: '+def+' | HP%: '+hp+'% → '+defLabel+' DEF: +'+gd2+'% toughness, '+hpLabel+' HP: +'+gh2+'% toughness → '+w+' wins';
+    });
+    canvas.addEventListener('mouseleave',function(){hoverEl.textContent='';});
+
+    slider.addEventListener('input',function(){
+      var val=parseInt(slider.value);
+      sliderValEl.textContent=val+'%';
+      draw(val/100);
+    });
+
+    draw(0);
+  }
+
+  setupHeatmap('heat5','hover5','unit5detail',0.12,0.08,'defSlider5','defSliderVal5');
+  setupHeatmap('heat6','hover6','unit6detail',0.01,0.01,'defSlider6','defSliderVal6');
+
+  // Chart DR1: Split sources vs single source — multiplicative stacking penalty
+  var drHalf=[5,7.5,10,12.5,15];
+  var drFull=drHalf.map(function(d){return d*2;});
+  var splitEHP=drHalf.map(function(d){return Math.round((1/Math.pow(1-d/100,2)-1)*10000)/100;});
+  var singleEHP=drFull.map(function(d){return Math.round((1/(1-d/100)-1)*10000)/100;});
+  new Chart(document.getElementById('chartDR1'),{
+    type:'bar',
+    data:{
+      labels:drFull.map(function(d){return d+'% total';}),
+      datasets:[{
+        label:'2× split sources (each half)',
+        data:splitEHP,
+        backgroundColor:'rgba(138,137,176,0.7)',
+        borderColor:tc1,
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.8,
+        categoryPercentage:0.7
+      },{
+        label:'1 single source',
+        data:singleEHP,
+        backgroundColor:'rgba(130,166,156,0.7)',
+        borderColor:tc2,
+        borderWidth:1,
+        borderRadius:4,
+        barPercentage:0.8,
+        categoryPercentage:0.7
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'rect',padding:16}},
+        tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label;},label:function(i){return i.dataset.label+': +'+i.raw.toFixed(2)+'% toughness';}}})},
+      scales:{x:{title:{display:true,text:'Target total DR',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11}},grid:{display:false},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'Toughness gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',intersect:true}},
+    plugins:[wmPlugin]
+  });
+
+  // Chart DR2: TTK scaling — % increase in TTK vs % gain in DR/DEF%/HP%
+  var ttkX=[];for(var i=0;i<=80;i+=2)ttkX.push(i);
+  var baseDEF=222;
+  var drTTK=ttkX.map(function(x){return{x:x,y:Math.round((1/(1-x/100)-1)*10000)/100};});
+  var hpTTK=ttkX.map(function(x){return{x:x,y:x};});
+  var defTTK=ttkX.map(function(x){return{x:x,y:Math.round(baseDEF*x/100/(baseDEF+100)*10000)/100};});
+  new Chart(document.getElementById('chartDR2'),{
+    type:'line',
+    data:{datasets:[
+      {label:'DR',data:drTTK,borderColor:tc2,backgroundColor:'rgba(146,182,172,0.08)',borderWidth:2.5,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0.3},
+      {label:'HP%',data:hpTTK,borderColor:tc1,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc1,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0},
+      {label:'DEF% (222 base)',data:defTTK,borderColor:tc3,backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc3,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,tension:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
+      plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'line',padding:16}},
+        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Total bonus: +'+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(1)+'% tougher';}}})},
+      scales:{x:{type:'linear',min:0,max:80,title:{display:true,text:'% gain in stat (DR / DEF% / HP%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
+        y:{min:0,title:{display:true,text:'Toughness gained (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      interaction:{mode:'nearest',axis:'x',intersect:false}},
+    plugins:[wmPlugin]
+  });
+
+  // Gauge meters: equal TTK with base DEF + existing bonus sliders
+  var equivSlider=document.getElementById('equivSlider');
+  var equivSliderVal=document.getElementById('equivSliderVal');
+  var equivHPSlider=document.getElementById('equivHPSlider');
+  var equivHPSliderVal=document.getElementById('equivHPSliderVal');
+  var equivDEFSlider=document.getElementById('equivDEFSlider');
+  var equivDEFSliderVal=document.getElementById('equivDEFSliderVal');
+  var equivDRSlider=document.getElementById('equivDRSlider');
+  var equivDRSliderVal=document.getElementById('equivDRSliderVal');
+  var gaugeHP=document.getElementById('gaugeHP');
+  var gaugeDR=document.getElementById('gaugeDR');
+  var gaugeDEF=document.getElementById('gaugeDEF');
+  var gaugeHPVal=document.getElementById('gaugeHPVal');
+  var gaugeDRVal=document.getElementById('gaugeDRVal');
+  var gaugeDEFVal=document.getElementById('gaugeDEFVal');
+  function updateGauges(){
+    var bd=parseInt(equivSlider.value);
+    var existHP=parseInt(equivHPSlider.value);
+    var existDEF=parseInt(equivDEFSlider.value);
+    var existDR=parseInt(equivDRSlider.value);
+    // HP% needed for +8% TTK: X = 8 × (1 + existHP/100)
+    var hp=Math.round(8*(1+existHP/100)*100)/100;
+    // DR needed: always 7.41% (multiplicative, independent of existing DR)
+    var dr=7.41;
+    // DEF% needed: X = 8 × (baseDEF × (1 + existDEF/100) + 100) / baseDEF
+    var def=bd>0?Math.round(8*(bd*(1+existDEF/100)+100)/bd*100)/100:999;
+    var maxVal=Math.max(hp,dr,def,30);
+    gaugeHP.style.width=(hp/maxVal*100)+'%';
+    gaugeDR.style.width=(dr/maxVal*100)+'%';
+    gaugeDEF.style.width=(Math.min(def,maxVal)/maxVal*100)+'%';
+    gaugeHPVal.textContent=hp.toFixed(2)+'%';
+    gaugeDRVal.textContent='7.41%';
+    gaugeDEFVal.textContent=def>999?'∞':def.toFixed(2)+'%';
+  }
+  updateGauges();
+  equivSlider.addEventListener('input',function(){
+    equivSliderVal.textContent=this.value;
+    updateGauges();
+  });
+  equivHPSlider.addEventListener('input',function(){
+    equivHPSliderVal.textContent=this.value+'%';
+    updateGauges();
+  });
+  equivDEFSlider.addEventListener('input',function(){
+    equivDEFSliderVal.textContent=this.value+'%';
+    updateGauges();
+  });
+  equivDRSlider.addEventListener('input',function(){
+    equivDRSliderVal.textContent=this.value+'%';
+    updateGauges();
+  });
+
+  // Annex data
+  var rows=[
+    ['Damasque',41,54,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',42,55,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',43,55,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',44,56,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',45,57,44,44,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Damasque',46,58,44,44,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Lumeridon',46,142,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Mushgloomini',46,71,38,134,28,57,'Muscimmon',46,119,72,72,42,42],
+    ['Donnatallow',40,86,35,35,26,26,'Hugglebeary',46,98,223,83,69,46],
+    ['Donnatallow',40,95,38,38,28,28,'Hugglebeary',46,98,223,83,69,46],
+    ['Muscimmon',31,75,39,39,28,28,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',32,76,39,39,28,28,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',33,78,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',34,79,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',35,80,41,41,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',36,81,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',37,83,42,42,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',38,84,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',39,86,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',40,95,48,48,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',41,96,49,49,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',42,98,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',43,99,50,50,33,33,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',44,100,51,51,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',45,101,51,51,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',46,103,52,52,34,34,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',47,104,53,53,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',48,105,53,53,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',49,106,54,54,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',50,108,54,54,35,35,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',40,39,40,40,29,29,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',46,42,43,43,30,30,'Muscimmon',46,119,72,72,42,42],
+    ['Chocllamour',50,44,45,45,31,31,'Muscimmon',46,119,72,72,42,42],
+    ['Muscimmon',50,108,54,54,35,35,'Hugglebeary',41,85,199,74,67,43],
+    ['Lumeridon',46,142,50,50,33,33,'Bunmareen',31,44,114,40,53,29]
+  ];
+  var tb=document.getElementById('annexBody');
+  var prevUnit='';
+  rows.forEach(function(r){
+    var tr=document.createElement('tr');
+    var isNewGroup=r[0]!==prevUnit;
+    prevUnit=r[0];
+    if(isNewGroup) tr.style.borderTop='1px solid #252d3d';
+    r.forEach(function(v,i){
+      var td=document.createElement('td');
+      td.style.color=(i===0||i===7)?'#e6edf3':'#c9d1d9';
+      td.textContent=v;
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+})();
+</script>
+
+<script src="/eoddb_footer.js" defer></script>
+</body>
+</html>
