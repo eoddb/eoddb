@@ -55,6 +55,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://eoddb.com/hna/teams</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://eoddb.com/hsr/</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>

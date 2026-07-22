@@ -24,6 +24,7 @@ editorial work of EODGamer (youtube.com/@EODGamerSG).
 - [Guide](https://eoddb.com/hna/guide): team building and strategy
 - [Theorycrafting](https://eoddb.com/hna/theorycrafting): EHP, DEF vs damage-reduction curves, TTK analysis, disposition breakpoint math
 - [Team Planner](https://eoddb.com/hna/teamplanner): interactive team-building tool
+- [Best Teams](https://eoddb.com/hna/teams): recommended team comps with hex positioning, Eidos pairings, and importable teamcodes
 
 ## Honkai: Nexus Anima — raw data (JSON)
 
@@ -34,6 +35,7 @@ editorial work of EODGamer (youtube.com/@EODGamerSG).
 - [Disposition effects](https://eoddb.com/hna/eoddb_hna_dispositions.json)
 - [Eidos](https://eoddb.com/hna/eoddb_hna_eidos.json): energy stats and unit pairings ("Companion" field)
 - [Eidos skills & node tracks](https://eoddb.com/hna/eoddb_hna_eidos_skill.json): Aspect/Eidos/Companion skills, Eidognosis node levels (I–VI) and Eidothreads (dupe-gated nodes, one per copy E1–E6)
+- [Recommended teams](https://eoddb.com/hna/eoddb_hna_teams.json): curated team compositions with importable team-planner codes
 - [Aspects](https://eoddb.com/hna/eoddb_hna_aspects.json): synergy breakpoints per unit count
 - [Types](https://eoddb.com/hna/eoddb_hna_types.json)
 - [Tier list](https://eoddb.com/hna/tierlist): see the tier list page; rankings are editorial
