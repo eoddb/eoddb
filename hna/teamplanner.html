@@ -609,6 +609,62 @@
     pointer-events: none;
   }
 
+  /* ── Team code import/export ── */
+  .teamcode-box {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .teamcode-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .teamcode-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .teamcode-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+  .teamcode-row input:focus {
+    outline: none;
+    border-color: var(--accent1);
+  }
+  .teamcode-btn {
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .teamcode-btn:hover { border-color: var(--accent1); }
+  .teamcode-status {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-height: 1em;
+  }
+  .teamcode-status.ok { color: #82A69C; }
+  .teamcode-status.err { color: #A6837D; }
+
   @media (max-width: 640px) {
     :root { --hex-size: 40px; }
     .planner-main { flex-direction: column; }
@@ -674,6 +730,16 @@
 
   <div class="controls">
     <button class="ctrl-btn danger" id="clearBtn">Clear All</button>
+  </div>
+
+  <div class="teamcode-box">
+    <div class="teamcode-title">Team Code</div>
+    <div class="teamcode-row">
+      <input id="tcInput" placeholder="Paste an in-game team code to load it here..." autocomplete="off" spellcheck="false">
+      <button class="teamcode-btn" id="tcImportBtn">Import</button>
+      <button class="teamcode-btn" id="tcExportBtn">Export</button>
+    </div>
+    <div class="teamcode-status" id="tcStatus">Import a code exported from the game, or build a team and export a code you can import in-game.</div>
   </div>
 
   <div class="roster-section">
@@ -1022,6 +1088,7 @@ document.querySelectorAll('.eidos-slot').forEach((slot, i) => {
 
 updateCount();
 updateSynergies();
+tcInit();
 
 }); // end Promise.all
 
@@ -1344,7 +1411,7 @@ function updateSynergies() {
   });
 }
 
-document.getElementById('clearBtn').addEventListener('click', () => {
+function clearBoard() {
   clearSelection();
   grid.forEach((row, ri) => {
     row.forEach((cell, ci) => {
@@ -1356,7 +1423,195 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   updateEidosRoster();
   updateAspectFilterOutlines();
   updateCompanionHearts();
-});
+}
+
+document.getElementById('clearBtn').addEventListener('click', clearBoard);
+
+// ── Team code import/export ──
+/*p1*/const _p1="VU2QTM3Yyg31FV81lk86sTAiC4t57q5UrkVTNCfX/RUTEZwUjEGftOwRF08EJ0vyVc9VXMhKccYvj01SjkypvFHE4ancvb7johgOIuGZ00N7FwTV7Ad+gWYi4OWyUiOWZ3z7AgoMF7NlWngJIQABlz9VCy0UBJP0vOIjDPm8TI/qiYjERBMAsfmIgtw+TSeLKNjdCiO+DYdKmkwVCDVQMn57YBSP/wrCTxQQ8md5zM+JbgJDb8oM13FduUPEcUfJ2C4rNLOWMdIRWLzHcc3JLnYwGiKybemwSEW1MkNT/rCpOzLP8sOtBVjCrGgvojATSGCa2XUgW2afzqBV7dPej7qxrQDY0TbuH4d1+9JNHPygMKAEFn34AZs8NCYLM54CI2tn4ld/6RD1wsN60gTNHRBKSygQVmn7CyuWJAtiGEOaym8WN/cxjieD4QIjOQMISlR210yIDY4pcZHWaDIlYCau5dYpFWQguVfd6kJKZxH3T5FhUd3rRrMGN3MZX1LTeAFto7m1JHoNRXxJ2RluW39Vsnp6qRZmK2YvVciBm/kCXvs0+7UPYj0pYC99AmCchV3nRueAflC3X5KTywSxpmjYEQ9QIhsVnOw6yZ7xINo+FirEEYU=";/*p1e*/
+
+const tcUnitId = {}, tcUnitName = {}, tcEidoId = {}, tcEidoName = {};
+
+function tcInit() {
+  try {
+    const raw = atob(_p1);
+    let s = 2463534242;
+    const next = () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>>= 0) & 0xFF; };
+    let txt = '';
+    for (let i = 0; i < raw.length; i++) txt += String.fromCharCode(raw.charCodeAt(i) ^ next());
+    const [a, b] = txt.split('|').map(part => part.split(',').map(Number));
+    UNITS.forEach((u, i) => { tcUnitId[u.name] = a[i]; tcUnitName[a[i]] = u.name; });
+    EIDOS.forEach((e, i) => { tcEidoId[e.name] = b[i]; tcEidoName[b[i]] = e.name; });
+  } catch (e) { return; }
+  document.getElementById('tcImportBtn').addEventListener('click', tcImport);
+  document.getElementById('tcExportBtn').addEventListener('click', tcExport);
+}
+
+function tcStatus(msg, cls) {
+  const el = document.getElementById('tcStatus');
+  el.textContent = msg;
+  el.className = 'teamcode-status' + (cls ? ' ' + cls : '');
+}
+
+function xxh32(d, seed) {
+  const P1 = 2654435761, P2 = 2246822519, P3 = 3266489917, P4 = 668265263, P5 = 374761393;
+  const u = x => x >>> 0, rl = (x, r) => u((x << r) | (x >>> (32 - r)));
+  const r32 = o => (d[o] | (d[o+1] << 8) | (d[o+2] << 16) | (d[o+3] << 24)) >>> 0;
+  let i = 0, h, len = d.length;
+  if (len >= 16) {
+    let v1 = u(seed + P1 + P2), v2 = u(seed + P2), v3 = u(seed), v4 = u(seed - P1);
+    for (; i <= len - 16; i += 16) {
+      v1 = u(Math.imul(rl(u(v1 + Math.imul(r32(i), P2)), 13), P1));
+      v2 = u(Math.imul(rl(u(v2 + Math.imul(r32(i+4), P2)), 13), P1));
+      v3 = u(Math.imul(rl(u(v3 + Math.imul(r32(i+8), P2)), 13), P1));
+      v4 = u(Math.imul(rl(u(v4 + Math.imul(r32(i+12), P2)), 13), P1));
+    }
+    h = u(rl(v1, 1) + rl(v2, 7) + rl(v3, 12) + rl(v4, 18));
+  } else h = u(seed + P5);
+  h = u(h + len);
+  for (; i <= len - 4; i += 4) h = u(Math.imul(rl(u(h + Math.imul(r32(i), P3)), 17), P4));
+  for (; i < len; i++) h = u(Math.imul(rl(u(h + Math.imul(d[i], P5)), 11), P1));
+  h ^= h >>> 15; h = u(Math.imul(h, P2));
+  h ^= h >>> 13; h = u(Math.imul(h, P3));
+  h ^= h >>> 16;
+  return u(h);
+}
+
+function tcB64ToBytes(s) {
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+function tcBytesToB64(bytes) {
+  let bin = '';
+  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+
+function tcParse(buf) {
+  const out = [];
+  let i = 0;
+  while (i < buf.length) {
+    const tag = buf[i++], field = tag >> 3, wt = tag & 7;
+    if (wt === 0) {
+      let v = 0, shift = 0, b;
+      do { b = buf[i++]; v += (b & 0x7F) * Math.pow(2, shift); shift += 7; } while (b & 0x80);
+      out.push([field, v]);
+    } else if (wt === 2) {
+      const len = buf[i++];
+      out.push([field, tcParse(buf.slice(i, i + len))]);
+      i += len;
+    } else {
+      throw new Error('bad wire type');
+    }
+  }
+  return out;
+}
+
+function tcImport() {
+  const code = document.getElementById('tcInput').value.trim();
+  if (!code) { tcStatus('Paste a team code first.', 'err'); return; }
+  let payload, suffix;
+  try {
+    payload = tcB64ToBytes(code.slice(0, -8));
+    suffix = tcB64ToBytes(code.slice(-8));
+  } catch (e) { tcStatus('That does not look like a team code.', 'err'); return; }
+  const h = xxh32(payload, 0);
+  const expect = (suffix[0] | (suffix[1] << 8) | (suffix[2] << 16) | (suffix[3] << 24)) >>> 0;
+  if (suffix.length !== 4 || h !== expect) { tcStatus('Invalid team code (checksum mismatch).', 'err'); return; }
+
+  let fields;
+  try { fields = tcParse(payload); } catch (e) { tcStatus('Could not read this team code.', 'err'); return; }
+
+  const units = [], eidos = [], problems = [];
+  fields.forEach(([f, v]) => {
+    if (f === 11) {
+      const d = {}; v.forEach(([k, val]) => { d[k] = val; });
+      units.push(d);
+    } else if (f === 7) {
+      const d = {}; v.forEach(([k, val]) => { d[k] = val; });
+      eidos.push(d);
+    }
+  });
+
+  clearBoard();
+  let placed = 0;
+  units.forEach(d => {
+    const pos = d[9], id = Math.floor((d[12] || 0) / 100);
+    const ci = Math.floor(pos / 8), rowLabel = (pos % 8) - 3, ri = rowLabel - 1;
+    const name = tcUnitName[id];
+    if (ri < 0 || ri > 3 || ci < 0 || ci > 6) { problems.push('unknown hex for unit ' + (name || id)); return; }
+    if (!name) { problems.push('unknown unit ID ' + id + ' at ' + rowLabel + COL_LETTERS[ci] + ' (newer game version?)'); return; }
+    if (grid[ri][ci].unit) { problems.push('two units at ' + rowLabel + COL_LETTERS[ci]); return; }
+    placeUnit(ri, ci, name);
+    placed++;
+  });
+
+  eidos.sort((a, b) => (a[13] || 0) - (b[13] || 0));
+  let slot = 0;
+  eidos.forEach(d => {
+    if (slot >= 3) return;
+    const name = tcEidoName[d[2]];
+    if (!name) { problems.push('unknown Eidos ID ' + d[2]); return; }
+    eidosSlots[slot++] = name;
+  });
+  renderEidosSlots();
+  updateEidosRoster();
+  updateAspectFilterOutlines();
+  updateCompanionHearts();
+
+  if (problems.length) {
+    tcStatus('Imported ' + placed + ' unit(s) with issues: ' + problems.join('; ') + '.', 'err');
+  } else {
+    tcStatus('Imported ' + placed + ' unit(s) and ' + slot + ' Eidos.', 'ok');
+  }
+}
+
+function tcVarint(n) {
+  const out = [];
+  do { let b = n & 0x7F; n = Math.floor(n / 128); if (n) b |= 0x80; out.push(b); } while (n);
+  return out;
+}
+
+function tcExport() {
+  const bytes = [];
+  let count = 0;
+  grid.forEach((row, ri) => row.forEach((cell, ci) => {
+    if (!cell.unit) return;
+    const id = tcUnitId[cell.unit];
+    if (id === undefined) return;
+    const body = [0x48, ...tcVarint(ci * 8 + ri + 4), 0x68, 0x02, 0x10, 0x01, 0x60, ...tcVarint(id * 100)];
+    bytes.push(0x5A, body.length, ...body);
+    count++;
+  }));
+  if (!count) { tcStatus('Place at least one unit before exporting.', 'err'); return; }
+  let slot = 0;
+  eidosSlots.forEach(name => {
+    if (!name) return;
+    const id = tcEidoId[name];
+    if (id === undefined) return;
+    const body = [];
+    if (slot) body.push(0x68, ...tcVarint(slot));
+    body.push(0x10, ...tcVarint(id));
+    bytes.push(0x3A, body.length, ...body);
+    slot++;
+  });
+  const payload = new Uint8Array(bytes);
+  const h = xxh32(payload, 0);
+  const suffix = new Uint8Array([h & 0xFF, (h >>> 8) & 0xFF, (h >>> 16) & 0xFF, (h >>> 24) & 0xFF]);
+  const code = tcBytesToB64(payload) + tcBytesToB64(suffix);
+  const input = document.getElementById('tcInput');
+  input.value = code;
+  input.select();
+  const done = () => tcStatus('Code copied — paste it in the game\'s team import.', 'ok');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(done, () => tcStatus('Code generated — copy it from the box above.', 'ok'));
+  } else {
+    tcStatus('Code generated — copy it from the box above.', 'ok');
+  }
+}
 
 </script>
 <script src="/eoddb_footer.js" defer></script>
