@@ -470,7 +470,7 @@
 
   <div class="tc-section">
     <h2>+8% HP vs +12% DEF Calculator</h2>
-    <p style="margin-bottom:14px;">Enter your unit's stats to see which perk gives more EHP.</p>
+    <p style="margin-bottom:14px;">Enter your unit's stats to see which perk makes it tougher. <span style="color:var(--text-muted);">&ldquo;Toughness&rdquo; on this page = effective HP &mdash; the total damage it takes to kill you.</span></p>
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
       <div style="display:flex;align-items:center;gap:12px;">
         <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:120px;">Base DEF:</label>
@@ -484,6 +484,7 @@
         <label style="font-size:12px;color:var(--text-muted);white-space:nowrap;min-width:120px;">Existing DEF%:</label>
         <input type="number" id="calcExistDEF" value="0" min="0" max="999" style="flex:1;max-width:100px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--header-text);font-size:13px;font-variant-numeric:tabular-nums;">
       </div>
+      <div style="font-size:11px;color:var(--text-muted);">HP% / DEF% = add up every % bonus the unit already has &mdash; aspect synergies, dispositions, skills, buffs.</div>
     </div>
     <div id="calcResult" style="background:rgba(113,125,146,0.10);border-radius:6px;padding:14px 18px;font-size:14px;line-height:1.8;"></div>
     <details style="margin-top:16px;">
@@ -491,65 +492,65 @@
       <div style="margin-top:12px;font-size:0.85rem;line-height:1.75;color:var(--text);">
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;">
           <div style="flex:1;min-width:240px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
-            <div style="font-weight:700;color:var(--tc-1);margin-bottom:4px;">Steady III</div>
+            <div style="font-weight:700;color:var(--tc-2);margin-bottom:4px;">Steady III</div>
             <div style="font-size:12px;">Increases Max Health by <strong style="color:var(--header-text);">8%</strong>. When Health drops below 50% for the first time, increase it by an additional <strong style="color:var(--header-text);">8%</strong>.</div>
           </div>
           <div style="flex:1;min-width:240px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 16px;">
-            <div style="font-weight:700;color:var(--tc-2);margin-bottom:4px;">Cautious III</div>
+            <div style="font-weight:700;color:var(--tc-1);margin-bottom:4px;">Cautious III</div>
             <div style="font-size:12px;">Gain <strong style="color:var(--header-text);">12%</strong> Armor. This effect doubles for <strong style="color:var(--header-text);">10s</strong> after the start of battle.</div>
           </div>
         </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Assuming the base +8% HP and +12% DEF are roughly equal for your build (use the calculator above to check), the choice comes down to the conditional bonus:</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">The base halves aren't equal for most tanks &mdash; above ~200 DEF the +12% Armor side is already ahead (check your unit in the calculator above). The bonus effects are what really separate them:</p>
         <ul class="summary-list">
-          <li>Short fights / burst-heavy content &rarr; <strong>Cautious III</strong> (front-loaded value &mdash; 24% Armor for the first 10 seconds)</li>
-          <li>Long fights / sustained damage &rarr; <strong>Steady III</strong> (insurance when HP drops below 50%, effectively 16% HP when you need it most)</li>
+          <li>Short fights / burst damage &rarr; <strong>Cautious III</strong> &mdash; its Armor doubles to 24% for the first 10 seconds, exactly when the burst lands</li>
+          <li>Long fights / steady damage &rarr; <strong>Steady III</strong> &mdash; the extra 8% HP arrives the moment you first drop below half health, right when you need it</li>
         </ul>
       </div>
     </details>
   </div>
 
   <div class="tc-section">
-    <h2>Summary</h2>
+    <h2>TL;DR &mdash; what to actually do</h2>
     <ul class="summary-list">
-      <li><strong>DEF has true linear scaling</strong> in terms of survivability &mdash; every point of DEF extends Time To Kill (TTK) by the same flat amount, despite the Damage Reduction % curve looking like diminishing returns.</li>
-      <li><strong>Both HP% and DEF% bonuses are additive</strong>, so stacking either gives diminishing marginal returns per perk &mdash; the more HP% or DEF% you already have, the less each additional percentage point is worth.</li>
-      <li><strong>The 12% DEF vs 8% HP ratio is intentional balance</strong> &mdash; at 1:1, HP generally outperforms assuming no sources of either. The 1.5&times; multiplier on DEF makes it largely the superior pick for any build above ~200 DEF.</li>
-      <li><strong>The +12% DEF perk's damage reduction gain peaks around 100 DEF</strong> (~2.8%), but its EHP advantage over HP% grows as both DEF and existing HP% increase.</li>
-      <li><strong>To reach 99% damage reduction</strong> requires 9,900 DEF &mdash; the formula ensures this is prohibitively expensive, keeping the game balanced.</li>
+      <li><strong>Over ~200 DEF &rarr; take the +12% DEF perk. Under ~200 &rarr; take +8% HP.</strong> Your existing bonuses shift the line, so check your unit in the calculator above.</li>
+      <li><strong>DEF does not have diminishing returns.</strong> The reduction % display slows down, but your real toughness climbs in a dead straight line &mdash; every point of DEF is worth as much as the last.</li>
+      <li><strong>Stacking one stat waters it down.</strong> The more HP% (or DEF%) you already have, the less each new perk of the same stat adds &mdash; spread your survivability across stats.</li>
+      <li><strong>Damage reduction (DR) is the best value point-for-point.</strong> About 7.4% DR matches a +8% HP perk, and DR never gets watered down by what you already own. Take it wherever the game offers it.</li>
+      <li><strong>Prefer one big DR source over several small ones.</strong> DR sources multiply instead of adding &mdash; two 10% sources give 19% total, not 20%.</li>
     </ul>
   </div>
 
   <div class="tc-section">
     <h2>DEF vs damage reduction</h2>
-    <div class="formula-box">DMG_REDUCTION = DEF / (DEF + 100)</div>
     <div class="chart-container"><canvas id="chart1"></canvas></div>
-    <p>Defence converts to damage reduction on a diminishing-returns curve. The first 100 DEF buys 50% reduction; doubling to 200 only reaches 66.7%. Reaching 90% costs 900 DEF, and 99% costs 9,900. The formula ensures every point of DEF always helps, but each one helps a little less than the last.</p>
+    <p>Your first 100 DEF halves the damage you take. After that, the display climbs slower and slower &mdash; 200 DEF reads 66.7%, and hitting 90% costs a full 900 DEF. Looks like classic diminishing returns, right? That's a trap &mdash; two sections down you'll see why the % display is misleading you.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">DMG_REDUCTION = DEF / (DEF + 100)</div></details>
   </div>
 
   <div class="tc-section">
     <h2>+12% DEF perk: damage reduction gained</h2>
-    <div class="formula-box">Gain = f(1.12 &times; DEF) &minus; f(DEF)<br>where f(x) = x / (x + 100)</div>
     <div class="chart-container"><canvas id="chart2"></canvas></div>
-    <p>A percentage-based DEF perk doesn't give flat returns. At low DEF, 12% of a small number is still small. At high DEF, diminishing returns eat into the gain. The perk peaks around 100 DEF at roughly +2.8% damage reduction, then tapers. This hump shape &mdash; unlike a pure derivative &mdash; is what makes the perk's value position-dependent.</p>
+    <p>The +12% DEF perk isn't worth the same everywhere. It peaks around 100 DEF at roughly +2.8% damage reduction and falls off on both sides &mdash; at low DEF, 12% of a small number is still small; at high DEF, the reduction display has already flattened out.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Gain = f(1.12 &times; DEF) &minus; f(DEF)<br>where f(x) = x / (x + 100)</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>Time to kill vs DEF</h2>
-    <div class="formula-box">TTK multiplier = 1 / (1 &minus; DR) = (DEF + 100) / 100</div>
+    <h2>DEF does NOT have diminishing returns</h2>
     <div class="chart-container"><canvas id="chart3"></canvas></div>
-    <p>Substituting the DR formula back into effective HP reveals a perfectly straight line. Every point of DEF gives the same survivability gain as the last &mdash; 100 DEF = 2&times; TTK, 500 DEF = 6&times;, 900 DEF = 10&times;. This linearity is the entire purpose of the DEF/(DEF+100) formula: it makes DEF stacking feel consistently rewarding without ever becoming broken.</p>
+    <p>Plot real toughness instead of the reduction % and DEF is a dead straight line. Every point of DEF buys exactly as much survival time as the last &mdash; 100 DEF doubles it, 500 DEF is 6&times;, 900 DEF is 10&times;. The % display flattens; your survivability doesn't. Don't let the display fool you.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Toughness multiplier = 1 / (1 &minus; DR) = (DEF + 100) / 100</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>Time to kill vs HP% bonuses</h2>
-    <div class="formula-box">Total HP = Base HP &times; (1 + &Sigma; HP% Bonuses)<br>TTK multiplier from HP% = (1 + HP%)</div>
+    <h2>HP% bonuses water each other down</h2>
     <div class="chart-container"><canvas id="chart4"></canvas></div>
-    <p>HP% bonuses are additive with each other, so the TTK multiplier from HP stacking is also a straight line &mdash; 50% HP bonus = 1.5&times; TTK, 100% = 2&times;. However, because each additional +8% HP is added to an ever-growing sum, the marginal EHP gain per perk diminishes: the first +8% gives 8% more TTK, but at 100% existing HP% it only gives 4%.</p>
+    <p>Your first +8% HP perk makes you a full 8% tougher. But every HP% bonus pours into the same pool, so the further along you are, the less each new one adds &mdash; at +100% existing HP bonuses, another +8% only makes you 4% tougher.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total HP = Base HP &times; (1 + &Sigma; HP% Bonuses)<br>Toughness multiplier from HP% = (1 + HP%)</div></details>
   </div>
 
   <div class="tc-section">
     <h2>+12% DEF vs +8% HP</h2>
-    <div class="formula-box">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.12 / (1 + existing DEF%)<br>+12% DEF EHP gain = effective perk &times; DEF / (DEF + 100)<br>+8% HP EHP gain&nbsp; = 0.08 / (1 + HP%)</div>
+    <p style="margin-bottom:12px;"><strong>Short version: above 200 DEF, take the DEF perk.</strong> The map shows the winner for every combination of DEF and existing HP% bonuses &mdash; hover to check any point, and drag the slider if you already have DEF% bonuses.</p>
     <div class="slider-row">
       <label>Existing DEF% bonuses:</label>
       <input type="range" id="defSlider5" min="0" max="100" value="0">
@@ -566,12 +567,13 @@
       <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
       <div class="unit-detail" id="unit5detail">222 DEF | 68% HP%</div>
     </div>
-    <p style="margin-top:12px;">With the game's actual perk ratio of 12% DEF to 8% HP, the DEF perk dominates for most mid-to-late game builds. At Hugglebeary's 222 DEF and 68% HP%, the +12% DEF perk gives +8.30% EHP versus +4.76% from +8% HP &mdash; DEF wins by 3.54%. The breakeven line shows that above 200 DEF, even 0% existing HP% favours DEF.</p>
+    <p style="margin-top:12px;">With the game's real ratio of 12% DEF to 8% HP, the DEF perk wins for most tanks. At Hugglebeary's 222 DEF and 68% HP%, +12% DEF adds +8.27% toughness versus +4.76% from +8% HP &mdash; not close. And above 200 DEF, DEF wins even if you have zero HP% bonuses.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.12 / (1 + existing DEF%)<br>+12% DEF toughness gain = effective perk &times; DEF / (DEF + 100)<br>+8% HP toughness gain&nbsp; = 0.08 / (1 + HP%)</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>+1% DEF vs +1% HP</h2>
-    <div class="formula-box">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.01 / (1 + existing DEF%)<br>+1% DEF EHP gain = effective perk &times; DEF / (DEF + 100)<br>+1% HP EHP gain&nbsp; = 0.01 / (1 + HP%)</div>
+    <h2>Why the devs picked 12% vs 8%</h2>
+    <p style="margin-bottom:12px;">A thought experiment: if both perks were an equal +1%, HP would win almost everywhere &mdash; the +100 baked into the damage formula permanently waters DEF down, and you'd need 100 DEF just to break even. The devs clearly knew it: handing DEF the 1.5&times; bigger number (12% vs 8%) is the compensation. Here's the equal-ratio world they avoided:</p>
     <div class="slider-row">
       <label>Existing DEF% bonuses:</label>
       <input type="range" id="defSlider6" min="0" max="100" value="0">
@@ -588,13 +590,14 @@
       <div class="unit-name">Lv.50 Hugglebeary &mdash; STR(5) Dominator, UGL(2) Mr Avocado Buff</div>
       <div class="unit-detail" id="unit6detail">222 DEF | 68% HP%</div>
     </div>
-    <p style="margin-top:12px;">At equal 1:1 ratios, HP is far stronger &mdash; you need 100 DEF just to break even with 0% existing HP%. At Hugglebeary's stats, the two perks are much closer than in the 12-vs-8 comparison. The devs intentionally gave DEF a 1.5&times; multiplier (12% vs 8%) to compensate for the +100 constant in the formula always diluting DEF's value.</p>
+    <p style="margin-top:12px;">At Hugglebeary's stats the equal-ratio version is nearly a coin flip &mdash; which is exactly why the real game hands DEF the bigger number.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Total DEF = Base DEF &times; (1 + &Sigma; DEF%)<br>Effective perk = 0.01 / (1 + existing DEF%)<br>+1% DEF toughness gain = effective perk &times; DEF / (DEF + 100)<br>+1% HP toughness gain&nbsp; = 0.01 / (1 + HP%)</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>Adding Damage reduction as another variable</h2>
-    <div class="formula-box">Final Damage = ATK &times; 100 / (DEF + 100) &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip; + k</div>
-    <p>Simple Defense in HNA passes through three multiplicative layers. First, the attacker's ATK is reduced by the target's DEF via the familiar DEF/(DEF+100) formula. Then each source of damage reduction multiplies independently &mdash; a 5% and a 20% DR source give 1&minus;(0.95&times;0.80)&nbsp;=&nbsp;24% total, not 25%. k represents other variables, which we will explore in a seperate subsection</p>
+    <h2>How damage reduction (DR) fits in</h2>
+    <p>Every hit in HNA gets shrunk in layers that multiply. DEF shrinks it first, then each DR source shrinks what's left, one after another. That's why two DR sources don't simply add &mdash; a 5% and a 20% source give 24% total reduction, not 25%. Verified in-game below.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Final Damage = ATK &times; 100 / (DEF + 100) &times; (1 &minus; DR&#8321;) &times; (1 &minus; DR&#8322;) &times; &hellip;</div></details>
     <div class="annex-table-wrap" style="margin-top:16px;">
       <table class="annex-def-table">
         <caption>Damage reduction test data</caption>
@@ -623,27 +626,27 @@
         </tbody>
       </table>
     </div>
-    <p style="margin-top:12px;">Damage Reduction sources are 3%/5% Aspect Synegies for Pride(2)/Pride(3) and Apollinis 20% Damage Reduction while skill is active, Nomnom 30% Damage Reduction while skill is active.</p>
+    <p style="margin-top:12px;font-size:0.78rem;color:var(--text-muted);">DR sources tested: the 3%/5% Pride(2)/Pride(3) aspect synergies, Apollinis's 20% DR while its skill is active, and Nomnom's 30% DR while its skill is active.</p>
   </div>
 
   <div class="tc-section">
     <h2>Stacking DR: multiple sources vs one</h2>
-    <div class="formula-box">Two sources of X%: multiplier = (1&minus;X%)&sup2;<br>One source of 2X%: multiplier = (1&minus;2X%)<br><br>One larger source always wins &mdash; splitting loses to multiplicative stacking penalty</div>
     <div class="chart-container"><canvas id="chartDR1"></canvas></div>
-    <p>Because DR stacks multiplicatively, two 10% sources give 19% total DR (0.9&times;0.9 = 0.81), not 20%. A single 20% source is strictly better &mdash; it gives the full 20% reduction. The gap widens with larger values: two 15% sources give 27.75% total, while one 30% source gives the full 30%. <strong>Always prefer one large DR source over two smaller ones that add up to the same value.</strong></p>
+    <p>Because DR sources multiply, two 10% sources give 19% total DR (0.9&times;0.9 = 0.81), not 20%. A single 20% source is strictly better &mdash; it gives the full 20%. The gap widens as the numbers grow: two 15% sources give 27.75%, one 30% source gives the full 30%. <strong>Always prefer one large DR source over two smaller ones that add up to the same value.</strong></p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">Two sources of X%: multiplier = (1&minus;X%)&sup2;<br>One source of 2X%: multiplier = (1&minus;2X%)</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>DR vs DEF% vs HP%: Time To Kill (TTK) scaling</h2>
-    <div class="formula-box">HP%: TTK increase = HP% (linear)<br>DEF%: TTK increase = Base DEF &times; DEF% / (Base DEF + 100) (linear, slope &lt; 1)<br>DR: TTK increase = 1 / (1 &minus; DR) &minus; 1 (accelerating)</div>
+    <h2>DR vs DEF% vs HP%: which stat scales best?</h2>
     <div class="chart-container"><canvas id="chartDR2"></canvas></div>
-    <p>HP% gives a 1:1 linear TTK increase &mdash; +50% HP means +50% TTK. DEF% is also linear but with a weaker slope that depends on base DEF (at 222 base: slope &asymp; 0.69). DR is the outlier &mdash; it accelerates. Each additional % of DR gives <strong>more</strong> TTK than the last, making it the only survivability stat with increasing returns.</p>
+    <p>HP% is one-for-one &mdash; +50% HP means +50% tougher. DEF% is also a straight line, but it only delivers about two-thirds of its sticker value at 222 base DEF (less on squishier units). DR is the outlier: its curve bends upward, so each extra % of DR is worth <strong>more</strong> than the last.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;margin-bottom:0;">HP%: toughness increase = HP% (linear)<br>DEF%: toughness increase = Base DEF &times; DEF% / (Base DEF + 100) (linear, slope &lt; 1)<br>DR: toughness increase = 1 / (1 &minus; DR) &minus; 1 (accelerating)</div></details>
   </div>
 
   <div class="tc-section">
-    <h2>Equal TTK: stat equivalence</h2>
-    <div class="formula-box">For the same +8% TTK increase:<br><br>HP% = 8%<br>DR = 1 &minus; 1/1.08 = 7.41%<br>DEF% = 8% &times; (Base DEF + 100) / Base DEF</div>
-    <p>To get the same survivability as +8% HP, you need only 7.41% DR &mdash; DR is more efficient point-for-point because of its accelerating curve. DEF% requires more than 8% because its slope is always less than 1 (it depends on base DEF).</p>
+    <h2>What is +8% HP worth in other stats?</h2>
+    <p>To match the toughness of a +8% HP perk you need only about 7.4% DR &mdash; but more than 8% DEF% (how much more depends on your base DEF). Set your unit's numbers below and the gauges show the price of the same toughness in each stat.</p>
+    <details><summary>Show the math</summary><div class="formula-box" style="margin-top:10px;">For the same +8% toughness:<br><br>HP% = 8%<br>DR = 1 &minus; 1/1.08 = 7.41%<br>DEF% = 8% &times; (Base DEF + 100) / Base DEF</div></details>
     <div id="equivGauges" style="display:flex;flex-direction:column;gap:14px;margin:16px 0;">
       <div class="gauge-row">
         <div class="gauge-label">HP%</div>
@@ -683,7 +686,7 @@
         <span id="equivDRSliderVal" style="font-size:13px;color:var(--header-text);min-width:42px;font-variant-numeric:tabular-nums;">0%</span>
       </div>
     </div>
-    <p style="margin-top:12px;">DR is always 7.41% regardless of existing bonuses &mdash; it scales independently. HP% and DEF% both need more the higher your existing bonuses are. This demonstrates why DR is the most efficient survivability stat to stack.</p>
+    <p style="margin-top:12px;">Notice DR's price never moves &mdash; 7.41% no matter what you already have, because DR multiplies instead of pooling with itself. HP% and DEF% both get more expensive the more of them you already own. That's why DR is the best survivability value in the game.</p>
   </div>
 
   <div class="tc-section">
@@ -778,10 +781,10 @@
     var hpStr=hpGain.toFixed(2);
     var defStr=defGain.toFixed(2);
     var winner='';
-    if(defGain>hpGain+0.005)winner='<span style="color:#92b6ac;font-weight:700;">+12% DEF wins</span>';
-    else if(hpGain>defGain+0.005)winner='<span style="color:#8a89b0;font-weight:700;">+8% HP wins</span>';
+    if(defGain>hpGain+0.005)winner='<span style="color:#8a89b0;font-weight:700;">+12% DEF wins</span>';
+    else if(hpGain>defGain+0.005)winner='<span style="color:#92b6ac;font-weight:700;">+8% HP wins</span>';
     else winner='<span style="color:#e6edf3;font-weight:700;">Roughly equal</span>';
-    calcResult.innerHTML=winner+'<br><span style="font-size:12px;color:#6e7a8a;">+8% HP: +'+hpStr+'% EHP &nbsp;|&nbsp; +12% DEF: +'+defStr+'% EHP</span>';
+    calcResult.innerHTML=winner+'<br><span style="font-size:12px;color:#6e7a8a;">+8% HP: +'+hpStr+'% toughness &nbsp;|&nbsp; +12% DEF: +'+defStr+'% toughness</span>';
   }
   runCalc();
   calcBaseDEF.addEventListener('input',runCalc);
@@ -840,8 +843,8 @@
     type:'line',
     data:{datasets:[{data:d3,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
-      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){var dr=(i.raw.x/(i.raw.x+100)*100).toFixed(1);return'TTK: '+i.raw.y.toFixed(1)+'x ('+dr+'% DR)';}}})},
-      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'DEF: '+i[0].raw.x;},label:function(i){var dr=(i.raw.x/(i.raw.x+100)*100).toFixed(1);return'Survives '+i.raw.y.toFixed(1)+'× longer ('+dr+'% DR)';}}})},
+      scales:{x:xDef(1000),y:{min:0,title:{display:true,text:'Toughness (× survival time)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',axis:'x',intersect:false}},
     plugins:[wmPlugin]
   });
@@ -853,9 +856,9 @@
     type:'line',
     data:{datasets:[{data:d4,borderColor:tc2,backgroundColor:f2,borderWidth:2,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:tc2,pointHoverBorderColor:sfc,pointHoverBorderWidth:2,fill:true,tension:0}]},
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
-      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'HP%: +'+i[0].raw.x+'%';},label:function(i){return'TTK: '+i.raw.y.toFixed(2)+'x';}}})},
+      plugins:{legend:{display:false},tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return'HP%: +'+i[0].raw.x+'%';},label:function(i){return'Survives '+i.raw.y.toFixed(2)+'× longer';}}})},
       scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'HP% bonuses',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
-        y:{min:1,max:2,title:{display:true,text:'TTK multiplier',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:0.25,color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+        y:{min:1,max:2,title:{display:true,text:'Toughness (× survival time)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:0.25,color:txtM,font:{size:11},callback:function(v){return v+'x';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',axis:'x',intersect:false}},
     plugins:[wmPlugin]
   });
@@ -952,7 +955,7 @@
 
       var gdVal=(currentGDef(222)*100).toFixed(2);
       var ghVal=(currentGHP(0.68)*100).toFixed(2);
-      document.getElementById(unitId).innerHTML='222 DEF | 68% HP% | '+Math.round(existingDefPct*100)+'% DEF% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% EHP</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% EHP</strong>';
+      document.getElementById(unitId).innerHTML='222 DEF | 68% HP% | '+Math.round(existingDefPct*100)+'% DEF% &rarr; '+defLabel+' DEF: <strong>+'+gdVal+'% toughness</strong> vs '+hpLabel+' HP: <strong>+'+ghVal+'% toughness</strong>';
 
       drawWatermark(ctx,W,H,padL,padR,padT,padB);
     }
@@ -967,7 +970,7 @@
       var gd2=(currentGDef(def)*100).toFixed(2);
       var gh2=(currentGHP(hp/100)*100).toFixed(2);
       var w=currentGDef(def)>currentGHP(hp/100)?defLabel+' DEF':hpLabel+' HP';
-      hoverEl.textContent='DEF: '+def+' | HP%: '+hp+'% → '+defLabel+' DEF: +'+gd2+'% EHP, '+hpLabel+' HP: +'+gh2+'% EHP → '+w+' wins';
+      hoverEl.textContent='DEF: '+def+' | HP%: '+hp+'% → '+defLabel+' DEF: +'+gd2+'% toughness, '+hpLabel+' HP: +'+gh2+'% toughness → '+w+' wins';
     });
     canvas.addEventListener('mouseleave',function(){hoverEl.textContent='';});
 
@@ -1014,9 +1017,9 @@
     },
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'rect',padding:16}},
-        tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label;},label:function(i){return i.dataset.label+': +'+i.raw.toFixed(2)+'% EHP';}}})},
+        tooltip:Object.assign({},ttip,{callbacks:{title:function(i){return i[0].label;},label:function(i){return i.dataset.label+': +'+i.raw.toFixed(2)+'% toughness';}}})},
       scales:{x:{title:{display:true,text:'Target total DR',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11}},grid:{display:false},border:{color:axs}},
-        y:{min:0,title:{display:true,text:'EHP gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+        y:{min:0,title:{display:true,text:'Toughness gain (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',intersect:true}},
     plugins:[wmPlugin]
   });
@@ -1036,9 +1039,9 @@
     ]},
     options:{responsive:true,maintainAspectRatio:false,parsing:{xAxisKey:'x',yAxisKey:'y'},
       plugins:{legend:{display:true,labels:{color:txt,font:{size:11},usePointStyle:true,pointStyle:'line',padding:16}},
-        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Total bonus: +'+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(1)+'% TTK';}}})},
+        tooltip:Object.assign({},ttip,{mode:'index',callbacks:{title:function(i){return'Total bonus: +'+i[0].raw.x+'%';},label:function(i){return i.dataset.label+': +'+i.raw.y.toFixed(1)+'% tougher';}}})},
       scales:{x:{type:'linear',min:0,max:80,title:{display:true,text:'% gain in stat (DR / DEF% / HP%)',color:hdr,font:{size:13,weight:500}},ticks:{stepSize:10,color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}},
-        y:{min:0,title:{display:true,text:'% increase in Time To Kill',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
+        y:{min:0,title:{display:true,text:'Toughness gained (%)',color:hdr,font:{size:13,weight:500}},ticks:{color:txtM,font:{size:11},callback:function(v){return'+'+v+'%';}},grid:{color:grd,lineWidth:1},border:{color:axs}}},
       interaction:{mode:'nearest',axis:'x',intersect:false}},
     plugins:[wmPlugin]
   });
