@@ -480,6 +480,7 @@
   /* Thumbnail unreachable — fall back to a plain link rather than a broken image. */
   .video-fallback { display: none; }
   .eidos-video.thumb-failed .video-thumb { display: none; }
+  .eidos-video.playing .video-thumb { display: none; }
 
   .eidos-video.thumb-failed .video-fallback {
     display: inline-block;
@@ -1054,17 +1055,40 @@ function buildVideo(e) {
 
 // Swap the thumbnail for a real embed. Plain youtube.com (not -nocookie) and
 // no ad-suppressing params, so the video serves ads exactly as on YouTube.
+// The thumbnail is hidden rather than removed so playback can be undone.
 document.addEventListener('click', evt => {
   const thumb = evt.target.closest('.video-thumb');
   if (!thumb) return;
+  const wrap = thumb.closest('.eidos-video');
   const iframe = document.createElement('iframe');
   iframe.src = 'https://www.youtube.com/embed/' + thumb.dataset.videoId + '?autoplay=1&playsinline=1&rel=0';
   iframe.title = thumb.dataset.videoLabel || 'Gameplay video';
   iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
   iframe.allowFullscreen = true;
   iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-  thumb.replaceWith(iframe);
+  wrap.classList.add('playing');
+  thumb.insertAdjacentElement('afterend', iframe);
 });
+
+// Dropping the iframe is what actually stops playback — a hidden one keeps
+// playing audio from a section the visitor has closed.
+function stopAllVideos() {
+  document.querySelectorAll('.eidos-video.playing').forEach(v => {
+    const f = v.querySelector('iframe');
+    if (f) f.remove();
+    v.classList.remove('playing');
+  });
+}
+
+// Only one Eidos open at a time, matching the Nexus Anima grid.
+function closeAllEidos() {
+  document.querySelectorAll('.eidos-detail-block.show-block').forEach(b => b.classList.remove('show-block'));
+  document.querySelectorAll('.eidos-entry.active-eidos').forEach(s => s.classList.remove('active-eidos'));
+  document.querySelectorAll('tr.detail-row.visible').forEach(r => r.classList.remove('visible'));
+  document.querySelectorAll('.node.active').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.node-panel.show').forEach(p => p.classList.remove('show'));
+  stopAllVideos();
+}
 
 // One node open at a time across the whole page; clicking the open one closes it.
 document.addEventListener('click', evt => {
@@ -1200,15 +1224,17 @@ async function init() {
           evt.stopPropagation();
           const name = span.dataset.eidosName;
           const block = detailTd.querySelector(`.eidos-detail-block[data-eidos-name="${name}"]`);
-          span.classList.toggle('active-eidos');
-          block.classList.toggle('show-block');
+          const opening = !block.classList.contains('show-block');
+          closeAllEidos();
+          if (!opening) return;
+          block.classList.add('show-block');
+          span.classList.add('active-eidos');
+          detailTr.classList.add('visible');
           // Fetch the thumbnail only once this Eidos is actually opened.
           block.querySelectorAll('img[data-src]').forEach(img => {
             img.src = img.dataset.src;
             img.removeAttribute('data-src');
           });
-          const anyVisible = detailTd.querySelectorAll('.eidos-detail-block.show-block').length > 0;
-          detailTr.classList.toggle('visible', anyVisible);
         });
       });
     });
