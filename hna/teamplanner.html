@@ -738,6 +738,7 @@
       <input id="tcInput" placeholder="Paste an in-game team code to load it here..." autocomplete="off" spellcheck="false">
       <button class="teamcode-btn" id="tcImportBtn">Import</button>
       <button class="teamcode-btn" id="tcExportBtn">Export</button>
+      <button class="teamcode-btn" id="tcLinkBtn">Copy Link</button>
     </div>
     <div class="teamcode-status" id="tcStatus">Import a code exported from the game, or build a team and export a code you can import in-game.</div>
   </div>
@@ -1445,6 +1446,14 @@ function tcInit() {
   } catch (e) { return; }
   document.getElementById('tcImportBtn').addEventListener('click', tcImport);
   document.getElementById('tcExportBtn').addEventListener('click', tcExport);
+  document.getElementById('tcLinkBtn').addEventListener('click', tcShareLink);
+
+  // deep link: /hna/teamplanner?code=... opens with the team on the board
+  const shared = new URLSearchParams(location.search).get('code');
+  if (shared) {
+    document.getElementById('tcInput').value = shared.replace(/ /g, '+');
+    tcImport();
+  }
 }
 
 function tcStatus(msg, cls) {
@@ -1575,7 +1584,7 @@ function tcVarint(n) {
   return out;
 }
 
-function tcExport() {
+function tcBuildCode() {
   const bytes = [];
   let count = 0;
   grid.forEach((row, ri) => row.forEach((cell, ci) => {
@@ -1586,7 +1595,7 @@ function tcExport() {
     bytes.push(0x5A, body.length, ...body);
     count++;
   }));
-  if (!count) { tcStatus('Place at least one unit before exporting.', 'err'); return; }
+  if (!count) return null;
   let slot = 0;
   eidosSlots.forEach(name => {
     if (!name) return;
@@ -1601,16 +1610,36 @@ function tcExport() {
   const payload = new Uint8Array(bytes);
   const h = xxh32(payload, 0);
   const suffix = new Uint8Array([h & 0xFF, (h >>> 8) & 0xFF, (h >>> 16) & 0xFF, (h >>> 24) & 0xFF]);
-  const code = tcBytesToB64(payload) + tcBytesToB64(suffix);
+  return tcBytesToB64(payload) + tcBytesToB64(suffix);
+}
+
+function tcCopy(text, okMsg, fallbackMsg) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => tcStatus(okMsg, 'ok'), () => tcStatus(fallbackMsg, 'ok'));
+  } else {
+    tcStatus(fallbackMsg, 'ok');
+  }
+}
+
+function tcExport() {
+  const code = tcBuildCode();
+  if (!code) { tcStatus('Place at least one unit before exporting.', 'err'); return; }
   const input = document.getElementById('tcInput');
   input.value = code;
   input.select();
-  const done = () => tcStatus('Code copied — paste it in the game\'s team import.', 'ok');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).then(done, () => tcStatus('Code generated — copy it from the box above.', 'ok'));
-  } else {
-    tcStatus('Code generated — copy it from the box above.', 'ok');
-  }
+  tcCopy(code, 'Code copied — paste it in the game\'s team import.',
+         'Code generated — copy it from the box above.');
+}
+
+function tcShareLink() {
+  const code = tcBuildCode();
+  if (!code) { tcStatus('Place at least one unit before sharing.', 'err'); return; }
+  const url = location.origin + location.pathname.replace(/\.html$/, '') + '?code=' + encodeURIComponent(code);
+  const input = document.getElementById('tcInput');
+  input.value = url;
+  input.select();
+  tcCopy(url, 'Link copied — anyone who opens it sees this team.',
+         'Link generated — copy it from the box above.');
 }
 
 </script>
