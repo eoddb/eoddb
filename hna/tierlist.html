@@ -428,6 +428,12 @@
     margin-top: 4px;
   }
 
+  /* Facade + sticky player come from the shared eoddb_hna_video.js. */
+  .tierlist-video {
+    max-width: 520px;
+    margin: 14px 0 4px;
+  }
+
   .yt-link {
     display: inline-flex;
     align-items: center;
@@ -521,6 +527,9 @@
 
 <div class="info-section">
   <h2>Tier List Weight</h2>
+  <div class="tierlist-video" data-yt-id="HWH7vDpobhQ"
+       data-yt-label="Honkai: Nexus Anima Tier List | All Nexus Anima &amp; Best Eidos Characters Ranked"
+       data-yt-back="Tier List video"></div>
   <p>Tier List is weighted heavily for early game lack of resources, small/no 5 star Eidos pool for new players and heavily prioritizes units that are <strong>versatile</strong> and can fit into a large array of rosters rather than other tier lists. If you have every unit in the game, the Top picks will still be relevant, but the tiers below may be more subjective as you can push pure aspect teams with enough resources.</p>
 </div>
 
@@ -803,6 +812,7 @@ async function init() {
 
 init();
 </script>
+<script src="/hna/eoddb_hna_video.js?v=1"></script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
 </html>
