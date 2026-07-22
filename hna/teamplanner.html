@@ -738,7 +738,7 @@
       <input id="tcInput" placeholder="Paste an in-game team code to load it here..." autocomplete="off" spellcheck="false">
       <button class="teamcode-btn" id="tcImportBtn">Import</button>
       <button class="teamcode-btn" id="tcExportBtn">Export</button>
-      <button class="teamcode-btn" id="tcLinkBtn">Copy Link</button>
+      <button class="teamcode-btn" id="tcShareBtn">Share</button>
     </div>
     <div class="teamcode-status" id="tcStatus">Import a code exported from the game, or build a team and export a code you can import in-game.</div>
   </div>
@@ -1199,6 +1199,7 @@ function onEidosSlotClick(slotIdx) {
 }
 
 function renderEidosSlots() {
+  tcMarkDirty();
   document.querySelectorAll('.eidos-slot').forEach((slot, i) => {
     slot.innerHTML = '';
     slot.classList.remove('occupied');
@@ -1231,6 +1232,7 @@ function placeUnit(ri, ci, name) {
   updateCount();
   updateSynergies();
   updateCompanionHearts();
+  tcMarkDirty();
 }
 
 function removeUnit(ri, ci) {
@@ -1251,6 +1253,7 @@ function removeUnit(ri, ci) {
   updateCount();
   updateSynergies();
   updateCompanionHearts();
+  tcMarkDirty();
 }
 
 function updateRoster() {
@@ -1446,7 +1449,7 @@ function tcInit() {
   } catch (e) { return; }
   document.getElementById('tcImportBtn').addEventListener('click', tcImport);
   document.getElementById('tcExportBtn').addEventListener('click', tcExport);
-  document.getElementById('tcLinkBtn').addEventListener('click', tcShareLink);
+  document.getElementById('tcShareBtn').addEventListener('click', tcShareLink);
 
   // deep link: /hna/teamplanner?code=... opens with the team on the board
   const shared = new URLSearchParams(location.search).get('code');
@@ -1638,8 +1641,20 @@ function tcShareLink() {
   const input = document.getElementById('tcInput');
   input.value = url;
   input.select();
-  tcCopy(url, 'Link copied — anyone who opens it sees this team.',
-         'Link generated — copy it from the box above.');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      tcStatus('Link copied — anyone who opens it sees this team.', 'ok');
+      document.getElementById('tcShareBtn').textContent = 'Copied!';
+    }, () => tcStatus('Link generated — copy it from the box above.', 'ok'));
+  } else {
+    tcStatus('Link generated — copy it from the box above.', 'ok');
+  }
+}
+
+// any board change invalidates the "Copied!" state
+function tcMarkDirty() {
+  const b = document.getElementById('tcShareBtn');
+  if (b && b.textContent !== 'Share') b.textContent = 'Share';
 }
 
 </script>
