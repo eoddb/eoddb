@@ -400,6 +400,110 @@
   }
 
 
+  /* ── Gameplay video (facade embed) ──
+     Only the thumbnail loads up front, and only once its Eidos is opened.
+     Nothing is requested from YouTube until the thumbnail is clicked, at
+     which point a normal youtube.com iframe replaces it so the video
+     monetises as usual. */
+  .eidos-media-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .eidos-video {
+    width: 300px;
+    max-width: 100%;
+    margin: 6px 0 10px;
+  }
+
+  .video-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    line-height: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .video-thumb:hover { border-color: var(--accent1); }
+
+  .video-thumb img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+  }
+
+  .video-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(113, 125, 146, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.15s;
+  }
+
+  .video-play::after {
+    content: '';
+    border-style: solid;
+    border-width: 8px 0 8px 13px;
+    border-color: transparent transparent transparent var(--header-text);
+    margin-left: 3px;
+  }
+
+  .video-thumb:hover .video-play {
+    background: var(--accent1);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .video-caption {
+    font-size: 0.66rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+    line-height: 1.45;
+  }
+
+  /* Thumbnail unreachable — fall back to a plain link rather than a broken image. */
+  .video-fallback { display: none; }
+  .eidos-video.thumb-failed .video-thumb { display: none; }
+
+  .eidos-video.thumb-failed .video-fallback {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--accent1);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .eidos-video.thumb-failed .video-fallback:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent1);
+  }
+
+  .eidos-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 8px;
+    display: block;
+  }
+
   /* ── Skill / Eidothread node tracks ──
      One row per skill: a big circle for the skill itself, then its
      Eidognosis nodes as small circles running horizontally. Everything is
@@ -920,6 +1024,48 @@ function buildTracks(rec) {
   return html + '</div><div class="node-panel"></div>';
 }
 
+function ytThumbFail(img) {
+  const v = img.closest('.eidos-video');
+  if (v) v.classList.add('thumb-failed');
+}
+
+// A wrong/pulled video ID doesn't 404 — YouTube answers with a 120x90 grey
+// placeholder and HTTP 200, so onerror never fires. A real mqdefault is
+// always 320 wide, so anything smaller means "no thumbnail".
+function ytThumbCheck(img) {
+  if (img.naturalWidth <= 120) ytThumbFail(img);
+}
+
+// Thumbnail facade — no YouTube request until the visitor actually clicks.
+function buildVideo(e) {
+  const id = String(e.Video || '').trim();
+  if (!/^[\w-]{11}$/.test(id)) return '';
+  const label = e.Name + ' Gameplay in Honkai: Nexus Anima';
+  return `<div class="eidos-video">
+    <button type="button" class="video-thumb" data-video-id="${esc(id)}" data-video-label="${esc(label)}" aria-label="Play ${esc(label)} on YouTube">
+      <img data-src="https://i.ytimg.com/vi/${esc(id)}/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"
+           onload="ytThumbCheck(this)" onerror="ytThumbFail(this)">
+      <span class="video-play" aria-hidden="true"></span>
+    </button>
+    <a class="video-fallback" href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Watch on YouTube &rarr;</a>
+    <div class="video-caption">${esc(label)} &middot; EODGamer</div>
+  </div>`;
+}
+
+// Swap the thumbnail for a real embed. Plain youtube.com (not -nocookie) and
+// no ad-suppressing params, so the video serves ads exactly as on YouTube.
+document.addEventListener('click', evt => {
+  const thumb = evt.target.closest('.video-thumb');
+  if (!thumb) return;
+  const iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed/' + thumb.dataset.videoId + '?autoplay=1&playsinline=1&rel=0';
+  iframe.title = thumb.dataset.videoLabel || 'Gameplay video';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allowFullscreen = true;
+  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+  thumb.replaceWith(iframe);
+});
+
 // One node open at a time across the whole page; clicking the open one closes it.
 document.addEventListener('click', evt => {
   const btn = evt.target.closest('.node');
@@ -1032,11 +1178,14 @@ async function init() {
       aspectEidos.forEach(e => {
         detailHTML += `<div class="eidos-detail-block" data-eidos-name="${e.Name}">
           <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
-          <div class="eidos-energy-stats">
-            <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
-            <div class="energy-stat"><div class="energy-stat-label">Energy Regen (Max)</div><div class="energy-stat-value">${e['Energy Regen (Eidognosis)']}/s</div></div>
-            <div class="energy-stat"><div class="energy-stat-label">Initial Energy (Max)</div><div class="energy-stat-value">${e['Initial Energy (Eidognosis)']}</div></div>
-            <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
+          <div class="eidos-media-row">
+            <div class="eidos-energy-stats">
+              <div class="energy-stat"><div class="energy-stat-label">Energy Cost</div><div class="energy-stat-value">${e['Energy Cost']}</div></div>
+              <div class="energy-stat"><div class="energy-stat-label">Energy Regen (Max)</div><div class="energy-stat-value">${e['Energy Regen (Eidognosis)']}/s</div></div>
+              <div class="energy-stat"><div class="energy-stat-label">Initial Energy (Max)</div><div class="energy-stat-value">${e['Initial Energy (Eidognosis)']}</div></div>
+              <div class="energy-stat"><div class="energy-stat-label">Companion</div><div class="energy-stat-value">${e.Companion}</div></div>
+            </div>
+            ${buildVideo(e)}
           </div>
           ${buildTracks(skillBy[e.Name])}
         </div>`;
@@ -1053,6 +1202,11 @@ async function init() {
           const block = detailTd.querySelector(`.eidos-detail-block[data-eidos-name="${name}"]`);
           span.classList.toggle('active-eidos');
           block.classList.toggle('show-block');
+          // Fetch the thumbnail only once this Eidos is actually opened.
+          block.querySelectorAll('img[data-src]').forEach(img => {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          });
           const anyVisible = detailTd.querySelectorAll('.eidos-detail-block.show-block').length > 0;
           detailTr.classList.toggle('visible', anyVisible);
         });

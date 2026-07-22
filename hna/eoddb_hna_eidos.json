@@ -8,7 +8,8 @@
     "Initial Energy": 120,
     "Companion": "Mimoo",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 140
+    "Initial Energy (Eidognosis)": 140,
+    "Video": null
   },
   {
     "Name": "Hua",
@@ -19,7 +20,8 @@
     "Initial Energy": 90,
     "Companion": "Marshalbird",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 110
+    "Initial Energy (Eidognosis)": 110,
+    "Video": "EwY5JN4n-Rs"
   },
   {
     "Name": "Maple",
@@ -30,7 +32,8 @@
     "Initial Energy": 110,
     "Companion": "Pumpkimp",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 130
+    "Initial Energy (Eidognosis)": 130,
+    "Video": null
   },
   {
     "Name": "Otto",
@@ -41,7 +44,8 @@
     "Initial Energy": 80,
     "Companion": "Chimaura",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 100
+    "Initial Energy (Eidognosis)": 100,
+    "Video": "s5-ZNhsqdWQ"
   },
   {
     "Name": "Kiana",
@@ -52,7 +56,8 @@
     "Initial Energy": 50,
     "Companion": "Fyrklor",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 70
+    "Initial Energy (Eidognosis)": 70,
+    "Video": "1SzIRn5m7WY"
   },
   {
     "Name": "Nanafey",
@@ -63,7 +68,8 @@
     "Initial Energy": 80,
     "Companion": "Beaubeanie",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 100
+    "Initial Energy (Eidognosis)": 100,
+    "Video": "ACBWwW9y4-8"
   },
   {
     "Name": "Shilian",
@@ -74,7 +80,8 @@
     "Initial Energy": 120,
     "Companion": "Framamba",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 140
+    "Initial Energy (Eidognosis)": 140,
+    "Video": "_tanGIBj8Iw"
   },
   {
     "Name": "Herocrates",
@@ -85,7 +92,8 @@
     "Initial Energy": 60,
     "Companion": "Camcorgi",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 80
+    "Initial Energy (Eidognosis)": 80,
+    "Video": "H91orIg3O3I"
   },
   {
     "Name": "Bai Mei",
@@ -96,7 +104,8 @@
     "Initial Energy": 90,
     "Companion": "Seroplumanth",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 110
+    "Initial Energy (Eidognosis)": 110,
+    "Video": "pWil2cjCgPk"
   },
   {
     "Name": "Olympia",
@@ -107,7 +116,8 @@
     "Initial Energy": 100,
     "Companion": "Noctumbra",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 120
+    "Initial Energy (Eidognosis)": 120,
+    "Video": null
   },
   {
     "Name": "Hungrille",
@@ -118,7 +128,8 @@
     "Initial Energy": 60,
     "Companion": "Hoggit",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 80
+    "Initial Energy (Eidognosis)": 80,
+    "Video": "DZDq6wGxZzA"
   },
   {
     "Name": "Parayaya",
@@ -129,7 +140,8 @@
     "Initial Energy": 200,
     "Companion": "Mesmerith",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 230
+    "Initial Energy (Eidognosis)": 230,
+    "Video": "5ygd-nxquCQ"
   },
   {
     "Name": "Blade",
@@ -140,6 +152,7 @@
     "Initial Energy": 80,
     "Companion": "Bladehound",
     "Energy Regen (Eidognosis)": 14,
-    "Initial Energy (Eidognosis)": 100
+    "Initial Energy (Eidognosis)": 100,
+    "Video": "8fnPP72qN9c"
   }
 ]
