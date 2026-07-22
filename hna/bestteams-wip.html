@@ -313,7 +313,7 @@
   </div>
 </div>
 
-<script src="/hna/eoddb_hna_teamboard.js?v=3"></script>
+<script src="/hna/eoddb_hna_teamboard.js?v=4"></script>
 <script>
 const FILTER_KEY = 'eoddb_hna_bt_deselected';
 
@@ -417,7 +417,6 @@ Promise.all([
     if (deselected.has(name)) div.classList.add('off');
     const img = document.createElement('img');
     img.alt = name;
-    img.loading = 'lazy';
     img.src = '/hna/img/' + (isEido ? 'eidos' : 'nexusanima') + '/' + slug(name) + '.webp';
     img.onerror = function () { div.innerHTML = '<span class="ftxt">' + name.slice(0, 3) + '</span>'; };
     div.appendChild(img);

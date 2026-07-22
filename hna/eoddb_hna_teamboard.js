@@ -130,7 +130,7 @@ function renderTeamBoard(container, code, opts) {
         } else {
           const img = document.createElement('img');
           img.alt = name;
-          img.loading = 'lazy';
+      
           img.src = '/hna/img/nexusanima/' + slug(name) + '.webp';
           img.onerror = function () { hex.innerHTML = '<span class="tb-txt">' + name.slice(0, 3) + '</span>'; };
           hex.appendChild(img);
@@ -153,7 +153,7 @@ function renderTeamBoard(container, code, opts) {
       if (name) {
         const img = document.createElement('img');
         img.alt = name;
-        img.loading = 'lazy';
+    
         img.src = '/hna/img/eidos/' + slug(name) + '.webp';
         img.onerror = function () { chip.innerHTML = '<span class="tb-txt">' + name.slice(0, 2) + '</span>'; };
         chip.appendChild(img);
