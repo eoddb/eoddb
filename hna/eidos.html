@@ -405,10 +405,19 @@
      Eidognosis nodes as small circles running horizontally. Everything is
      generated from eoddb_hna_eidos_skill.json, so new Eidos, extra nodes
      or changed values need no edits here. */
-  .track-hint {
+  /* Single page-level footnote — the tracks themselves carry no help text,
+     so opening several Eidos at once doesn't repeat it. */
+  .grid-footnote {
+    max-width: 1400px;
+    margin: -1.4rem auto 2rem;
     font-size: 0.7rem;
+    line-height: 1.7;
     color: var(--text-muted);
-    margin: 2px 0 10px;
+  }
+
+  .grid-footnote strong {
+    color: var(--text);
+    font-weight: 600;
   }
 
   .skill-tracks {
@@ -761,6 +770,11 @@
   <span class="legend-item" data-rarity="4"><span class="legend-dot r4"></span> <span style="color:var(--r4)">4-Star</span></span>
 </div>
 <div class="grid-pair" id="grid-pair"></div>
+<p class="grid-footnote">
+  Click an Eidos to open its skills, then click any circle to read it &mdash; the large circle is the skill itself, the small ones its upgrade nodes.
+  <strong>AS / ES / CS</strong> nodes are <strong>Eidognosis</strong>: ability upgrades bought on a node board, which every player unlocks over time.
+  <strong>ET</strong> nodes are <strong>Eidothreads</strong>, a separate track entirely &mdash; one unlocks per duplicate copy of that Eidos (E1&ndash;E6), each rewriting a specific skill, so they are the scarce progression axis rather than something everyone maxes.
+</p>
 
 <h2 class="energy-section-header">Eidos Skill Analysis</h2>
 <div class="energy-table-wrap" id="energy-table-wrap">
@@ -843,7 +857,7 @@ const NODE_TEXT = {};
 function buildTracks(rec) {
   if (!rec) return '';
   const name = rec.Name;
-  let html = '<div class="track-hint">Click a circle to read it &mdash; big circle is the skill itself, small circles are its Eidognosis nodes.</div><div class="skill-tracks">';
+  let html = '<div class="skill-tracks">';
 
   SKILL_TRACKS.forEach(t => {
     const base = splitNamed(rec[t.field]);
