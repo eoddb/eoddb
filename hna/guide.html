@@ -297,59 +297,10 @@
     color: var(--accent1);
   }
 
-  .video-wrap {
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    position: relative;
-    cursor: pointer;
-    aspect-ratio: 16 / 9;
-    background: #000;
+  /* Facade + sticky player come from the shared eoddb_hna_video.js. */
+  .lore-video {
+    max-width: 560px;
     margin: 1rem 0;
-  }
-
-  .video-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .video-wrap .play-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 68px;
-    height: 48px;
-    background: rgba(0,0,0,0.75);
-    border-radius: 14px;
-    pointer-events: none;
-    transition: background 0.2s;
-  }
-
-  .video-wrap:hover .play-btn {
-    background: #c45454;
-  }
-
-  .video-wrap .play-btn::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 54%;
-    transform: translate(-50%, -50%);
-    border-style: solid;
-    border-width: 10px 0 10px 18px;
-    border-color: transparent transparent transparent #fff;
-  }
-
-  .video-wrap iframe {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 0;
   }
 
   .lore-divider {
@@ -498,10 +449,9 @@
     <p>This lore guide is sourced entirely from in-game dialogue with <strong>Zero</strong>, a mysterious entity who appears to the player early in the game. Zero speaks with knowledge of the player's past, the Old World, and the forces that shape the 81 planes.</p>
     <p>All quotes below are taken directly from Zero's dialogue. Nothing has been summarized or paraphrased &mdash; this is the lore as it was told.</p>
 
-    <div class="video-wrap" id="yt-embed" onclick="loadVideo()">
-      <img src="https://img.youtube.com/vi/RdQV0fzTS1s/maxresdefault.jpg" alt="Zero Explains the Lore of Honkai: Nexus Anima" loading="lazy">
-      <div class="play-btn"></div>
-    </div>
+    <div class="lore-video" data-yt-id="RdQV0fzTS1s"
+         data-yt-label="Zero Explains the Lore of Honkai: Nexus Anima"
+         data-yt-back="Lore video"></div>
 
     <hr class="lore-divider">
 
@@ -733,14 +683,7 @@
 
 </div>
 
-<script>
-function loadVideo() {
-  var w = document.getElementById('yt-embed');
-  w.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/RdQV0fzTS1s?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-  w.style.cursor = 'default';
-}
-</script>
-
+<script src="/hna/eoddb_hna_video.js?v=1"></script>
 <script src="/eoddb_footer.js" defer></script>
 </body>
 </html>

@@ -400,11 +400,10 @@
   }
 
 
-  /* ── Gameplay video (facade embed) ──
-     Only the thumbnail loads up front, and only once its Eidos is opened.
-     Nothing is requested from YouTube until the thumbnail is clicked, at
-     which point a normal youtube.com iframe replaces it so the video
-     monetises as usual. */
+  /* ── Gameplay video ──
+     Facade thumbnail + sticky mini-player live in the shared
+     eoddb_hna_video.js, which also injects their CSS. Only the per-page
+     layout lives here. */
   .eidos-media-row {
     display: flex;
     flex-wrap: wrap;
@@ -412,186 +411,10 @@
     align-items: flex-start;
   }
 
-  .eidos-video {
+  .eidos-video-slot {
     width: 300px;
     max-width: 100%;
     margin: 6px 0 10px;
-  }
-
-  .video-thumb {
-    position: relative;
-    display: block;
-    width: 100%;
-    padding: 0;
-    line-height: 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.15s;
-  }
-
-  .video-thumb:hover { border-color: var(--accent1); }
-
-  .video-thumb img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    display: block;
-  }
-
-  .video-play {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 52px;
-    height: 36px;
-    border-radius: 8px;
-    background: rgba(113, 125, 146, 0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s, transform 0.15s;
-  }
-
-  .video-play::after {
-    content: '';
-    border-style: solid;
-    border-width: 8px 0 8px 13px;
-    border-color: transparent transparent transparent var(--header-text);
-    margin-left: 3px;
-  }
-
-  .video-thumb:hover .video-play {
-    background: var(--accent1);
-    transform: translate(-50%, -50%) scale(1.08);
-  }
-
-  .video-caption {
-    font-size: 0.66rem;
-    color: var(--text-muted);
-    margin-top: 5px;
-    line-height: 1.45;
-  }
-
-  /* Thumbnail unreachable — fall back to a plain link rather than a broken image. */
-  .video-fallback { display: none; }
-  .eidos-video.thumb-failed .video-thumb { display: none; }
-  .eidos-video.playing .video-thumb { display: none; }
-
-  /* Reserves the inline 16:9 box that the floating player docks over. */
-  .video-holder {
-    display: none;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #000;
-  }
-
-  .eidos-video.playing .video-holder { display: block; }
-
-  /* ── Persistent player ──
-     The iframe is created once inside this fixed container and never
-     reparented — moving an iframe in the DOM reloads it, which would
-     restart the video and its ad. Instead the container is positioned over
-     the inline slot while that Eidos is open and on screen, and drops to a
-     corner mini-player otherwise. It is never hidden while playing. */
-  #eidos-player {
-    position: fixed;
-    z-index: 60;
-    display: none;
-  }
-
-  #eidos-player.active { display: block; }
-  #eidos-player .ep-frame { width: 100%; height: 100%; }
-
-  #eidos-player iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
-    border-radius: 8px;
-  }
-
-  #eidos-player .ep-bar { display: none; }
-
-  #eidos-player.mini {
-    right: 16px;
-    bottom: 16px;
-    left: auto;
-    top: auto;
-    width: min(300px, calc(100vw - 24px));
-    height: auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
-  }
-
-  #eidos-player.mini .ep-frame { height: auto; aspect-ratio: 16 / 9; }
-  #eidos-player.mini iframe { border-radius: 0; }
-
-  #eidos-player.mini .ep-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 8px;
-  }
-
-  #eidos-player .ep-back {
-    flex: 1;
-    text-align: left;
-    background: none;
-    border: 0;
-    color: var(--text-muted);
-    font-family: inherit;
-    font-size: 0.68rem;
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  #eidos-player .ep-back:hover { color: var(--header-text); }
-
-  #eidos-player .ep-close {
-    background: none;
-    border: 0;
-    color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1;
-    padding: 2px 4px;
-    cursor: pointer;
-  }
-
-  #eidos-player .ep-close:hover { color: var(--header-text); }
-
-  .eidos-video.thumb-failed .video-fallback {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: var(--accent1);
-    text-decoration: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-  }
-
-  .eidos-video.thumb-failed .video-fallback:hover {
-    background: var(--surface-hover);
-    border-color: var(--accent1);
-  }
-
-  .eidos-video iframe {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border: 0;
-    border-radius: 8px;
-    display: block;
   }
 
   /* ── Skill / Eidothread node tracks ──
@@ -989,6 +812,7 @@
 <div class="error-msg" id="error"></div>
 
 <script src="/hna/eoddb_hna_aspect_colors.js?v=1"></script>
+<script src="/hna/eoddb_hna_video.js?v=1"></script>
 <script>
 
 const ASPECT_ORDER = [
@@ -1114,143 +938,22 @@ function buildTracks(rec) {
   return html + '</div><div class="node-panel"></div>';
 }
 
-function ytThumbFail(img) {
-  const v = img.closest('.eidos-video');
-  if (v) v.classList.add('thumb-failed');
-}
-
-// A wrong/pulled video ID doesn't 404 — YouTube answers with a 120x90 grey
-// placeholder and HTTP 200, so onerror never fires. A real mqdefault is
-// always 320 wide, so anything smaller means "no thumbnail".
-function ytThumbCheck(img) {
-  if (img.naturalWidth <= 120) ytThumbFail(img);
-}
-
-// Thumbnail facade — no YouTube request until the visitor actually clicks.
+// Emits a slot the shared player script fills in. data-yt-lazy holds the
+// thumbnail back until the Eidos is actually opened.
 function buildVideo(e) {
   const id = String(e.Video || '').trim();
   if (!/^[\w-]{11}$/.test(id)) return '';
   const label = e.Name + ' Gameplay in Honkai: Nexus Anima';
-  return `<div class="eidos-video" data-owner="${esc(e.Name)}">
-    <button type="button" class="video-thumb" data-video-id="${esc(id)}" data-video-label="${esc(label)}" data-owner="${esc(e.Name)}" aria-label="Play ${esc(label)} on YouTube">
-      <img data-src="https://i.ytimg.com/vi/${esc(id)}/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"
-           onload="ytThumbCheck(this)" onerror="ytThumbFail(this)">
-      <span class="video-play" aria-hidden="true"></span>
-    </button>
-    <a class="video-fallback" href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener">Watch on YouTube &rarr;</a>
-    <div class="video-holder" aria-hidden="true"></div>
-    <div class="video-caption">${esc(label)} &middot; EODGamer</div>
-  </div>`;
+  return `<div class="eidos-video-slot" data-yt-id="${esc(id)}" data-yt-label="${esc(label)}"` +
+         ` data-yt-back="${esc(e.Name)}" data-yt-lazy="1"></div>`;
 }
 
-// ── Persistent video player ───────────────────────────────────────────────
-// One iframe, created once and never moved: re-parenting an iframe reloads
-// it, which would restart the video and its ad. The fixed container is
-// positioned over the inline slot while that Eidos is open and on screen,
-// and falls back to a corner mini-player when it isn't — so browsing on
-// doesn't interrupt playback, and the player stays visible the whole time.
-let player = null;
-let playerState = { id: null, owner: null };
-
-function videoWrapFor(name) {
-  return document.querySelector(`.eidos-video[data-owner="${name}"]`);
-}
-
-function ensurePlayer() {
-  if (player) return player;
-  player = document.createElement('div');
-  player.id = 'eidos-player';
-  player.innerHTML =
-    '<div class="ep-frame"></div>' +
-    '<div class="ep-bar">' +
-      '<button type="button" class="ep-back"></button>' +
-      '<button type="button" class="ep-close" aria-label="Close video">&times;</button>' +
-    '</div>';
-  document.body.appendChild(player);
-
-  player.querySelector('.ep-close').addEventListener('click', () => stopPlayer());
-
-  // Jump back to the Eidos this video belongs to.
-  player.querySelector('.ep-back').addEventListener('click', () => {
-    const name = playerState.owner;
-    if (!name) return;
-    const span = document.querySelector(`.eidos-entry[data-eidos-name="${name}"]`);
-    if (span && !span.classList.contains('active-eidos')) span.click();
-    const wrap = videoWrapFor(name);
-    if (wrap) wrap.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  });
-
-  let queued = false;
-  const onMove = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => { queued = false; syncPlayer(); });
-  };
-  // Capture phase so scrolling inside the table wrappers counts too.
-  window.addEventListener('scroll', onMove, { passive: true, capture: true });
-  window.addEventListener('resize', onMove, { passive: true });
-  return player;
-}
-
-function startPlayer(id, label, owner) {
-  ensurePlayer();
-  stopPlayer(true);
-  playerState = { id, owner };
-
-  const iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&rel=0';
-  iframe.title = label;
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  iframe.allowFullscreen = true;
-  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-  player.querySelector('.ep-frame').appendChild(iframe);
-  player.querySelector('.ep-back').textContent = '▸ ' + owner;
-
-  const wrap = videoWrapFor(owner);
-  if (wrap) wrap.classList.add('playing');
-  player.classList.add('active');
-  syncPlayer();
-}
-
-// Removing the iframe is what actually stops playback.
-function stopPlayer(keepActive) {
-  if (!player) return;
-  player.querySelector('.ep-frame').innerHTML = '';
-  playerState = { id: null, owner: null };
-  document.querySelectorAll('.eidos-video.playing').forEach(v => v.classList.remove('playing'));
-  if (!keepActive) {
-    player.classList.remove('active', 'mini');
-    player.removeAttribute('style');
-  }
-}
-
-// Dock over the inline slot when it's open and on screen, else go mini.
-function syncPlayer() {
-  if (!player || !playerState.id) return;
-  const wrap = videoWrapFor(playerState.owner);
-  const holder = wrap && wrap.querySelector('.video-holder');
-  let r = null;
-  const vh = window.innerHeight || document.documentElement.clientHeight || 0;
-  if (holder && holder.offsetParent !== null && vh) {
-    const box = holder.getBoundingClientRect();
-    if (box.height > 0 && box.bottom > 70 && box.top < vh - 40) r = box;
-  }
-  if (r) {
-    player.classList.remove('mini');
-    player.style.left = r.left + 'px';
-    player.style.top = r.top + 'px';
-    player.style.width = r.width + 'px';
-    player.style.height = r.height + 'px';
-  } else {
-    player.classList.add('mini');
-    player.removeAttribute('style');
-  }
-}
-
-document.addEventListener('click', evt => {
-  const thumb = evt.target.closest('.video-thumb');
-  if (!thumb) return;
-  startPlayer(thumb.dataset.videoId, thumb.dataset.videoLabel || 'Gameplay video', thumb.dataset.owner);
+// The mini-player's back button asks for its slot to be shown again.
+document.addEventListener('eoddb-video-reveal', evt => {
+  const block = evt.target.closest('.eidos-detail-block');
+  if (!block || block.classList.contains('show-block')) return;
+  const span = document.querySelector(`.eidos-entry[data-eidos-name="${block.dataset.eidosName}"]`);
+  if (span) span.click();
 });
 
 // Only one Eidos open at a time, matching the Nexus Anima grid. Playback is
@@ -1399,16 +1102,13 @@ async function init() {
           const block = detailTd.querySelector(`.eidos-detail-block[data-eidos-name="${name}"]`);
           const opening = !block.classList.contains('show-block');
           closeAllEidos();
-          if (!opening) { syncPlayer(); return; }
+          if (!opening) { EODDB_VIDEO.sync(); return; }
           block.classList.add('show-block');
           span.classList.add('active-eidos');
           detailTr.classList.add('visible');
           // Fetch the thumbnail only once this Eidos is actually opened.
-          block.querySelectorAll('img[data-src]').forEach(img => {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-          });
-          syncPlayer();
+          EODDB_VIDEO.hydrate(block);
+          EODDB_VIDEO.sync();
         });
       });
     });
@@ -1427,6 +1127,9 @@ async function init() {
 
   gridPair.appendChild(buildAspectTable(leftAspects));
   gridPair.appendChild(buildAspectTable(rightAspects));
+
+  // Build the video facades now that the detail blocks exist.
+  EODDB_VIDEO.scan(gridPair);
 
   // Sync first-column widths across both tables
   const firstCols = gridPair.querySelectorAll('td:first-child, th:first-child');
