@@ -4,8 +4,8 @@ const EODDB_NAV_PAGES = [
   { label: 'Nexus Anima', href: '/hna/nexusanima' },
   { label: 'Eidos', href: '/hna/eidos' },
   { label: 'Aspects', href: '/hna/aspects' },
+  { label: 'Best Teams', href: '/hna/teams' },
   { label: 'Team Planner', href: '/hna/teamplanner' },
-  { label: 'Teams', href: '/hna/teams' },
   { label: 'Theorycrafting', href: '/hna/theorycrafting' },
   { label: 'Tier List', href: '/hna/tierlist' },
 ];
