@@ -79,6 +79,95 @@ function tcVarint(n) {
   return out;
 }
 
+// Read-only mini board. renderTeamBoard(containerEl, code, opts?) draws the
+// 4x7 hex grid + eido chips for a teamcode. Returns {units:[names], eidos:[names]}
+// (unknown IDs render as "?" hexes and return null entries). opts.hexSize px.
+function renderTeamBoard(container, code, opts) {
+  opts = opts || {};
+  const size = opts.hexSize || 36;
+  if (!document.getElementById('tb-style')) {
+    const st = document.createElement('style');
+    st.id = 'tb-style';
+    st.textContent =
+      '.tb-board{display:inline-flex;flex-direction:column;gap:2px;padding:10px;background:#111821;border:1px solid #252d3d;border-radius:8px}' +
+      '.tb-row{display:flex;gap:3px}' +
+      '.tb-row.tb-off{margin-left:calc(var(--tb-size)/2 + 3px)}' +
+      '.tb-hex{width:var(--tb-size);height:var(--tb-size);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:#1a2130;display:flex;align-items:center;justify-content:center;position:relative}' +
+      '.tb-hex.tb-filled{background:#252d3d}' +
+      '.tb-hex img{width:calc(100% - 6px);height:calc(100% - 6px);object-fit:cover;border-radius:50%}' +
+      '.tb-hex .tb-txt{font-size:calc(var(--tb-size)*0.28);color:#8a94a3;font-weight:600}' +
+      '.tb-eidos{display:flex;gap:6px;justify-content:center;margin-top:8px}' +
+      '.tb-eido{width:calc(var(--tb-size)*0.8);height:calc(var(--tb-size)*0.8);border-radius:50%;border:1.5px solid #717D92;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#1a2130}' +
+      '.tb-eido img{width:100%;height:100%;object-fit:cover}' +
+      '.tb-eido .tb-txt{font-size:calc(var(--tb-size)*0.24);color:#8a94a3;font-weight:600}';
+    document.head.appendChild(st);
+  }
+  const team = tcDecode(code);
+  const slug = n => n.toLowerCase().replace(/[ .']/g, '');
+  const byCell = {};
+  const unitNames = [];
+  team.units.forEach(u => {
+    const ci = Math.floor(u.pos / 8), ri = (u.pos % 8) - 4;
+    const name = tcUnitName[u.id] || null;
+    unitNames.push(name);
+    if (ri >= 0 && ri < 4 && ci >= 0 && ci < 7) byCell[ri + '-' + ci] = name || '?';
+  });
+  const board = document.createElement('div');
+  board.className = 'tb-board';
+  board.style.setProperty('--tb-size', size + 'px');
+  for (let ri = 0; ri < 4; ri++) {
+    const row = document.createElement('div');
+    row.className = 'tb-row' + (ri % 2 ? ' tb-off' : '');
+    for (let ci = 0; ci < 7; ci++) {
+      const hex = document.createElement('div');
+      hex.className = 'tb-hex';
+      const name = byCell[ri + '-' + ci];
+      if (name) {
+        hex.classList.add('tb-filled');
+        hex.title = name;
+        if (name === '?') {
+          hex.innerHTML = '<span class="tb-txt">?</span>';
+        } else {
+          const img = document.createElement('img');
+          img.alt = name;
+          img.loading = 'lazy';
+          img.src = '/hna/img/nexusanima/' + slug(name) + '.webp';
+          img.onerror = function () { hex.innerHTML = '<span class="tb-txt">' + name.slice(0, 3) + '</span>'; };
+          hex.appendChild(img);
+        }
+      }
+      row.appendChild(hex);
+    }
+    board.appendChild(row);
+  }
+  const eidoNames = [];
+  if (team.eidos.length) {
+    const strip = document.createElement('div');
+    strip.className = 'tb-eidos';
+    team.eidos.forEach(e => {
+      const name = tcEidoName[e.id] || null;
+      eidoNames.push(name);
+      const chip = document.createElement('div');
+      chip.className = 'tb-eido';
+      chip.title = name || 'Unknown Eidos';
+      if (name) {
+        const img = document.createElement('img');
+        img.alt = name;
+        img.loading = 'lazy';
+        img.src = '/hna/img/eidos/' + slug(name) + '.webp';
+        img.onerror = function () { chip.innerHTML = '<span class="tb-txt">' + name.slice(0, 2) + '</span>'; };
+        chip.appendChild(img);
+      } else {
+        chip.innerHTML = '<span class="tb-txt">?</span>';
+      }
+      strip.appendChild(chip);
+    });
+    board.appendChild(strip);
+  }
+  container.appendChild(board);
+  return {units: unitNames, eidos: eidoNames};
+}
+
 // Verify + parse a full code. Returns {units:[{pos,id,lvl,rank}], eidos:[{id,thread}]}
 // with eidos already in slot order, or throws with a user-safe message.
 function tcDecode(code) {

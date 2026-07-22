@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
+<title>Honkai: Nexus Anima Best Teams | EODdb.com</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="The best Honkai: Nexus Anima team comps — curated HNA teams with hex-grid positioning, Eidos pairings, and one-click import into the Team Planner or the game.">
+<meta name="keywords" content="Honkai Nexus Anima best teams, HNA best teams, Nexus Anima team comps, HNA team building, best HNA teams F2P, Nexus Anima teamcode, EODdb">
+<meta property="og:title" content="Honkai: Nexus Anima Best Teams | EODdb.com">
+<meta property="og:description" content="Curated Honkai: Nexus Anima team comps with full hex positioning and Eidos — open any team in the planner or import it straight into the game.">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Honkai: Nexus Anima Best Teams | EODdb.com">
+<meta name="twitter:description" content="Curated HNA team comps with hex positioning, Eidos pairings, and in-game import codes.">
+
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --header-text: #e6edf3;
+    --header-bg: #111821;
+    --accent1: #717D92;
+    --accent1-dim: rgba(113,125,146,0.15);
+    --r3: #8ac4e0;
+    --r4: #b89adb;
+    --r5: #dfc86a;
+    --discord: #5865F2;
+    --discord-dim: rgba(88,101,242,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 980px;
+    margin: 0 auto 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .bt-wrap { max-width: 980px; margin: 0 auto; }
+
+  .bt-intro {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 1.4rem;
+  }
+
+  .section-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+  }
+
+  /* ── Roster filter ── */
+  .bt-filter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 1.4rem;
+  }
+
+  .bt-filter-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .bt-filter-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .bt-filter-icons { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .bt-ficon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: var(--header-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.15s, border-color 0.15s;
+  }
+
+  .bt-ficon img { width: 100%; height: 100%; object-fit: cover; }
+  .bt-ficon .ftxt { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; }
+  .bt-ficon:hover { border-color: var(--accent1); }
+  .bt-ficon.off { opacity: 0.25; }
+  .bt-ficon.eido { border-radius: 8px; }
+
+  .bt-filter-note { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; min-height: 1em; }
+
+  /* ── Team cards ── */
+  .bt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .bt-card.bt-hidden { display: none; }
+
+  .bt-board { flex-shrink: 0; }
+
+  .bt-body { flex: 1; min-width: 0; }
+
+  .bt-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+
+  .bt-title { font-size: 1.05rem; font-weight: 700; color: var(--header-text); }
+
+  .bt-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--accent1-dim);
+    color: var(--accent1);
+  }
+
+  .bt-desc { font-size: 0.85rem; line-height: 1.7; color: var(--text); }
+  .bt-desc p + p { margin-top: 8px; }
+  .bt-desc strong { color: var(--header-text); }
+
+  .bt-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  .bt-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color 0.15s, opacity 0.15s;
+  }
+
+  .bt-btn.primary { background: var(--accent1); border-color: var(--accent1); color: #fff; }
+  .bt-btn:hover { border-color: var(--accent1); }
+  .bt-btn.primary:hover { opacity: 0.85; }
+
+  .bt-empty {
+    text-align: center;
+    padding: 30px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  .divider { margin: 1.8rem auto; border: none; border-top: 1px solid var(--border); }
+
+  /* ── Community CTA ── */
+  .cta-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cta-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--discord-dim);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  .cta-icon svg { width: 22px; height: 22px; fill: var(--discord); }
+  .cta-text { flex: 1; }
+  .cta-text strong { display: block; font-size: 0.9rem; color: var(--header-text); margin-bottom: 2px; }
+  .cta-text span { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+
+  .cta-btn {
+    display: inline-block; padding: 8px 18px; background: var(--discord); color: #fff;
+    font-size: 0.78rem; font-weight: 600; border-radius: 6px; text-decoration: none;
+    white-space: nowrap; transition: opacity 0.15s;
+  }
+  .cta-btn:hover { opacity: 0.85; }
+
+  @media (max-width: 700px) {
+    .bt-card { flex-direction: column; align-items: center; }
+    .bt-body { width: 100%; }
+    .cta-card { flex-direction: column; text-align: center; gap: 12px; }
+  }
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Honkai: Nexus Anima Best Teams",
+ "url": "https://eoddb.com/hna/bestteams",
+ "description": "Curated Honkai: Nexus Anima team comps with hex-grid positioning, Eidos pairings, and importable teamcodes.",
+ "about": {
+  "@type": "VideoGame",
+  "name": "Honkai: Nexus Anima",
+  "publisher": {
+   "@type": "Organization",
+   "name": "HoYoverse"
+  }
+ },
+ "author": {
+  "@type": "Person",
+  "name": "EODGamer",
+  "url": "https://www.youtube.com/@EODGamerSG"
+ },
+ "isPartOf": {
+  "@type": "WebSite",
+  "name": "EODdb.com",
+  "url": "https://eoddb.com/"
+ }
+}
+</script>
+</head>
+<body>
+<script src="/hna/eoddb_hna_nav.js?v=3"></script>
+
+<div class="page-header">
+  <h1>Honkai: Nexus Anima Best Teams</h1>
+  <span class="subtitle">Curated HNA team comps with full hex positioning and Eidos &mdash; open any team in the planner or import it straight into the game.</span>
+</div>
+
+<div class="bt-wrap">
+  <p class="bt-intro">
+    These are the team comps we recommend building toward in Honkai: Nexus Anima —
+    each one shown exactly as it sits on the hex grid, with its Eidos and a working
+    team code. Every board below can be opened in the
+    <a href="/hna/teamplanner" style="color:var(--accent1)">Team Planner</a> to tweak,
+    or copied as a code and imported directly in-game.
+  </p>
+
+  <!-- video slot: when the Best Teams video is live, embed it here via
+       eoddb_hna_video.js (facade + sticky mini-player, per site convention) -->
+
+  <div class="bt-filter" id="btFilter" style="display:none">
+    <div class="bt-filter-title">Filter by your roster</div>
+    <div class="bt-filter-hint">Deselect any Nexus Anima or Eidos you don't own &mdash; teams that need them are hidden automatically.</div>
+    <div class="bt-filter-icons" id="btFilterIcons"></div>
+    <div class="bt-filter-note" id="btFilterNote"></div>
+  </div>
+
+  <div class="section-label">Recommended Teams</div>
+  <div id="btList"></div>
+  <div class="bt-empty" id="btEmpty" style="display:none">
+    Every listed team uses something you've deselected &mdash; re-enable units above to see more.
+  </div>
+
+  <hr class="divider">
+
+  <div class="cta-card">
+    <div class="cta-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+    </div>
+    <div class="cta-text">
+      <strong>Cleared endgame content with your own comp?</strong>
+      <span>Share your team code in the Discord!</span>
+    </div>
+    <a href="https://discord.gg/9trXVCZh7N" class="cta-btn" target="_blank" rel="noopener">Share on Discord</a>
+  </div>
+</div>
+
+<script src="/hna/eoddb_hna_teamboard.js?v=2"></script>
+<script>
+const FILTER_KEY = 'eoddb_hna_bt_deselected';
+
+Promise.all([
+  fetch('/hna/eoddb_hna_nexus_anima_units.json').then(r => r.json()),
+  fetch('/hna/eoddb_hna_eidos.json').then(r => r.json()),
+  fetch('/hna/eoddb_hna_teams.json').then(r => r.json())
+]).then(([unitsData, eidosData, teams]) => {
+  tcInitData(unitsData.map(u => u.Name), eidosData.map(e => e.Name));
+
+  const listEl = document.getElementById('btList');
+  const cards = [];           // {el, members:Set}
+  const usedUnits = new Set(), usedEidos = new Set();
+
+  teams.filter(t => t.featured).forEach(team => {
+    const card = document.createElement('div');
+    card.className = 'bt-card';
+
+    const boardWrap = document.createElement('div');
+    boardWrap.className = 'bt-board';
+    let names;
+    try {
+      names = renderTeamBoard(boardWrap, team.code, {hexSize: 34});
+    } catch (e) { return; }
+
+    const body = document.createElement('div');
+    body.className = 'bt-body';
+
+    const titleRow = document.createElement('div');
+    titleRow.className = 'bt-title-row';
+    const title = document.createElement('span');
+    title.className = 'bt-title';
+    title.textContent = team.title;
+    titleRow.appendChild(title);
+    if (team.cleared) {
+      const tag = document.createElement('span');
+      tag.className = 'bt-tag';
+      tag.textContent = team.cleared;
+      titleRow.appendChild(tag);
+    }
+    body.appendChild(titleRow);
+
+    const desc = document.createElement('div');
+    desc.className = 'bt-desc';
+    desc.innerHTML = team.description || '';
+    body.appendChild(desc);
+
+    const actions = document.createElement('div');
+    actions.className = 'bt-actions';
+    const open = document.createElement('a');
+    open.className = 'bt-btn primary';
+    open.href = '/hna/teamplanner?code=' + encodeURIComponent(team.code);
+    open.textContent = 'Open in Team Planner';
+    actions.appendChild(open);
+    const copy = document.createElement('button');
+    copy.className = 'bt-btn';
+    copy.textContent = 'Copy Team Code';
+    copy.addEventListener('click', () => {
+      const done = () => { copy.textContent = 'Copied!'; setTimeout(() => { copy.textContent = 'Copy Team Code'; }, 2000); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(team.code).then(done, () => {});
+    });
+    actions.appendChild(copy);
+    body.appendChild(actions);
+
+    card.appendChild(boardWrap);
+    card.appendChild(body);
+    listEl.appendChild(card);
+
+    const members = new Set();
+    names.units.forEach(n => { if (n) { members.add(n); usedUnits.add(n); } });
+    names.eidos.forEach(n => { if (n) { members.add(n); usedEidos.add(n); } });
+    cards.push({el: card, members});
+  });
+
+  // ── roster filter: icons for every unit/eido used by any listed team ──
+  if (!cards.length) return;
+  const slug = n => n.toLowerCase().replace(/[ .']/g, '');
+  let deselected;
+  try { deselected = new Set(JSON.parse(localStorage.getItem(FILTER_KEY)) || []); }
+  catch (e) { deselected = new Set(); }
+
+  const iconsEl = document.getElementById('btFilterIcons');
+  const noteEl = document.getElementById('btFilterNote');
+
+  function applyFilter() {
+    let hidden = 0;
+    cards.forEach(c => {
+      const blocked = [...c.members].some(m => deselected.has(m));
+      c.el.classList.toggle('bt-hidden', blocked);
+      if (blocked) hidden++;
+    });
+    document.getElementById('btEmpty').style.display = (hidden === cards.length) ? '' : 'none';
+    noteEl.textContent = hidden ? (hidden + ' team(s) hidden by your roster filter.') : '';
+    try { localStorage.setItem(FILTER_KEY, JSON.stringify([...deselected])); } catch (e) {}
+  }
+
+  function addIcon(name, isEido) {
+    const div = document.createElement('div');
+    div.className = 'bt-ficon' + (isEido ? ' eido' : '');
+    div.title = name + (isEido ? ' (Eidos)' : '');
+    if (deselected.has(name)) div.classList.add('off');
+    const img = document.createElement('img');
+    img.alt = name;
+    img.loading = 'lazy';
+    img.src = '/hna/img/' + (isEido ? 'eidos' : 'nexusanima') + '/' + slug(name) + '.webp';
+    img.onerror = function () { div.innerHTML = '<span class="ftxt">' + name.slice(0, 3) + '</span>'; };
+    div.appendChild(img);
+    div.addEventListener('click', () => {
+      if (deselected.has(name)) { deselected.delete(name); div.classList.remove('off'); }
+      else { deselected.add(name); div.classList.add('off'); }
+      applyFilter();
+    });
+    iconsEl.appendChild(div);
+  }
+
+  [...usedUnits].sort().forEach(n => addIcon(n, false));
+  [...usedEidos].sort().forEach(n => addIcon(n, true));
+  document.getElementById('btFilter').style.display = '';
+  applyFilter();
+});
+</script>
+<script src="/eoddb_footer.js" defer></script>
+</body>
+</html>

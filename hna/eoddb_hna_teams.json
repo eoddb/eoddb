@@ -1,0 +1,32 @@
+[
+  {
+    "id": "bt-001",
+    "code": "WgpIJGgCEAFguJUJWgpINWgCEAFgwJoMWgpILmgCEAFgtJ4MWgpIN2gCEAFg5JcJOgMQxBM6BWgBEIwV34355A==",
+    "era": "beta1",
+    "featured": true,
+    "title": "F2P Starter Core",
+    "cleared": "",
+    "date": "2026-07-22",
+    "description": ""
+  },
+  {
+    "id": "bt-002",
+    "code": "WgxIBVAGaAIQMmCAlwlaDEgkUAZoAhAyYLiVCVoKSCVoAhAyYPi+EFoMSCxQAWgCEDJgmJ8MWgxILlAGaAIQMmC0ngxaDEg1UAJoAhAyYMCaDFoMSDdQBmgCEDJg5JcJWgxIB1ABaAIQMmCAiA5wAjoFEMQTGAE6BWgBEOgHOgdoAhCMFRgD87uXRQ==",
+    "era": "beta1",
+    "featured": true,
+    "title": "Expanded Core",
+    "cleared": "",
+    "date": "2026-07-22",
+    "description": ""
+  },
+  {
+    "id": "bt-003",
+    "code": "WgpIHmgCEDJgnKUEWgxIJFAGaAIQMmC4lQlaCkglaAIQMmD4vhBaDEgsUAFoAhAyYJifDFoMSC5QAmgCEDJgwJoMWgxINFAGaAIQMmCAlwlaDEg1UAJoAhAyYPCiBFoMSDdQBmgCEDJgtJ4MOgYQwKIBGAM6B2gBENAPGAE6BmgCELDRAQ==knXHEA==",
+    "era": "beta1",
+    "featured": true,
+    "title": "Seroplumanth R2 Core",
+    "cleared": "",
+    "date": "2026-07-22",
+    "description": ""
+  }
+]

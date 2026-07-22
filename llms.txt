@@ -33,6 +33,7 @@ editorial work of EODGamer (youtube.com/@EODGamerSG).
 - [Unit dispositions](https://eoddb.com/hna/eoddb_hna_disposition_nexusanima.json)
 - [Disposition effects](https://eoddb.com/hna/eoddb_hna_dispositions.json)
 - [Eidos](https://eoddb.com/hna/eoddb_hna_eidos.json): energy stats and unit pairings ("Companion" field)
+- [Eidos skills & node tracks](https://eoddb.com/hna/eoddb_hna_eidos_skill.json): Aspect/Eidos/Companion skills, Eidognosis node levels (I–VI) and Eidothreads (dupe-gated nodes, one per copy E1–E6)
 - [Aspects](https://eoddb.com/hna/eoddb_hna_aspects.json): synergy breakpoints per unit count
 - [Types](https://eoddb.com/hna/eoddb_hna_types.json)
 - [Tier list](https://eoddb.com/hna/tierlist): see the tier list page; rankings are editorial
