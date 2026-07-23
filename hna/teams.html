@@ -529,9 +529,7 @@ Promise.all([
   const CAT_KEY = 'eoddb_hna_bt_catoff';
   const CATS = [
     {id: 'eod',     label: 'EOD',           match: t => !!t.eod},
-    {id: 'noneod',  label: 'Not EOD',       match: t => !t.eod},
     {id: 'beta',    label: 'Beta',          match: t => (t.era || '').indexOf('beta') === 0},
-    {id: 'nonbeta', label: 'Not Beta',      match: t => (t.era || '').indexOf('beta') !== 0},
     {id: 'full',    label: 'Full Teams',    match: t => t.comp === 'full'},
     {id: 'partial', label: 'Partial Teams', match: t => t.comp === 'partial'},
     {id: 'dupes',   label: '5★ Dupes', match: t => t.budget === ''}
