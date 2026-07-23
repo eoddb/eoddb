@@ -149,5 +149,36 @@
     "cleared": "",
     "date": "2026-07-23",
     "description": "<p>Balanced Parayaya Team Comp for backline damage</p>"
+  },
+  {
+    "id": "bt-006",
+    "code": "WgxIFFAGaAIQMmCY6gxaDEgWUAZoAhAyYOSXCVoKSBxoAhAyYNDoDFoKSB1oAhAyYPi+EFoKSCRoAhAyYJifDFoKSCVoAhAyYMCaDFoMSCxQBmgCEDJg/OoMWgxIL1AGaAIQMmC0ngxwBDoEELitAToHaAEQxBMYAjoHaAIQ6AcYBA==gTnioQ==",
+    "era": "beta1",
+    "comp": "full",
+    "budget": "nodupes",
+    "eod": true,
+    "breakpoints": [
+      "Memory 3",
+      "Strength 3"
+    ],
+    "notable": [],
+    "magic": [
+      "Starspine",
+      "Dragamour"
+    ],
+    "physical": [
+      "Hugglebeary",
+      "Bladehound",
+      "Cinechel",
+      "Camcorgi",
+      "Fyrklor",
+      "Framamba"
+    ],
+    "featured": true,
+    "highlight": false,
+    "title": "Blade Team",
+    "cleared": "",
+    "date": "2026-07-23",
+    "description": "<p>Blade Team Comp</p>"
   }
 ]
