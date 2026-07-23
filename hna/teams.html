@@ -359,6 +359,7 @@
        eoddb_hna_video.js (facade + sticky mini-player, per site convention) -->
 
   <div class="bt-cat-filters" id="btCatFilters" style="display:none"></div>
+  <div class="bt-filter-note" id="btCatNote" style="margin: -6px 0 1rem"></div>
 
   <div class="bt-filter" id="btFilter" style="display:none">
     <div class="bt-filter-title">Filter by your roster</div>
@@ -528,11 +529,16 @@ Promise.all([
   // ── category filter pills: EOD / era / comp / 5★ dupes ──
   const CAT_KEY = 'eoddb_hna_bt_catoff';
   const CATS = [
-    {id: 'eod',     label: 'EOD',           match: t => !!t.eod},
-    {id: 'beta',    label: 'Beta',          match: t => (t.era || '').indexOf('beta') === 0},
-    {id: 'full',    label: 'Full Teams',    match: t => t.comp === 'full'},
-    {id: 'partial', label: 'Partial Teams', match: t => t.comp === 'partial'},
-    {id: 'dupes',   label: '5★ Dupes', match: t => t.budget === ''}
+    {id: 'eod',     label: 'EOD',           desc: "EOD's own comps",
+     match: t => !!t.eod},
+    {id: 'beta',    label: 'Beta',          desc: 'teams from the beta',
+     match: t => (t.era || '').indexOf('beta') === 0},
+    {id: 'full',    label: 'Full Teams',    desc: 'full teams (8 anima + 3 Eidos)',
+     match: t => t.comp === 'full'},
+    {id: 'partial', label: 'Partial Teams', desc: 'partial teams (fewer than 8 + 3)',
+     match: t => t.comp === 'partial'},
+    {id: 'dupes',   label: '5★ Dupes', desc: 'teams needing 5★ dupes (R1+/E1+)',
+     match: t => t.budget === ''}
   ];
   let catOff;
   try { catOff = new Set(JSON.parse(localStorage.getItem(CAT_KEY)) || []); }
@@ -543,8 +549,14 @@ Promise.all([
     b.className = 'tag-btn' + (catOff.has(cat.id) ? '' : ' active');
     b.textContent = cat.label;
     b.addEventListener('click', () => {
-      if (catOff.has(cat.id)) { catOff.delete(cat.id); b.classList.add('active'); }
-      else { catOff.add(cat.id); b.classList.remove('active'); }
+      const note = document.getElementById('btCatNote');
+      if (catOff.has(cat.id)) {
+        catOff.delete(cat.id); b.classList.add('active');
+        note.textContent = 'Showing ' + cat.desc + ' again.';
+      } else {
+        catOff.add(cat.id); b.classList.remove('active');
+        note.textContent = 'Hiding ' + cat.desc + ' — click again to undo.';
+      }
       applyFilter();
     });
     catBar.appendChild(b);
