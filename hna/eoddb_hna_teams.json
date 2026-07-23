@@ -118,20 +118,17 @@
   },
   {
     "id": "bt-005",
-    "code": "WgpIBmgCEDJgwIsRWgxIHFAGaAIQMmCY6gxaCkgdaAIQMmD4vhBaDEgkUAZoAhAyYJiQEVoMSCxQAWgCEDJgmJ8MWgxILVACaAIQMmD8kBFaDEg0UAZoAhAyYOyNEVoMSDVQAmgCEDJgwJoMcAQ6BBD0sgE6B2gBEMQTGAI6B2gCELAJGAQ=+5SpXw==",
+    "code": "WgpIBmgCEDJgwIsRWgxIHFAGaAIQMmCY6gxaCkgdaAIQMmD4vhBaDEgkUAZoAhAyYJiQEVoKSCxoAhAyYJifDFoMSC1QAmgCEDJg/JARWgxINFAGaAIQMmDsjRFaCkg1aAIQMmDAmgxwBDoEEPSyAToHaAEQxBMYAjoHaAIQsAkYBA==d+02AA==",
     "era": "beta1",
     "comp": "full",
-    "budget": "",
+    "budget": "nodupes",
     "eod": true,
     "breakpoints": [
       "Hate 3",
       "Memory 3",
       "Strength 1"
     ],
-    "notable": [
-      "Cinechel (R1)",
-      "Camcorgi (R2)"
-    ],
+    "notable": [],
     "magic": [
       "Dragamour"
     ],
