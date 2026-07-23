@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7864601453573272" crossorigin="anonymous"></script>
+<title>PoE2 Item Triage (WIP) | EODdb.com</title>
+<meta name="description" content="Work-in-progress Path of Exile 2 item triage tool — paste an in-game item copy and see its modifiers, tiers, and rolls broken down.">
+<meta name="keywords" content="PoE2 item checker, Path of Exile 2 item parser, PoE2 modifier tiers, EODdb">
+<meta property="og:title" content="PoE2 Item Triage (WIP) | EODdb.com">
+<meta property="og:description" content="Paste a PoE2 item and see its modifiers, tiers, and rolls broken down.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PoE2 Item Triage (WIP) | EODdb.com">
+<meta name="twitter:description" content="Paste a PoE2 item and see its modifiers, tiers, and rolls broken down.">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b25;
+    --surface-hover: #1c2233;
+    --border: #252d3d;
+    --text: #c9d1d9;
+    --text-muted: #6e7a8a;
+    --header-text: #e6edf3;
+    --header-bg: #111821;
+    --accent1: #717D92;
+    --accent1-dim: rgba(113,125,146,0.12);
+    --sage: #82A69C;
+    --khaki: #A69C7D;
+    --plum: #755F64;
+    --stone: #9E9C93;
+    --taupe: #7A6E69;
+    --violet: #66606E;
+    --danger: #a65b5f;
+    --danger-text: #d4918f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 1100px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--header-text);
+  }
+  .page-header .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .wip-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(166,156,125,0.15);
+    color: var(--khaki);
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+
+  .panel {
+    max-width: 1100px;
+    margin: 0 auto 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .panel h2 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .paste-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .paste-hint kbd {
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--header-text);
+  }
+
+  #paste-box {
+    width: 100%;
+    min-height: 130px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 12px;
+    resize: vertical;
+  }
+  #paste-box:focus { outline: none; border-color: var(--accent1); }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text);
+    background: transparent;
+    font-size: 0.8rem;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn:hover { background: var(--surface-hover); border-color: var(--accent1); }
+  .btn.primary { border-color: var(--accent1); background: var(--accent1-dim); color: var(--header-text); }
+
+  /* ── Item overview controls ── */
+  .control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .control label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .control select, .control input[type="number"], .control input[type="text"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+  .control select:focus, .control input:focus { outline: none; border-color: var(--accent1); }
+
+  #item-name-line { font-size: 0.9rem; color: var(--header-text); font-weight: 600; margin-bottom: 10px; }
+  #item-name-line .base { color: var(--text-muted); font-weight: 400; }
+
+  .flag-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .flag-row label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.8rem; color: var(--text); cursor: pointer;
+  }
+  .flag-row input { accent-color: var(--accent1); }
+
+  .meta-line { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
+  .meta-line b { color: var(--text); font-weight: 600; }
+
+  /* ── Mod list ── */
+  .mod-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--bg);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .mod-main { flex: 1; min-width: 0; }
+  .mod-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; align-items: center; }
+  .badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .badge.prefix     { background: rgba(113,125,146,0.18); color: #a9b4c6; }
+  .badge.suffix     { background: rgba(102,96,110,0.25);  color: #b3aec0; }
+  .badge.implicit   { background: rgba(158,156,147,0.15); color: var(--stone); }
+  .badge.enhancement{ background: rgba(122,110,105,0.22); color: #b0a49e; }
+  .badge.unique     { background: rgba(166,156,125,0.18); color: #c4b998; }
+  .badge.unknown    { background: rgba(166,91,95,0.18);   color: var(--danger-text); }
+  .badge.marker-desecrated { background: rgba(117,95,100,0.3); color: #b394a0; }
+  .badge.marker-fractured  { background: rgba(130,166,156,0.16); color: var(--sage); }
+  .badge.marker-boost      { background: rgba(166,156,125,0.15); color: var(--khaki); }
+  .badge.marker-unscalable { background: rgba(158,156,147,0.12); color: var(--text-muted); }
+  .mod-name { font-size: 0.7rem; color: var(--text-muted); }
+
+  .mod-line { font-size: 0.82rem; color: var(--text); line-height: 1.5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .mod-tags { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.03em; }
+
+  .roll { display: inline-flex; align-items: center; gap: 5px; }
+  .roll-bar {
+    width: 54px; height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .roll-fill { height: 100%; border-radius: 3px; }
+  .roll-fill.hi  { background: var(--sage); }
+  .roll-fill.mid { background: var(--khaki); }
+  .roll-fill.lo  { background: var(--danger); }
+  .roll-pct { font-size: 0.65rem; color: var(--text-muted); }
+  .roll-out { font-size: 0.65rem; color: var(--khaki); }
+
+  .mod-remove {
+    border: none; background: none; cursor: pointer;
+    color: var(--text-muted); font-size: 0.9rem; line-height: 1;
+    padding: 2px 4px; border-radius: 4px;
+  }
+  .mod-remove:hover { color: var(--danger-text); background: rgba(166,91,95,0.12); }
+
+  .add-mod-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .add-mod-row select, .add-mod-row input {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: inherit; font-size: 0.8rem; padding: 6px 8px;
+  }
+  .add-mod-row input { flex: 1; min-width: 180px; }
+
+  .empty-note { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+  /* ── Unparsed ── */
+  #unparsed-panel { border-color: rgba(166,91,95,0.45); }
+  #unparsed-panel h2 { color: var(--danger-text); }
+  #unparsed-list li {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.75rem;
+    color: var(--danger-text);
+    list-style: none;
+    padding: 2px 0;
+  }
+
+  details.debug { max-width: 1100px; margin: 0 auto 1.2rem; }
+  details.debug summary {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); cursor: pointer; user-select: none;
+  }
+  details.debug pre {
+    margin-top: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    overflow-x: auto;
+    max-height: 400px;
+  }
+
+  .hidden { display: none; }
+
+  @media (max-width: 600px) {
+    body { padding: 2rem 0.8rem; }
+    .panel { padding: 14px 14px; }
+  }
+</style>
+</head>
+<body>
+<script src="/poe2/eoddb_poe2_nav.js?v=3"></script>
+
+<div class="page-header">
+  <h1>Item Triage<span class="wip-tag">Work in progress</span></h1>
+  <div class="subtitle">Paste a Path of Exile 2 item — the tool reads its modifiers, tiers, and rolls. Triage verdicts coming next.</div>
+</div>
+
+<div class="panel">
+  <h2>Paste your item</h2>
+  <div class="paste-hint">
+    In game: hover the item and press <kbd>Ctrl</kbd>+<kbd>C</kbd>, then paste here.
+    Everything runs in your browser — nothing is uploaded. If a line isn't recognised, it's shown below so you can adjust the controls yourself.
+  </div>
+  <textarea id="paste-box" spellcheck="false" placeholder="Item Class: Bows&#10;Rarity: Rare&#10;..."></textarea>
+  <div class="btn-row">
+    <button class="btn primary" id="btn-parse">Parse item</button>
+    <button class="btn" id="btn-example">Try an example</button>
+    <button class="btn" id="btn-clear">Clear</button>
+  </div>
+</div>
+
+<div class="panel" id="overview-panel">
+  <h2>Item overview</h2>
+  <div id="item-name-line" class="hidden"></div>
+  <div class="control-grid">
+    <div class="control">
+      <label for="sel-class">Item class</label>
+      <select id="sel-class"></select>
+    </div>
+    <div class="control">
+      <label for="sel-rarity">Rarity</label>
+      <select id="sel-rarity">
+        <option>Normal</option><option>Magic</option><option selected>Rare</option><option>Unique</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="inp-ilvl">Item level</label>
+      <input type="number" id="inp-ilvl" min="1" max="100" placeholder="—">
+    </div>
+    <div class="control">
+      <label for="inp-quality">Quality %</label>
+      <input type="number" id="inp-quality" min="0" max="50" placeholder="—">
+    </div>
+    <div class="control">
+      <label for="inp-qgroup">Catalyst group</label>
+      <input type="text" id="inp-qgroup" placeholder="e.g. Lightning Modifiers">
+    </div>
+  </div>
+  <div class="flag-row">
+    <label><input type="checkbox" id="flag-corrupted"> Corrupted</label>
+    <label><input type="checkbox" id="flag-sanctified"> Sanctified</label>
+    <label><input type="checkbox" id="flag-fractured"> Fractured</label>
+    <label><input type="checkbox" id="flag-mirrored"> Mirrored</label>
+  </div>
+  <div class="meta-line" id="meta-line"></div>
+</div>
+
+<div class="panel">
+  <h2>Modifiers</h2>
+  <div id="mod-list"><div class="empty-note">No modifiers yet — paste an item above or add one manually.</div></div>
+  <div class="add-mod-row">
+    <select id="add-kind">
+      <option value="prefix">Prefix</option>
+      <option value="suffix">Suffix</option>
+      <option value="implicit">Implicit</option>
+    </select>
+    <input type="text" id="add-text" placeholder="Type a modifier line, e.g. +38% to Lightning Resistance">
+    <button class="btn" id="btn-add-mod">Add</button>
+  </div>
+</div>
+
+<div class="panel hidden" id="unparsed-panel">
+  <h2>Unrecognised lines</h2>
+  <div class="paste-hint">These lines weren't understood — the format may have changed, or this wasn't an item copy. Set the controls manually for anything missing.</div>
+  <ul id="unparsed-list"></ul>
+</div>
+
+<details class="debug">
+  <summary>Parsed state (debug)</summary>
+  <pre id="debug-json">—</pre>
+</details>
+
+<script src="/poe2/eoddb_poe2_itemparse.js?v=1"></script>
+<script>
+(function () {
+  "use strict";
+
+  var ITEM_CLASSES = ["Amulets","Belts","Body Armours","Boots","Bows","Charms","Crossbows","Foci","Gloves","Helmets","Jewels","One Hand Maces","Quarterstaves","Quivers","Rings","Sceptres","Shields","Spears","Staves","Two Hand Maces","Wands"];
+
+  var EXAMPLE = [
+    "Item Class: Rings","Rarity: Rare","Carrion Gyre","Gold Ring","--------",
+    "Quality (Lightning Modifiers): +20% (augmented)","--------",
+    "Requires: Level 60","--------","Item Level: 79","--------",
+    "{ Enhancement — Damage }","59(40-60)% increased Damage","--------",
+    "{ Implicit Modifier }","10(6-15)% increased Rarity of Items found","--------",
+    "{ Prefix Modifier \"Flaring\" (Tier: 1) — Damage, Physical, Attack }",
+    "Adds 18(12-19) to 23(22-32) Physical Damage to Attacks",
+    "{ Prefix Modifier \"Sparking\" (Tier: 5) — Damage, Elemental, Lightning, Attack — 20% Increased }",
+    "Adds 1 to 30(28-32) Lightning damage to Attacks",
+    "{ Suffix Modifier \"of Archaeology\" (Tier: 1) }",
+    "17(15-18)% increased Rarity of Items found",
+    "{ Suffix Modifier \"of the Leopard\" (Tier: 3) — Attribute }",
+    "+26(25-27) to Dexterity",
+    "{ Desecrated Suffix Modifier \"of the Yeti\" (Tier: 5) — Elemental, Cold, Resistance }",
+    "+24(21-25)% to Cold Resistance","--------","Corrupted"
+  ].join("\n");
+
+  /* ── State: single source of truth. Dropdowns and the parser both write
+     here; render() is the only reader. ── */
+  var state = emptyState();
+
+  function emptyState() {
+    return {
+      ok: false, itemClass: "", rarity: "Rare", name: null, base: null,
+      quality: null, itemLevel: null, sockets: null,
+      requires: null, properties: [], runes: [], enchants: [], grantsSkill: null,
+      implicits: [], enhancements: [], mods: [],
+      flags: { corrupted: false, sanctified: false, fractured: false, mirrored: false, unmodifiable: false },
+      flavour: [], unparsed: []
+    };
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Seed item-class dropdown (blank first entry = "not set").
+  (function () {
+    var sel = $("sel-class");
+    sel.appendChild(new Option("—", ""));
+    ITEM_CLASSES.forEach(function (c) { sel.appendChild(new Option(c, c)); });
+  })();
+
+  function ensureClassOption(value) {
+    var sel = $("sel-class");
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === value) { return; }
+    }
+    sel.appendChild(new Option(value, value));
+  }
+
+  /* ── Rendering ── */
+
+  function rollSpan(v) {
+    var span = document.createElement("span");
+    span.className = "roll";
+    if (v.max === v.min) { return span; }
+    var pct = (v.value - v.min) / (v.max - v.min);
+    var outside = pct < 0 || pct > 1;
+    var clamped = Math.max(0, Math.min(1, pct));
+    var bar = document.createElement("span");
+    bar.className = "roll-bar";
+    var fill = document.createElement("span");
+    fill.className = "roll-fill " + (clamped >= 0.75 ? "hi" : clamped >= 0.4 ? "mid" : "lo");
+    fill.style.width = (clamped * 100).toFixed(0) + "%";
+    bar.appendChild(fill);
+    span.appendChild(bar);
+    var pctEl = document.createElement("span");
+    pctEl.className = "roll-pct";
+    pctEl.textContent = v.value + " of " + v.min + "–" + v.max;
+    span.appendChild(pctEl);
+    if (outside) {
+      var out = document.createElement("span");
+      out.className = "roll-out";
+      out.textContent = "outside range";
+      out.title = "Roll is outside the tier's normal range — usually a sanctified item.";
+      span.appendChild(out);
+    }
+    span.title = outside ? "Outside normal tier range" : (clamped * 100).toFixed(0) + "% of the tier range";
+    return span;
+  }
+
+  function badge(cls, text) {
+    var b = document.createElement("span");
+    b.className = "badge " + cls;
+    b.textContent = text;
+    return b;
+  }
+
+  function modRow(mod, listName, index) {
+    var row = document.createElement("div");
+    row.className = "mod-row";
+    var main = document.createElement("div");
+    main.className = "mod-main";
+
+    var badges = document.createElement("div");
+    badges.className = "mod-badges";
+    var kindClass = ["prefix","suffix","implicit","enhancement","unique"].indexOf(mod.kind) !== -1 ? mod.kind : "unknown";
+    badges.appendChild(badge(kindClass, mod.kind + (mod.tier !== null && mod.tier !== undefined ? " T" + mod.tier : "")));
+    if (mod.desecrated) { badges.appendChild(badge("marker-desecrated", "Desecrated")); }
+    if (mod.fractured)  { badges.appendChild(badge("marker-fractured", "Fractured")); }
+    if (mod.qualityBoost) { badges.appendChild(badge("marker-boost", "+" + mod.qualityBoost + "% quality")); }
+    if (mod.unscalable) { badges.appendChild(badge("marker-unscalable", "Unscalable")); }
+    if (mod.name) {
+      var nm = document.createElement("span");
+      nm.className = "mod-name";
+      nm.textContent = "“" + mod.name + "”";
+      badges.appendChild(nm);
+    }
+    main.appendChild(badges);
+
+    (mod.lines || []).forEach(function (line) {
+      var l = document.createElement("div");
+      l.className = "mod-line";
+      var t = document.createElement("span");
+      t.textContent = line.text;
+      l.appendChild(t);
+      (line.values || []).forEach(function (v) { l.appendChild(rollSpan(v)); });
+      main.appendChild(l);
+    });
+
+    if (mod.tags && mod.tags.length) {
+      var tg = document.createElement("div");
+      tg.className = "mod-tags";
+      tg.textContent = "tags: " + mod.tags.join(", ");
+      main.appendChild(tg);
+    }
+
+    row.appendChild(main);
+
+    var rm = document.createElement("button");
+    rm.className = "mod-remove";
+    rm.title = "Remove this modifier";
+    rm.textContent = "×";
+    rm.addEventListener("click", function () {
+      state[listName].splice(index, 1);
+      render();
+    });
+    row.appendChild(rm);
+    return row;
+  }
+
+  function render() {
+    // Overview controls
+    if (state.itemClass) { ensureClassOption(state.itemClass); }
+    $("sel-class").value = state.itemClass || "";
+    $("sel-rarity").value = state.rarity || "Rare";
+    $("inp-ilvl").value = state.itemLevel !== null && state.itemLevel !== undefined ? state.itemLevel : "";
+    $("inp-quality").value = state.quality ? state.quality.value : "";
+    $("inp-qgroup").value = state.quality && state.quality.group ? state.quality.group : "";
+    $("flag-corrupted").checked = !!state.flags.corrupted;
+    $("flag-sanctified").checked = !!state.flags.sanctified;
+    $("flag-fractured").checked = !!state.flags.fractured;
+    $("flag-mirrored").checked = !!state.flags.mirrored;
+
+    var nameLine = $("item-name-line");
+    if (state.name) {
+      nameLine.classList.remove("hidden");
+      nameLine.innerHTML = "";
+      nameLine.appendChild(document.createTextNode(state.name));
+      if (state.base) {
+        var b = document.createElement("span");
+        b.className = "base";
+        b.textContent = " — " + state.base;
+        nameLine.appendChild(b);
+      }
+    } else {
+      nameLine.classList.add("hidden");
+    }
+
+    // Meta line: requires / sockets / runes / granted skill / properties
+    var meta = [];
+    if (state.requires && state.requires.level) {
+      var reqTxt = "Level " + state.requires.level;
+      (state.requires.attributes || []).forEach(function (a) { reqTxt += ", " + a.value + " " + a.attr; });
+      meta.push("<b>Requires:</b> " + reqTxt);
+    }
+    if (state.sockets) { meta.push("<b>Sockets:</b> " + state.sockets); }
+    (state.runes || []).forEach(function (r) { meta.push("<b>Rune:</b> " + r); });
+    (state.enchants || []).forEach(function (e) { meta.push("<b>Enchant:</b> " + e); });
+    if (state.grantsSkill) {
+      meta.push("<b>Grants:</b> " + (state.grantsSkill.level ? "Level " + state.grantsSkill.level + " " : "") + state.grantsSkill.name);
+    }
+    (state.properties || []).forEach(function (p) { meta.push("<b>" + p.name + ":</b> " + p.value); });
+    $("meta-line").innerHTML = meta.join(" &nbsp;·&nbsp; ");
+
+    // Mods
+    var list = $("mod-list");
+    list.innerHTML = "";
+    var total = 0;
+    [["enhancements", state.enhancements], ["implicits", state.implicits], ["mods", state.mods]].forEach(function (pair) {
+      pair[1].forEach(function (mod, i) {
+        list.appendChild(modRow(mod, pair[0], i));
+        total++;
+      });
+    });
+    if (!total) {
+      var e = document.createElement("div");
+      e.className = "empty-note";
+      e.textContent = "No modifiers yet — paste an item above or add one manually.";
+      list.appendChild(e);
+    }
+
+    // Unparsed
+    var up = $("unparsed-panel");
+    var ul = $("unparsed-list");
+    ul.innerHTML = "";
+    if (state.unparsed && state.unparsed.length) {
+      up.classList.remove("hidden");
+      state.unparsed.forEach(function (line) {
+        var li = document.createElement("li");
+        li.textContent = "! " + line;
+        ul.appendChild(li);
+      });
+    } else {
+      up.classList.add("hidden");
+    }
+
+    $("debug-json").textContent = JSON.stringify(state, null, 2);
+  }
+
+  /* ── Parse-to-prefill ── */
+
+  function parseNow() {
+    var text = $("paste-box").value;
+    if (!text.trim()) { return; }
+    var res = window.eoddbItemParse.parseItem(text);
+    if (res.ok) {
+      state = res;
+    } else {
+      state = emptyState();
+      state.unparsed = res.unparsed.length ? res.unparsed : ["(nothing recognisable — was that a PoE2 item copy?)"];
+    }
+    render();
+  }
+
+  $("btn-parse").addEventListener("click", parseNow);
+  $("paste-box").addEventListener("paste", function () { setTimeout(parseNow, 0); });
+  $("btn-example").addEventListener("click", function () {
+    $("paste-box").value = EXAMPLE;
+    parseNow();
+  });
+  $("btn-clear").addEventListener("click", function () {
+    $("paste-box").value = "";
+    state = emptyState();
+    render();
+  });
+
+  /* ── Manual control writes (the user confirming/correcting the automation) ── */
+
+  $("sel-class").addEventListener("change", function () { state.itemClass = this.value; });
+  $("sel-rarity").addEventListener("change", function () { state.rarity = this.value; });
+  $("inp-ilvl").addEventListener("change", function () { state.itemLevel = this.value === "" ? null : parseInt(this.value, 10); });
+  function qualityWrite() {
+    var v = $("inp-quality").value;
+    var g = $("inp-qgroup").value.trim();
+    state.quality = v === "" ? null : { value: parseInt(v, 10), group: g || null };
+  }
+  $("inp-quality").addEventListener("change", qualityWrite);
+  $("inp-qgroup").addEventListener("change", qualityWrite);
+  ["corrupted", "sanctified", "fractured", "mirrored"].forEach(function (f) {
+    $("flag-" + f).addEventListener("change", function () { state.flags[f] = this.checked; });
+  });
+
+  $("btn-add-mod").addEventListener("click", function () {
+    var text = $("add-text").value.trim();
+    if (!text) { return; }
+    var kind = $("add-kind").value;
+    var mod = {
+      kind: kind, name: null, tier: null, tags: [],
+      desecrated: false, fractured: false, crafted: false,
+      qualityBoost: null, unscalable: false,
+      lines: [{ text: text, values: [] }], manual: true
+    };
+    if (kind === "implicit") { state.implicits.push(mod); } else { state.mods.push(mod); }
+    $("add-text").value = "";
+    render();
+  });
+  $("add-text").addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter") { $("btn-add-mod").click(); }
+  });
+
+  render();
+})();
+</script>
+
+<script src="/eoddb_footer.js" defer></script>
+</body>
+</html>
