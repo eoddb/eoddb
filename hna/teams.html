@@ -110,6 +110,29 @@
 
   .bt-filter-icons { display: flex; flex-wrap: wrap; gap: 8px; }
 
+  .bt-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .bt-filter-toggle:hover { border-color: var(--accent1); color: var(--text); }
+  .bt-filter-toggle .arrow { font-size: 0.6rem; transition: transform 0.15s; }
+  .bt-filter-toggle.open .arrow { transform: rotate(90deg); }
+
+  .bt-filter-lower { margin-top: 10px; }
+
   .bt-ficon {
     width: 42px;
     height: 42px;
@@ -311,6 +334,10 @@
     <div class="bt-filter-title">Filter by your roster</div>
     <div class="bt-filter-hint">Deselect any Nexus Anima or Eidos you don't own &mdash; teams that need them are hidden automatically.</div>
     <div class="bt-filter-icons" id="btFilterIcons"></div>
+    <button class="bt-filter-toggle" id="btLowerToggle" style="display:none">
+      <span class="arrow">&#9656;</span><span id="btLowerLabel">Show 4&#9733; &amp; below</span>
+    </button>
+    <div class="bt-filter-icons bt-filter-lower" id="btFilterIconsLower" style="display:none"></div>
     <div class="bt-filter-note" id="btFilterNote"></div>
   </div>
 
@@ -344,6 +371,10 @@ Promise.all([
   fetch('/hna/eoddb_hna_teams.json').then(r => r.json())
 ]).then(([unitsData, eidosData, teams]) => {
   tcInitData(unitsData.map(u => u.Name), eidosData.map(e => e.Name));
+
+  const rarityOf = {};
+  unitsData.forEach(u => { rarityOf[u.Name] = +u.Rarity; });
+  eidosData.forEach(e => { rarityOf[e.Name] = +e.Rarity; });
 
   const listEl = document.getElementById('btList');
   const cards = [];           // {el, members:Set}
@@ -450,7 +481,7 @@ Promise.all([
     try { localStorage.setItem(FILTER_KEY, JSON.stringify([...deselected])); } catch (e) {}
   }
 
-  function addIcon(name, isEido) {
+  function addIcon(name, isEido, container) {
     const div = document.createElement('div');
     div.className = 'bt-ficon' + (isEido ? ' eido' : '');
     div.title = name + (isEido ? ' (Eidos)' : '');
@@ -465,11 +496,36 @@ Promise.all([
       else { deselected.add(name); div.classList.add('off'); }
       applyFilter();
     });
-    iconsEl.appendChild(div);
+    container.appendChild(div);
   }
 
-  [...usedUnits].sort().forEach(n => addIcon(n, false));
-  [...usedEidos].sort().forEach(n => addIcon(n, true));
+  // 5★ icons visible by default; 4★ & below collapsed (most rosters
+  // have the lower rarities, so they'd be noise up front)
+  const lowerEl = document.getElementById('btFilterIconsLower');
+  const toggleEl = document.getElementById('btLowerToggle');
+  const is5 = n => rarityOf[n] === 5;
+  const lowerSort = (a, b) => (rarityOf[b] || 0) - (rarityOf[a] || 0) || a.localeCompare(b);
+
+  [...usedUnits].filter(is5).sort().forEach(n => addIcon(n, false, iconsEl));
+  [...usedEidos].filter(is5).sort().forEach(n => addIcon(n, true, iconsEl));
+  const lowerUnits = [...usedUnits].filter(n => !is5(n)).sort(lowerSort);
+  const lowerEidos = [...usedEidos].filter(n => !is5(n)).sort(lowerSort);
+  lowerUnits.forEach(n => addIcon(n, false, lowerEl));
+  lowerEidos.forEach(n => addIcon(n, true, lowerEl));
+
+  const lowerCount = lowerUnits.length + lowerEidos.length;
+  if (lowerCount) {
+    toggleEl.style.display = '';
+    const labelEl = document.getElementById('btLowerLabel');
+    let open = [...lowerUnits, ...lowerEidos].some(n => deselected.has(n));
+    const sync = () => {
+      lowerEl.style.display = open ? '' : 'none';
+      toggleEl.classList.toggle('open', open);
+      labelEl.textContent = (open ? 'Hide' : 'Show') + ' 4★ & below (' + lowerCount + ')';
+    };
+    toggleEl.addEventListener('click', () => { open = !open; sync(); });
+    sync();
+  }
   document.getElementById('btFilter').style.display = '';
   applyFilter();
 });
