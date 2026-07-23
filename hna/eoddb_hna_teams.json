@@ -57,5 +57,25 @@
     "cleared": "",
     "date": "2026-07-22",
     "description": ""
+  },
+  {
+    "id": "bt-004",
+    "code": "WgpIBWgCEDJgsPIoWgxIJFACaAIQMmDc9ChaDEgmUANoAhAyYJTzKFoMSCxQAmgCEDJg+PMoWgpILmgCEDJgnIcOWgpIL2gCEDJggIgOWgxINFAGaAIQMmC4lQlaDEg2UAZoAhAyYOSXCXADOgQQsNEBOgdoARCMFRgDOgdoAhDoBxgEG33emA==",
+    "era": "beta1",
+    "comp": "full",
+    "budget": "nodupes",
+    "eod": true,
+    "breakpoints": [
+      "Satiation 4",
+      "Beauty 2",
+      "Light 2"
+    ],
+    "notable": [],
+    "featured": true,
+    "highlight": false,
+    "title": "Magic DMG & Anti Magic",
+    "cleared": "",
+    "date": "2026-07-23",
+    "description": "<p>Magic DMG &amp; Anti Magic Team</p>"
   }
 ]
