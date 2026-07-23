@@ -4,32 +4,38 @@
     "code": "WgpIJGgCEAFguJUJWgpINWgCEAFgwJoMWgpILmgCEAFgtJ4MWgpIN2gCEAFg5JcJOgMQxBM6BWgBEIwV34355A==",
     "era": "beta1",
     "comp": "partial",
+    "eod": true,
+    "breakpoints": 1,
     "featured": true,
     "title": "F2P Starter Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": ""
+    "description": "<p>This partial team composition is great for people who want to mix and match other units into their roster and acts as a flexible starting point. Core frontline unit <strong>Apollinis</strong> provides your backline units more time to do damage.</p><p>Beta tested by EOD.</p>"
   },
   {
     "id": "bt-002",
     "code": "WgxIBVAGaAIQMmCAlwlaDEgkUAZoAhAyYLiVCVoKSCVoAhAyYPi+EFoMSCxQAWgCEDJgmJ8MWgxILlAGaAIQMmC0ngxaDEg1UAJoAhAyYMCaDFoMSDdQBmgCEDJg5JcJWgxIB1ABaAIQMmCAiA5wAjoFEMQTGAE6BWgBEOgHOgdoAhCMFRgD87uXRQ==",
     "era": "beta1",
     "comp": "full",
+    "eod": true,
+    "breakpoints": 2,
     "featured": true,
     "title": "Expanded Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": ""
+    "description": "<p>This team clears content well and consists of two Protectors. Key 5★ units with high Rapport/Eidothreads are <strong>Cinechel R1</strong>, <strong>Camcorgi R2</strong> and <strong>Umpurrella R1</strong>.</p><p>Beta tested by EOD.</p>"
   },
   {
     "id": "bt-003",
     "code": "WgpIHmgCEDJgnKUEWgxIJFAGaAIQMmC4lQlaCkglaAIQMmD4vhBaDEgsUAFoAhAyYJifDFoMSC5QAmgCEDJgwJoMWgxINFAGaAIQMmCAlwlaDEg1UAJoAhAyYPCiBFoMSDdQBmgCEDJgtJ4MOgYQwKIBGAM6B2gBENAPGAE6BmgCELDRAQ==knXHEA==",
     "era": "beta1",
     "comp": "full",
+    "eod": true,
+    "breakpoints": 3,
     "featured": true,
     "title": "Seroplumanth R2 Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": ""
+    "description": "<p>This team clears content well and consists of two Protectors. Key 5★ units with high Rapport/Eidothreads are <strong>Cinechel R1</strong>, <strong>Camcorgi R2</strong>, <strong>Seroplumanth R2</strong>, <strong>Bai Mei E3</strong> and <strong>Herocrates E1</strong>.</p><p>Beta tested by EOD.</p>"
   }
 ]

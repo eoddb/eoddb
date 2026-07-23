@@ -172,43 +172,26 @@
 
   .bt-board { flex-shrink: 0; }
 
-  .bt-board-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .bt-era-tag {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: rgba(166,156,125,0.15);
-    color: #A69C7D;
-  }
-
-  .bt-era-tag.launch { background: rgba(130,166,156,0.15); color: #82A69C; }
-
-  .bt-comp-tag {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .bt-comp-tag.full { background: var(--accent1-dim); color: var(--accent1); }
-  .bt-comp-tag.partial { background: rgba(158,156,147,0.15); color: #9E9C93; }
-
-  .bt-meta-date { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; }
-
   .bt-body { flex: 1; min-width: 0; }
 
-  .bt-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  /* tags ARE the card header — no title text */
+  .bt-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 
-  .bt-title { font-size: 1.05rem; font-weight: 700; color: var(--header-text); }
+  .bt-htag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .bt-htag.eod { background: rgba(102,96,110,0.22); color: #a89fb3; }
+  .bt-htag.era { background: rgba(166,156,125,0.15); color: #A69C7D; }
+  .bt-htag.era.launch { background: rgba(130,166,156,0.15); color: #82A69C; }
+  .bt-htag.full { background: var(--accent1-dim); color: var(--accent1); }
+  .bt-htag.partial { background: rgba(158,156,147,0.15); color: #9E9C93; }
+  .bt-htag.bp { background: rgba(122,110,105,0.2); color: #a5968f; }
+
+  .bt-meta-date { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; margin-left: auto; }
 
   .bt-tag {
     font-size: 0.65rem;
@@ -405,47 +388,30 @@ Promise.all([
       names = renderTeamBoard(boardWrap, team.code, {hexSize: 34});
     } catch (e) { return; }
 
-    // era + date classifiers below the board (era values come from the
-    // teams workbook; unmapped eras fall back to their raw value)
-    const ERA_LABELS = {beta1: 'Beta', beta2: 'Beta 2', launch: 'Launch'};
-    const COMP_LABELS = {full: 'Full Team', partial: 'Partial Team'};
-    const meta = document.createElement('div');
-    meta.className = 'bt-board-meta';
-    if (team.era) {
-      const eraTag = document.createElement('span');
-      eraTag.className = 'bt-era-tag' + (team.era === 'launch' ? ' launch' : '');
-      eraTag.textContent = ERA_LABELS[team.era] || team.era;
-      meta.appendChild(eraTag);
-    }
-    if (COMP_LABELS[team.comp]) {
-      const compTag = document.createElement('span');
-      compTag.className = 'bt-comp-tag ' + team.comp;
-      compTag.textContent = COMP_LABELS[team.comp];
-      meta.appendChild(compTag);
-    }
-    if (team.date) {
-      const dateEl = document.createElement('span');
-      dateEl.className = 'bt-meta-date';
-      dateEl.textContent = team.date;
-      meta.appendChild(dateEl);
-    }
-    if (meta.childNodes.length) boardWrap.appendChild(meta);
-
     const body = document.createElement('div');
     body.className = 'bt-body';
 
+    // tags ARE the header (era/comp/breakpoints computed by the localfiles
+    // generator; eod comes from the workbook; unmapped eras show raw)
+    const ERA_LABELS = {beta1: 'Beta', beta2: 'Beta 2', launch: 'Launch'};
+    const COMP_LABELS = {full: 'Full Team', partial: 'Partial Team'};
     const titleRow = document.createElement('div');
     titleRow.className = 'bt-title-row';
-    const title = document.createElement('span');
-    title.className = 'bt-title';
-    title.textContent = team.title;
-    titleRow.appendChild(title);
-    if (team.cleared) {
-      const tag = document.createElement('span');
-      tag.className = 'bt-tag';
-      tag.textContent = team.cleared;
-      titleRow.appendChild(tag);
+    const addTag = (cls, text) => {
+      const s = document.createElement('span');
+      s.className = cls;
+      s.textContent = text;
+      titleRow.appendChild(s);
+    };
+    if (team.eod) addTag('bt-htag eod', 'EOD');
+    if (team.era) addTag('bt-htag era' + (team.era === 'launch' ? ' launch' : ''),
+                         ERA_LABELS[team.era] || team.era);
+    if (COMP_LABELS[team.comp]) addTag('bt-htag ' + team.comp, COMP_LABELS[team.comp]);
+    if (Number.isInteger(team.breakpoints)) {
+      addTag('bt-htag bp', team.breakpoints + ' Breakpoint' + (team.breakpoints === 1 ? '' : 's'));
     }
+    if (team.cleared) addTag('bt-tag', team.cleared);
+    if (team.date) addTag('bt-meta-date', team.date);
     body.appendChild(titleRow);
 
     const desc = document.createElement('div');
