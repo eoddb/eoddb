@@ -189,6 +189,8 @@
   .bt-htag.era.launch { background: rgba(130,166,156,0.15); color: #82A69C; }
   .bt-htag.full { background: var(--accent1-dim); color: var(--accent1); }
   .bt-htag.partial { background: rgba(158,156,147,0.15); color: #9E9C93; }
+  .bt-htag.no5 { background: rgba(122,110,105,0.22); color: #ab9a93; }
+  .bt-htag.nodupes { background: rgba(117,95,100,0.25); color: #b2989e; }
   .bt-htag.bp { background: rgba(122,110,105,0.2); color: #a5968f; }
 
   .bt-meta-date { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; margin-left: auto; }
@@ -408,6 +410,8 @@ Promise.all([
     if (team.era) addTag('bt-htag era' + (team.era === 'launch' ? ' launch' : ''),
                          ERA_LABELS[team.era] || team.era);
     if (COMP_LABELS[team.comp]) addTag('bt-htag ' + team.comp, COMP_LABELS[team.comp]);
+    if (team.budget === 'no5') addTag('bt-htag no5', 'No 5★s');
+    else if (team.budget === 'nodupes') addTag('bt-htag nodupes', 'No Dupes');
     // breakpoint labels like "Light 2" — one badge per aspect breakpoint
     // hit, tinted with the shared aspect color
     (Array.isArray(team.breakpoints) ? team.breakpoints : []).forEach(label => {

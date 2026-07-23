@@ -4,6 +4,7 @@
     "code": "WgpIJGgCEAFguJUJWgpINWgCEAFgwJoMWgpILmgCEAFgtJ4MWgpIN2gCEAFg5JcJOgMQxBM6BWgBEIwV34355A==",
     "era": "beta1",
     "comp": "partial",
+    "budget": "nodupes",
     "eod": true,
     "breakpoints": [
       "Light 2"
@@ -19,6 +20,7 @@
     "code": "WgxIBVAGaAIQMmCAlwlaDEgkUAZoAhAyYLiVCVoKSCVoAhAyYPi+EFoKSCxoAhAyYJifDFoMSC5QBmgCEDJgtJ4MWgpINWgCEDJgwJoMWgxIN1AGaAIQMmDklwlaCkgHaAIQMmCAiA5wAjoFEMQTGAE6BWgBEOgHOgdoAhCMFRgDAHK5Qg==",
     "era": "beta1",
     "comp": "full",
+    "budget": "nodupes",
     "eod": true,
     "breakpoints": [
       "Memory 3",
@@ -35,6 +37,7 @@
     "code": "WgpIHmgCEDJgnKUEWgxIJFAGaAIQMmC4lQlaCkglaAIQMmD4vhBaCkgsaAIQMmCYnwxaCkguaAIQMmDAmgxaDEg0UAZoAhAyYICXCVoMSDVQAmgCEDJg8KIEWgxIN1AGaAIQMmC0ngw6BBDAogE6BWgBENAPOgZoAhCw0QE=a0PyIg==",
     "era": "beta1",
     "comp": "full",
+    "budget": "",
     "eod": true,
     "breakpoints": [
       "Memory 3",
