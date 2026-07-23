@@ -220,20 +220,20 @@
   .mod-line { font-size: 0.82rem; color: var(--text); line-height: 1.5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .mod-tags { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.03em; }
 
-  .roll { display: inline-flex; align-items: center; gap: 5px; }
-  .roll-bar {
-    width: 54px; height: 5px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-    display: inline-block;
+  .mod-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: start;
   }
-  .roll-fill { height: 100%; border-radius: 3px; }
-  .roll-fill.hi  { background: var(--sage); }
-  .roll-fill.mid { background: var(--khaki); }
-  .roll-fill.lo  { background: var(--danger); }
-  .roll-pct { font-size: 0.65rem; color: var(--text-muted); }
-  .roll-out { font-size: 0.65rem; color: var(--khaki); }
+  .mod-col-head {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
 
   .mod-remove {
     border: none; background: none; cursor: pointer;
@@ -284,6 +284,7 @@
   @media (max-width: 600px) {
     body { padding: 2rem 0.8rem; }
     .panel { padding: 14px 14px; }
+    .mod-columns { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -429,35 +430,6 @@
 
   /* ── Rendering ── */
 
-  function rollSpan(v) {
-    var span = document.createElement("span");
-    span.className = "roll";
-    if (v.max === v.min) { return span; }
-    var pct = (v.value - v.min) / (v.max - v.min);
-    var outside = pct < 0 || pct > 1;
-    var clamped = Math.max(0, Math.min(1, pct));
-    var bar = document.createElement("span");
-    bar.className = "roll-bar";
-    var fill = document.createElement("span");
-    fill.className = "roll-fill " + (clamped >= 0.75 ? "hi" : clamped >= 0.4 ? "mid" : "lo");
-    fill.style.width = (clamped * 100).toFixed(0) + "%";
-    bar.appendChild(fill);
-    span.appendChild(bar);
-    var pctEl = document.createElement("span");
-    pctEl.className = "roll-pct";
-    pctEl.textContent = v.value + " of " + v.min + "–" + v.max;
-    span.appendChild(pctEl);
-    if (outside) {
-      var out = document.createElement("span");
-      out.className = "roll-out";
-      out.textContent = "outside range";
-      out.title = "Roll is outside the tier's normal range — usually a sanctified item.";
-      span.appendChild(out);
-    }
-    span.title = outside ? "Outside normal tier range" : (clamped * 100).toFixed(0) + "% of the tier range";
-    return span;
-  }
-
   function badge(cls, text) {
     var b = document.createElement("span");
     b.className = "badge " + cls;
@@ -492,8 +464,12 @@
       l.className = "mod-line";
       var t = document.createElement("span");
       t.textContent = line.text;
+      if (line.values && line.values.length) {
+        t.title = line.values.map(function (v) {
+          return "roll " + v.value + " (tier range " + v.min + "–" + v.max + ")";
+        }).join(", ");
+      }
       l.appendChild(t);
-      (line.values || []).forEach(function (v) { l.appendChild(rollSpan(v)); });
       main.appendChild(l);
     });
 
@@ -562,17 +538,39 @@
     (state.properties || []).forEach(function (p) { meta.push("<b>" + p.name + ":</b> " + p.value); });
     $("meta-line").innerHTML = meta.join(" &nbsp;·&nbsp; ");
 
-    // Mods
+    // Mods: implicits/enhancements/uniques full-width, then Prefix | Suffix columns
     var list = $("mod-list");
     list.innerHTML = "";
-    var total = 0;
-    [["enhancements", state.enhancements], ["implicits", state.implicits], ["mods", state.mods]].forEach(function (pair) {
-      pair[1].forEach(function (mod, i) {
-        list.appendChild(modRow(mod, pair[0], i));
-        total++;
-      });
+    var others = [], prefixes = [], suffixes = [];
+    state.enhancements.forEach(function (mod, i) { others.push([mod, "enhancements", i]); });
+    state.implicits.forEach(function (mod, i) { others.push([mod, "implicits", i]); });
+    state.mods.forEach(function (mod, i) {
+      if (mod.kind === "prefix") { prefixes.push([mod, "mods", i]); }
+      else if (mod.kind === "suffix") { suffixes.push([mod, "mods", i]); }
+      else { others.push([mod, "mods", i]); }
     });
-    if (!total) {
+    others.forEach(function (m) { list.appendChild(modRow(m[0], m[1], m[2])); });
+    if (prefixes.length || suffixes.length) {
+      var cols = document.createElement("div");
+      cols.className = "mod-columns";
+      [["Prefixes", prefixes], ["Suffixes", suffixes]].forEach(function (pair) {
+        var col = document.createElement("div");
+        var head = document.createElement("div");
+        head.className = "mod-col-head";
+        head.textContent = pair[0] + " (" + pair[1].length + ")";
+        col.appendChild(head);
+        if (!pair[1].length) {
+          var none = document.createElement("div");
+          none.className = "empty-note";
+          none.textContent = "none";
+          col.appendChild(none);
+        }
+        pair[1].forEach(function (m) { col.appendChild(modRow(m[0], m[1], m[2])); });
+        cols.appendChild(col);
+      });
+      list.appendChild(cols);
+    }
+    if (!others.length && !prefixes.length && !suffixes.length) {
       var e = document.createElement("div");
       e.className = "empty-note";
       e.textContent = "No modifiers yet — paste an item above or add one manually.";
