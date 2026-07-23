@@ -16,7 +16,7 @@
   },
   {
     "id": "bt-002",
-    "code": "WgxIBVAGaAIQMmCAlwlaDEgkUAZoAhAyYLiVCVoKSCVoAhAyYPi+EFoMSCxQAWgCEDJgmJ8MWgxILlAGaAIQMmC0ngxaDEg1UAJoAhAyYMCaDFoMSDdQBmgCEDJg5JcJWgxIB1ABaAIQMmCAiA5wAjoFEMQTGAE6BWgBEOgHOgdoAhCMFRgD87uXRQ==",
+    "code": "WgxIBVAGaAIQMmCAlwlaDEgkUAZoAhAyYLiVCVoKSCVoAhAyYPi+EFoKSCxoAhAyYJifDFoMSC5QBmgCEDJgtJ4MWgpINWgCEDJgwJoMWgxIN1AGaAIQMmDklwlaCkgHaAIQMmCAiA5wAjoFEMQTGAE6BWgBEOgHOgdoAhCMFRgDAHK5Qg==",
     "era": "beta1",
     "comp": "full",
     "eod": true,
@@ -28,7 +28,7 @@
     "title": "Expanded Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": "<p>This team clears content well and consists of two Protectors. Key 5★ units with high Rapport/Eidothreads are <strong>Cinechel R1</strong>, <strong>Camcorgi R2</strong> and <strong>Umpurrella R1</strong>.</p><p>Beta tested by EOD.</p>"
+    "description": "<p>This team clears content well and consists of two Protectors. All 5★ units here are just at base copies (R0/E0).</p><p>Beta tested by EOD.</p>"
   },
   {
     "id": "bt-003",
