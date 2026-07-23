@@ -552,14 +552,18 @@ Promise.all([
   catBar.style.display = '';
 
   function applyFilter() {
-    let hidden = 0;
+    let hidden = 0, filterable = 0;
     cards.forEach(c => {
+      // highlighted comps are never hidden — filters only govern the list
+      if (c.team.highlight) { c.el.classList.remove('bt-hidden'); return; }
+      filterable++;
       const blocked = [...c.members].some(m => deselected.has(m))
         || CATS.some(cat => catOff.has(cat.id) && cat.match(c.team));
       c.el.classList.toggle('bt-hidden', blocked);
       if (blocked) hidden++;
     });
-    document.getElementById('btEmpty').style.display = (hidden === cards.length) ? '' : 'none';
+    document.getElementById('btEmpty').style.display =
+      (filterable && hidden === filterable) ? '' : 'none';
     noteEl.textContent = hidden ? (hidden + ' team(s) hidden by your filters.') : '';
     try {
       localStorage.setItem(FILTER_KEY, JSON.stringify([...deselected]));
