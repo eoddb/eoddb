@@ -84,6 +84,36 @@
     margin-bottom: 0.8rem;
   }
 
+  /* ── Category filter pills (style shared with nexusanima's tag-btn) ── */
+  .bt-cat-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .tag-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: 0.75rem;
+    font-family: inherit;
+  }
+
+  .tag-btn:hover { background: var(--surface-hover); border-color: var(--text-muted); }
+
+  .tag-btn.active {
+    background: var(--surface);
+    border-color: var(--accent1);
+    color: var(--header-text);
+  }
+
   /* ── Roster filter ── */
   .bt-filter {
     background: var(--surface);
@@ -205,6 +235,9 @@
     color: var(--accent1);
   }
 
+  .bt-notable { font-size: 0.8rem; line-height: 1.6; color: var(--text); margin-bottom: 8px; }
+  .bt-notable .nlbl { font-weight: 700; color: var(--text-muted); }
+
   .bt-desc { font-size: 0.85rem; line-height: 1.7; color: var(--text); }
   .bt-desc p + p { margin-top: 8px; }
   .bt-desc strong { color: var(--header-text); }
@@ -325,6 +358,8 @@
   <!-- video slot: when the Best Teams video is live, embed it here via
        eoddb_hna_video.js (facade + sticky mini-player, per site convention) -->
 
+  <div class="bt-cat-filters" id="btCatFilters" style="display:none"></div>
+
   <div class="bt-filter" id="btFilter" style="display:none">
     <div class="bt-filter-title">Filter by your roster</div>
     <div class="bt-filter-hint">Deselect any Nexus Anima or Eidos you don't own &mdash; teams that need them are hidden automatically.</div>
@@ -345,7 +380,7 @@
   <div class="section-label" id="btListLabel">Best Teams</div>
   <div id="btList"></div>
   <div class="bt-empty" id="btEmpty" style="display:none">
-    Every listed team uses something you've deselected &mdash; re-enable units above to see more.
+    Every listed team is hidden by your filters &mdash; re-enable filter buttons or units above to see more.
   </div>
 
   <hr class="divider">
@@ -431,10 +466,23 @@ Promise.all([
     if (team.date) addTag('bt-meta-date', team.date);
     body.appendChild(titleRow);
 
-    const desc = document.createElement('div');
-    desc.className = 'bt-desc';
-    desc.innerHTML = team.description || '';
-    body.appendChild(desc);
+    if (Array.isArray(team.notable) && team.notable.length) {
+      const nt = document.createElement('div');
+      nt.className = 'bt-notable';
+      const lbl = document.createElement('span');
+      lbl.className = 'nlbl';
+      lbl.textContent = 'Notable Eidothreads/Rapport: ';
+      nt.appendChild(lbl);
+      nt.appendChild(document.createTextNode(team.notable.join(', ')));
+      body.appendChild(nt);
+    }
+
+    if (team.description) {
+      const desc = document.createElement('div');
+      desc.className = 'bt-desc';
+      desc.innerHTML = team.description;
+      body.appendChild(desc);
+    }
 
     const actions = document.createElement('div');
     actions.className = 'bt-actions';
@@ -461,7 +509,7 @@ Promise.all([
     const members = new Set();
     names.units.forEach(n => { if (n) { members.add(n); usedUnits.add(n); } });
     names.eidos.forEach(n => { if (n) { members.add(n); usedEidos.add(n); } });
-    cards.push({el: card, members});
+    cards.push({el: card, members, team});
   });
 
   document.getElementById('btHighlightLabel').style.display = hlCount ? '' : 'none';
@@ -477,16 +525,48 @@ Promise.all([
   const iconsEl = document.getElementById('btFilterIcons');
   const noteEl = document.getElementById('btFilterNote');
 
+  // ── category filter pills: EOD / era / comp / 5★ dupes ──
+  const CAT_KEY = 'eoddb_hna_bt_catoff';
+  const CATS = [
+    {id: 'eod',     label: 'EOD',           match: t => !!t.eod},
+    {id: 'noneod',  label: 'Not EOD',       match: t => !t.eod},
+    {id: 'beta',    label: 'Beta',          match: t => (t.era || '').indexOf('beta') === 0},
+    {id: 'nonbeta', label: 'Not Beta',      match: t => (t.era || '').indexOf('beta') !== 0},
+    {id: 'full',    label: 'Full Teams',    match: t => t.comp === 'full'},
+    {id: 'partial', label: 'Partial Teams', match: t => t.comp === 'partial'},
+    {id: 'dupes',   label: '5★ Dupes', match: t => t.budget === ''}
+  ];
+  let catOff;
+  try { catOff = new Set(JSON.parse(localStorage.getItem(CAT_KEY)) || []); }
+  catch (e) { catOff = new Set(); }
+  const catBar = document.getElementById('btCatFilters');
+  CATS.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'tag-btn' + (catOff.has(cat.id) ? '' : ' active');
+    b.textContent = cat.label;
+    b.addEventListener('click', () => {
+      if (catOff.has(cat.id)) { catOff.delete(cat.id); b.classList.add('active'); }
+      else { catOff.add(cat.id); b.classList.remove('active'); }
+      applyFilter();
+    });
+    catBar.appendChild(b);
+  });
+  catBar.style.display = '';
+
   function applyFilter() {
     let hidden = 0;
     cards.forEach(c => {
-      const blocked = [...c.members].some(m => deselected.has(m));
+      const blocked = [...c.members].some(m => deselected.has(m))
+        || CATS.some(cat => catOff.has(cat.id) && cat.match(c.team));
       c.el.classList.toggle('bt-hidden', blocked);
       if (blocked) hidden++;
     });
     document.getElementById('btEmpty').style.display = (hidden === cards.length) ? '' : 'none';
-    noteEl.textContent = hidden ? (hidden + ' team(s) hidden by your roster filter.') : '';
-    try { localStorage.setItem(FILTER_KEY, JSON.stringify([...deselected])); } catch (e) {}
+    noteEl.textContent = hidden ? (hidden + ' team(s) hidden by your filters.') : '';
+    try {
+      localStorage.setItem(FILTER_KEY, JSON.stringify([...deselected]));
+      localStorage.setItem(CAT_KEY, JSON.stringify([...catOff]));
+    } catch (e) {}
   }
 
   function addIcon(name, isEido, container) {

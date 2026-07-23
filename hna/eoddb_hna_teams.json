@@ -9,6 +9,7 @@
     "breakpoints": [
       "Light 2"
     ],
+    "notable": [],
     "featured": true,
     "highlight": true,
     "title": "F2P Starter Core",
@@ -27,12 +28,13 @@
       "Memory 3",
       "Light 2"
     ],
+    "notable": [],
     "featured": true,
     "highlight": false,
     "title": "Expanded Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": "<p>This team clears content well and consists of two Protectors. All 5★ units here are just at base copies (R0/E0).</p><p>Beta tested by EOD.</p>"
+    "description": ""
   },
   {
     "id": "bt-003",
@@ -46,11 +48,14 @@
       "Light 2",
       "Reality 2"
     ],
+    "notable": [
+      "Seroplumanth (R2)"
+    ],
     "featured": true,
     "highlight": false,
     "title": "Seroplumanth R2 Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": "<p>This team clears content well and consists of two Protectors. The key 5★ with high Rapport/Eidothreads is <strong>Seroplumanth R2</strong>.</p><p>Beta tested by EOD.</p>"
+    "description": ""
   }
 ]
