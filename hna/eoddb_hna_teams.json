@@ -10,10 +10,11 @@
       "Light 2"
     ],
     "featured": true,
+    "highlight": true,
     "title": "F2P Starter Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": "<p>This partial team composition is great for people who want to mix and match other units into their roster and acts as a flexible starting point. Core frontline unit <strong>Apollinis</strong> provides your backline units more time to do damage.</p><p>Beta tested by EOD.</p>"
+    "description": "<p>Easily accessible roster with 3 four star anchors. Light 2 duo Apollinis anchors the frontline and combines with good magic damage, AOE, stun unit Starspine. 4 star Framamba is a solid physical dps that's also 4 star Shilian's companion that builds a memory roster. Camcorgi is a 5 star that is obtainable for free after doing some Apex Club quests (which are not gated by F2P status), good physical damage, AOE and crowd control and allowing a flexible memory last slot to proc a 3 memory aspect synergy. A team of these 4 pretty much clears most content by varying the other eidos/nexus anima slots. (see more teams below)</p>"
   },
   {
     "id": "bt-002",
@@ -27,6 +28,7 @@
       "Light 2"
     ],
     "featured": true,
+    "highlight": false,
     "title": "Expanded Core",
     "cleared": "",
     "date": "2026-07-22",
@@ -45,6 +47,7 @@
       "Reality 2"
     ],
     "featured": true,
+    "highlight": false,
     "title": "Seroplumanth R2 Core",
     "cleared": "",
     "date": "2026-07-22",

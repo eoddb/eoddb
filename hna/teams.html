@@ -340,7 +340,9 @@
     <div class="bt-filter-note" id="btFilterNote"></div>
   </div>
 
-  <div class="section-label">Recommended Teams</div>
+  <div class="section-label" id="btHighlightLabel" style="display:none">Highlighted Comp</div>
+  <div id="btHighlight"></div>
+  <div class="section-label" id="btListLabel">Best Teams</div>
   <div id="btList"></div>
   <div class="bt-empty" id="btEmpty" style="display:none">
     Every listed team uses something you've deselected &mdash; re-enable units above to see more.
@@ -377,8 +379,10 @@ Promise.all([
   eidosData.forEach(e => { rarityOf[e.Name] = +e.Rarity; });
 
   const listEl = document.getElementById('btList');
+  const hlEl = document.getElementById('btHighlight');
   const cards = [];           // {el, members:Set}
   const usedUnits = new Set(), usedEidos = new Set();
+  let hlCount = 0, restCount = 0;
 
   teams.filter(t => t.featured).forEach(team => {
     const card = document.createElement('div');
@@ -451,13 +455,17 @@ Promise.all([
 
     card.appendChild(boardWrap);
     card.appendChild(body);
-    listEl.appendChild(card);
+    if (team.highlight) { hlEl.appendChild(card); hlCount++; }
+    else { listEl.appendChild(card); restCount++; }
 
     const members = new Set();
     names.units.forEach(n => { if (n) { members.add(n); usedUnits.add(n); } });
     names.eidos.forEach(n => { if (n) { members.add(n); usedEidos.add(n); } });
     cards.push({el: card, members});
   });
+
+  document.getElementById('btHighlightLabel').style.display = hlCount ? '' : 'none';
+  document.getElementById('btListLabel').style.display = restCount ? '' : 'none';
 
   // ── roster filter: icons for every unit/eido used by any listed team ──
   if (!cards.length) return;
