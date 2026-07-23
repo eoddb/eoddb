@@ -32,7 +32,7 @@
   },
   {
     "id": "bt-003",
-    "code": "WgpIHmgCEDJgnKUEWgxIJFAGaAIQMmC4lQlaCkglaAIQMmD4vhBaDEgsUAFoAhAyYJifDFoMSC5QAmgCEDJgwJoMWgxINFAGaAIQMmCAlwlaDEg1UAJoAhAyYPCiBFoMSDdQBmgCEDJgtJ4MOgYQwKIBGAM6B2gBENAPGAE6BmgCELDRAQ==knXHEA==",
+    "code": "WgpIHmgCEDJgnKUEWgxIJFAGaAIQMmC4lQlaCkglaAIQMmD4vhBaCkgsaAIQMmCYnwxaCkguaAIQMmDAmgxaDEg0UAZoAhAyYICXCVoMSDVQAmgCEDJg8KIEWgxIN1AGaAIQMmC0ngw6BBDAogE6BWgBENAPOgZoAhCw0QE=a0PyIg==",
     "era": "beta1",
     "comp": "full",
     "eod": true,
@@ -45,6 +45,6 @@
     "title": "Seroplumanth R2 Core",
     "cleared": "",
     "date": "2026-07-22",
-    "description": "<p>This team clears content well and consists of two Protectors. Key 5★ units with high Rapport/Eidothreads are <strong>Cinechel R1</strong>, <strong>Camcorgi R2</strong>, <strong>Seroplumanth R2</strong>, <strong>Bai Mei E3</strong> and <strong>Herocrates E1</strong>.</p><p>Beta tested by EOD.</p>"
+    "description": "<p>This team clears content well and consists of two Protectors. The key 5★ with high Rapport/Eidothreads is <strong>Seroplumanth R2</strong>.</p><p>Beta tested by EOD.</p>"
   }
 ]
