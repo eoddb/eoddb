@@ -192,6 +192,16 @@
 
   .bt-era-tag.launch { background: rgba(130,166,156,0.15); color: #82A69C; }
 
+  .bt-comp-tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .bt-comp-tag.full { background: var(--accent1-dim); color: var(--accent1); }
+  .bt-comp-tag.partial { background: rgba(158,156,147,0.15); color: #9E9C93; }
+
   .bt-meta-date { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; }
 
   .bt-body { flex: 1; min-width: 0; }
@@ -334,10 +344,14 @@
     <div class="bt-filter-title">Filter by your roster</div>
     <div class="bt-filter-hint">Deselect any Nexus Anima or Eidos you don't own &mdash; teams that need them are hidden automatically.</div>
     <div class="bt-filter-icons" id="btFilterIcons"></div>
-    <button class="bt-filter-toggle" id="btLowerToggle" style="display:none">
-      <span class="arrow">&#9656;</span><span id="btLowerLabel">Show 4&#9733; &amp; below</span>
+    <button class="bt-filter-toggle" id="btToggle4" style="display:none">
+      <span class="arrow">&#9656;</span><span class="lbl"></span>
     </button>
-    <div class="bt-filter-icons bt-filter-lower" id="btFilterIconsLower" style="display:none"></div>
+    <div class="bt-filter-icons bt-filter-lower" id="btIcons4" style="display:none"></div>
+    <button class="bt-filter-toggle" id="btToggle3" style="display:none">
+      <span class="arrow">&#9656;</span><span class="lbl"></span>
+    </button>
+    <div class="bt-filter-icons bt-filter-lower" id="btIcons3" style="display:none"></div>
     <div class="bt-filter-note" id="btFilterNote"></div>
   </div>
 
@@ -394,6 +408,7 @@ Promise.all([
     // era + date classifiers below the board (era values come from the
     // teams workbook; unmapped eras fall back to their raw value)
     const ERA_LABELS = {beta1: 'Beta', beta2: 'Beta 2', launch: 'Launch'};
+    const COMP_LABELS = {full: 'Full Team', partial: 'Partial Team'};
     const meta = document.createElement('div');
     meta.className = 'bt-board-meta';
     if (team.era) {
@@ -401,6 +416,12 @@ Promise.all([
       eraTag.className = 'bt-era-tag' + (team.era === 'launch' ? ' launch' : '');
       eraTag.textContent = ERA_LABELS[team.era] || team.era;
       meta.appendChild(eraTag);
+    }
+    if (COMP_LABELS[team.comp]) {
+      const compTag = document.createElement('span');
+      compTag.className = 'bt-comp-tag ' + team.comp;
+      compTag.textContent = COMP_LABELS[team.comp];
+      meta.appendChild(compTag);
     }
     if (team.date) {
       const dateEl = document.createElement('span');
@@ -499,33 +520,36 @@ Promise.all([
     container.appendChild(div);
   }
 
-  // 5★ icons visible by default; 4★ & below collapsed (most rosters
-  // have the lower rarities, so they'd be noise up front)
-  const lowerEl = document.getElementById('btFilterIconsLower');
-  const toggleEl = document.getElementById('btLowerToggle');
+  // 5★ icons visible by default; 4★ and 3★ each collapse behind their
+  // own toggle (most rosters have the lower rarities, so they'd be noise
+  // up front). A group auto-expands if a saved deselection is inside it.
   const is5 = n => rarityOf[n] === 5;
-  const lowerSort = (a, b) => (rarityOf[b] || 0) - (rarityOf[a] || 0) || a.localeCompare(b);
-
   [...usedUnits].filter(is5).sort().forEach(n => addIcon(n, false, iconsEl));
   [...usedEidos].filter(is5).sort().forEach(n => addIcon(n, true, iconsEl));
-  const lowerUnits = [...usedUnits].filter(n => !is5(n)).sort(lowerSort);
-  const lowerEidos = [...usedEidos].filter(n => !is5(n)).sort(lowerSort);
-  lowerUnits.forEach(n => addIcon(n, false, lowerEl));
-  lowerEidos.forEach(n => addIcon(n, true, lowerEl));
 
-  const lowerCount = lowerUnits.length + lowerEidos.length;
-  if (lowerCount) {
+  [
+    {label: '4★', match: n => rarityOf[n] === 4, toggle: 'btToggle4', box: 'btIcons4'},
+    {label: '3★', match: n => !is5(n) && rarityOf[n] !== 4, toggle: 'btToggle3', box: 'btIcons3'}
+  ].forEach(g => {
+    const boxEl = document.getElementById(g.box);
+    const toggleEl = document.getElementById(g.toggle);
+    const gUnits = [...usedUnits].filter(g.match).sort();
+    const gEidos = [...usedEidos].filter(g.match).sort();
+    gUnits.forEach(n => addIcon(n, false, boxEl));
+    gEidos.forEach(n => addIcon(n, true, boxEl));
+    const count = gUnits.length + gEidos.length;
+    if (!count) return;
     toggleEl.style.display = '';
-    const labelEl = document.getElementById('btLowerLabel');
-    let open = [...lowerUnits, ...lowerEidos].some(n => deselected.has(n));
+    const labelEl = toggleEl.querySelector('.lbl');
+    let open = [...gUnits, ...gEidos].some(n => deselected.has(n));
     const sync = () => {
-      lowerEl.style.display = open ? '' : 'none';
+      boxEl.style.display = open ? '' : 'none';
       toggleEl.classList.toggle('open', open);
-      labelEl.textContent = (open ? 'Hide' : 'Show') + ' 4★ & below (' + lowerCount + ')';
+      labelEl.textContent = (open ? 'Hide' : 'Show') + ' ' + g.label + ' (' + count + ')';
     };
     toggleEl.addEventListener('click', () => { open = !open; sync(); });
     sync();
-  }
+  });
   document.getElementById('btFilter').style.display = '';
   applyFilter();
 });
