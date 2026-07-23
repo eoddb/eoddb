@@ -177,5 +177,37 @@
     "cleared": "",
     "date": "2026-07-23",
     "description": "<p>Blade Team Comp</p>"
+  },
+  {
+    "id": "bt-007",
+    "code": "WgpIB2gCEDJggOIJWgxIFFAGaAIQMmC4lQlaDEgcUAZoAhAyYJjqDFoKSB1oAhAyYPi+EFoMSCRQBmgCEDJgkOUJWgxIL1AGaAIQMmDklwlaCkg0aAIQMmDI4wlaDEg3UAZoAhAyYJS+EHAFOgMQ7A46B2gBEIwVGAM6B2gCEMQTGAI=lR+B0A==",
+    "era": "beta1",
+    "comp": "full",
+    "budget": "nodupes",
+    "eod": true,
+    "breakpoints": [
+      "Dark 3",
+      "Light 2",
+      "Love 2",
+      "Strength 1"
+    ],
+    "notable": [],
+    "magic": [
+      "Dragamour",
+      "Starspine"
+    ],
+    "physical": [
+      "Waxula",
+      "Hugglebeary",
+      "Lumeridon",
+      "Noctumbra",
+      "Heartcease"
+    ],
+    "featured": true,
+    "highlight": false,
+    "title": "Olympia Team",
+    "cleared": "",
+    "date": "2026-07-23",
+    "description": "<p>Olympia Team Comp</p>"
   }
 ]
