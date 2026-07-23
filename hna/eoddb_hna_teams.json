@@ -5,7 +5,9 @@
     "era": "beta1",
     "comp": "partial",
     "eod": true,
-    "breakpoints": 1,
+    "breakpoints": [
+      "Light 2"
+    ],
     "featured": true,
     "title": "F2P Starter Core",
     "cleared": "",
@@ -18,7 +20,10 @@
     "era": "beta1",
     "comp": "full",
     "eod": true,
-    "breakpoints": 2,
+    "breakpoints": [
+      "Memory 3",
+      "Light 2"
+    ],
     "featured": true,
     "title": "Expanded Core",
     "cleared": "",
@@ -31,7 +36,11 @@
     "era": "beta1",
     "comp": "full",
     "eod": true,
-    "breakpoints": 3,
+    "breakpoints": [
+      "Memory 3",
+      "Light 2",
+      "Reality 2"
+    ],
     "featured": true,
     "title": "Seroplumanth R2 Core",
     "cleared": "",

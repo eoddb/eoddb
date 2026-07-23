@@ -358,6 +358,7 @@
   </div>
 </div>
 
+<script src="/hna/eoddb_hna_aspect_colors.js"></script>
 <script src="/hna/eoddb_hna_teamboard.js?v=4"></script>
 <script>
 const FILTER_KEY = 'eoddb_hna_bt_deselected';
@@ -407,9 +408,17 @@ Promise.all([
     if (team.era) addTag('bt-htag era' + (team.era === 'launch' ? ' launch' : ''),
                          ERA_LABELS[team.era] || team.era);
     if (COMP_LABELS[team.comp]) addTag('bt-htag ' + team.comp, COMP_LABELS[team.comp]);
-    if (Number.isInteger(team.breakpoints)) {
-      addTag('bt-htag bp', team.breakpoints + ' Breakpoint' + (team.breakpoints === 1 ? '' : 's'));
-    }
+    // breakpoint labels like "Light 2" — one badge per aspect breakpoint
+    // hit, tinted with the shared aspect color
+    (Array.isArray(team.breakpoints) ? team.breakpoints : []).forEach(label => {
+      const s = document.createElement('span');
+      s.className = 'bt-htag bp';
+      s.textContent = label;
+      const aspect = label.slice(0, label.lastIndexOf(' '));
+      const col = (typeof ASPECT_COLORS !== 'undefined') && ASPECT_COLORS[aspect];
+      if (col) { s.style.background = col + '26'; s.style.color = col; }
+      titleRow.appendChild(s);
+    });
     if (team.cleared) addTag('bt-tag', team.cleared);
     if (team.date) addTag('bt-meta-date', team.date);
     body.appendChild(titleRow);
