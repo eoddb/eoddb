@@ -467,16 +467,20 @@ Promise.all([
     if (team.date) addTag('bt-meta-date', team.date);
     body.appendChild(titleRow);
 
-    if (Array.isArray(team.notable) && team.notable.length) {
+    const infoLine = (label, items) => {
+      if (!Array.isArray(items) || !items.length) return;
       const nt = document.createElement('div');
       nt.className = 'bt-notable';
       const lbl = document.createElement('span');
       lbl.className = 'nlbl';
-      lbl.textContent = 'Notable Eidothreads/Rapport: ';
+      lbl.textContent = label + ': ';
       nt.appendChild(lbl);
-      nt.appendChild(document.createTextNode(team.notable.join(', ')));
+      nt.appendChild(document.createTextNode(items.join(', ')));
       body.appendChild(nt);
-    }
+    };
+    infoLine('Notable Eidothreads/Rapport', team.notable);
+    infoLine('Magic DMG', team.magic);
+    infoLine('Physical DMG', team.physical);
 
     if (team.description) {
       const desc = document.createElement('div');

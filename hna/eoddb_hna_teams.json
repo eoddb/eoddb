@@ -10,6 +10,13 @@
       "Light 2"
     ],
     "notable": [],
+    "magic": [
+      "Starspine"
+    ],
+    "physical": [
+      "Camcorgi",
+      "Framamba"
+    ],
     "featured": true,
     "highlight": true,
     "title": "F2P Starter Core",
@@ -29,6 +36,17 @@
       "Light 2"
     ],
     "notable": [],
+    "magic": [
+      "Dragamour",
+      "Starspine",
+      "Umpurrella"
+    ],
+    "physical": [
+      "Chimaura",
+      "Cinechel",
+      "Framamba",
+      "Camcorgi"
+    ],
     "featured": true,
     "highlight": false,
     "title": "Expanded Core",
@@ -51,6 +69,17 @@
     "notable": [
       "Seroplumanth (R2)"
     ],
+    "magic": [
+      "Sharkalaka",
+      "Dragamour",
+      "Seroplumanth"
+    ],
+    "physical": [
+      "Cinechel",
+      "Camcorgi",
+      "Chimaura",
+      "Framamba"
+    ],
     "featured": true,
     "highlight": false,
     "title": "Seroplumanth R2 Core",
@@ -71,11 +100,54 @@
       "Light 2"
     ],
     "notable": [],
+    "magic": [
+      "Hoggit",
+      "Nomnom",
+      "Vulberry",
+      "Beaubeanie",
+      "Umpurrella",
+      "Starspine"
+    ],
+    "physical": [],
     "featured": true,
     "highlight": false,
     "title": "Magic DMG & Anti Magic",
     "cleared": "",
     "date": "2026-07-23",
-    "description": "<p>Magic DMG &amp; Anti Magic Team</p>"
+    "description": "<p>Hungrille Magic Team Comp &mdash; Magic DMG &amp; Anti Magic Team</p>"
+  },
+  {
+    "id": "bt-005",
+    "code": "WgpIBmgCEDJgwIsRWgxIHFAGaAIQMmCY6gxaCkgdaAIQMmD4vhBaDEgkUAZoAhAyYJiQEVoMSCxQAWgCEDJgmJ8MWgxILVACaAIQMmD8kBFaDEg0UAZoAhAyYOyNEVoMSDVQAmgCEDJgwJoMcAQ6BBD0sgE6B2gBEMQTGAI6B2gCELAJGAQ=+5SpXw==",
+    "era": "beta1",
+    "comp": "full",
+    "budget": "",
+    "eod": true,
+    "breakpoints": [
+      "Hate 3",
+      "Memory 3",
+      "Strength 1"
+    ],
+    "notable": [
+      "Cinechel (R1)",
+      "Camcorgi (R2)"
+    ],
+    "magic": [
+      "Dragamour"
+    ],
+    "physical": [
+      "Mesmerith",
+      "Hugglebeary",
+      "Cinechel",
+      "Batnyss",
+      "Rosfurcate",
+      "Camcorgi"
+    ],
+    "featured": true,
+    "highlight": false,
+    "title": "Balanced Parayaya",
+    "cleared": "",
+    "date": "2026-07-23",
+    "description": "<p>Balanced Parayaya Team Comp for backline damage</p>"
   }
 ]
