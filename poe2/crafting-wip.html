@@ -311,6 +311,24 @@
   .roll-bar-scale .q-mid  { color: #a9b4c6; }
   .roll-bar-scale .q-high { color: var(--sage); }
 
+  /* Compact variant: one per modifier row. The modifier text is the point —
+     this is a visual aside, so it sits on a single line beside the bar and
+     drops the floor/max captions, keeping only the figure. */
+  .roll-bar.compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 0;
+  }
+  .roll-bar.compact .roll-bar-track { flex: 1; height: 4px; }
+  .roll-bar.compact .roll-bar-scale {
+    display: block;
+    flex-shrink: 0;
+    margin: 0;
+    font-size: 0.55rem;
+    white-space: nowrap;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .roll-bar-fill { transition: none; }
   }
@@ -664,7 +682,7 @@
 </details>
 
 <script src="/poe2/eoddb_poe2_itemparse.js?v=1"></script>
-<script src="/poe2/eoddb_poe2_triage_rules.js?v=2"></script>
+<script src="/poe2/eoddb_poe2_triage_rules.js?v=3"></script>
 <script>
 (function () {
   "use strict";
@@ -788,6 +806,17 @@
       main.appendChild(l);
     });
 
+    /* Per-modifier roll bar, scored by the same exported function the triage
+       summary uses. Absent when the mod has no printed range to measure. */
+    var score = window.eoddbTriageRules && window.eoddbTriageRules.modRollScore
+      ? window.eoddbTriageRules.modRollScore(mod) : null;
+    if (score !== null && score !== undefined) {
+      main.appendChild(rollBar({
+        pct: score,
+        quartile: score >= 0.75 ? "high" : (score <= 0.25 ? "low" : "mid")
+      }, true));
+    }
+
     row.appendChild(main);
 
     var rm = document.createElement("button");
@@ -863,10 +892,11 @@
     });
   }
 
-  /* Reader for the triage row's bar data — draws it, decides nothing. */
-  function rollBar(bar) {
+  /* Reader for roll-bar data — draws it, decides nothing. Used both for the
+     triage summary and, in compact form, under each modifier row. */
+  function rollBar(bar, compact) {
     var wrap = document.createElement("div");
-    wrap.className = "roll-bar";
+    wrap.className = "roll-bar" + (compact ? " compact" : "");
 
     var track = document.createElement("div");
     track.className = "roll-bar-track";
@@ -882,18 +912,27 @@
 
     var scale = document.createElement("div");
     scale.className = "roll-bar-scale";
-    var left = document.createElement("span");
-    left.textContent = "0% floor";
-    var mid = document.createElement("span");
-    mid.className = "q-" + bar.quartile;
-    var word = bar.quartile === "high" ? "upper quartile"
-             : bar.quartile === "low" ? "lower quartile" : "mid-range";
-    mid.innerHTML = "<b>" + Math.round(bar.pct * 100) + "%</b> · " + word;
-    var right = document.createElement("span");
-    right.textContent = "100% max";
-    scale.appendChild(left);
-    scale.appendChild(mid);
-    scale.appendChild(right);
+    var pct = Math.round(bar.pct * 100);
+    if (compact) {
+      // Just the figure — the modifier line above it is what matters.
+      var only = document.createElement("span");
+      only.className = "q-" + bar.quartile;
+      only.innerHTML = "<b>" + pct + "%</b> of range";
+      scale.appendChild(only);
+    } else {
+      var left = document.createElement("span");
+      left.textContent = "0% floor";
+      var mid = document.createElement("span");
+      mid.className = "q-" + bar.quartile;
+      var word = bar.quartile === "high" ? "upper quartile"
+               : bar.quartile === "low" ? "lower quartile" : "mid-range";
+      mid.innerHTML = "<b>" + pct + "%</b> · " + word;
+      var right = document.createElement("span");
+      right.textContent = "100% max";
+      scale.appendChild(left);
+      scale.appendChild(mid);
+      scale.appendChild(right);
+    }
     wrap.appendChild(scale);
     return wrap;
   }

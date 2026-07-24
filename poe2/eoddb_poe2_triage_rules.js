@@ -238,11 +238,11 @@
            advice can apply, so none is offered. */
         verdict = "Because it is " + divineBlockReason + ", these ranges can't be rerolled with a Divine Orb.";
       } else if (quartile === "low") {
-        verdict = "Bottom quartile — a strong Divine Orb candidate, since it rerolls every value at once and there is little here to lose.";
+        verdict = "Bottom quartile — a strong Divine Orb candidate, as the average rolls sit in the bottom quartile. Check if the key lines are not outliers.";
       } else if (quartile === "high") {
-        verdict = "Top quartile — a Divine Orb risks more than it gains overall; judge the individual lines instead.";
+        verdict = "Top quartile — already sitting at the upper quartile of outcomes, there is little reason to use a Divine Orb unless a key line's roll is not what you wanted.";
       } else {
-        verdict = "Mid-range — a Divine Orb is a coin flip overall; it is only worth it if the low lines below are ones you're keeping.";
+        verdict = "Mid-range — On average, a Divine Orb use will get you to a similar position. Its use here strongly depends on which lines you want to correct.";
       }
 
       rows.push({
@@ -299,5 +299,8 @@
     return { headline: headline, rows: rows };
   }
 
-  return { computeTriage: computeTriage };
+  /* modRollScore is exported so the per-modifier bars on the item page score
+     a line with the exact same arithmetic as the summary bar — two
+     implementations of this could drift and contradict each other. */
+  return { computeTriage: computeTriage, modRollScore: modRollScore, rollPct: rollPct };
 });
