@@ -57,13 +57,22 @@ const EODDB_NAV_PAGES = [
       max-width: 1400px;
       margin: 0 auto;
       display: flex;
-      align-items: baseline;
+      /* Not baseline: MOON GET! draws its glyphs ~0.23em BELOW the
+         typographic baseline, so baseline-aligning it with the body font
+         left the ordinary links floating ~3px high. Stretching every item
+         to full bar height and pinning the text by padding instead lands
+         both fonts' letter-bottoms on the same line, and keeps the active
+         link's underline flush with the bottom of the bar. */
+      align-items: stretch;
       gap: 0;
       overflow-x: auto;
     }
+    /* 15/9 rather than an even 12/12: the extra top padding puts the whole
+       text block back where it sat before, so MOON GET stays centred in the
+       bar rather than riding 3px high. */
     .eoddb-nav-brand {
       display: block;
-      padding: 12px 0;
+      padding: 15px 0 9px;
       margin-right: 6px;
       font-size: 0.8rem;
       font-weight: 800;
@@ -94,10 +103,11 @@ const EODDB_NAV_PAGES = [
       background: #252d3d;
       margin: 0 10px;
       flex-shrink: 0;
+      align-self: center;
     }
     .eoddb-nav-link {
       display: block;
-      padding: 12px 16px;
+      padding: 15px 16px 9px;
       font-size: 0.8rem;
       font-weight: 500;
       color: #6e7a8a;
