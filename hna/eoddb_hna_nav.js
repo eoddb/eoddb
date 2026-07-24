@@ -108,10 +108,12 @@ const EODDB_NAV_PAGES = [
       flex-shrink: 0;
       align-self: center;
     }
-    /* The body-font links: this is the group that gets adjusted. */
+    /* The body-font links: this is the group that gets adjusted. Top and
+       bottom move in opposite directions so the box height — and with it the
+       bar height and the active link's underline — stays put. */
     .eoddb-nav-link {
       display: block;
-      padding: 12px 16px;
+      padding: 14px 16px 10px;
       font-size: 0.8rem;
       font-weight: 500;
       color: #6e7a8a;
