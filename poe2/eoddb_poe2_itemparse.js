@@ -58,7 +58,7 @@
     var mod = {
       kind: null, name: null, tier: null, tags: [],
       desecrated: false, fractured: false, crafted: false,
-      qualityBoost: null, unscalable: false,
+      corruption: false, qualityBoost: null, unscalable: false,
       lines: []
     };
     var hm = head.match(/^(?:(Desecrated|Fractured|Crafted)\s+)?(Prefix|Suffix|Implicit|Unique|Enchant|Rune)(?:\s+Modifier)?(?:\s+"([^"]+)")?(?:\s+\(Tier:\s*(\d+)\))?$/);
@@ -69,8 +69,12 @@
       mod.kind = hm[2].toLowerCase();
       mod.name = hm[3] || null;
       mod.tier = hm[4] ? parseInt(hm[4], 10) : null;
-    } else if (head === "Enhancement") {
+    } else if (head === "Enhancement" || head === "Corruption Enhancement") {
+      // "Corruption Enhancement" observed on an unboosted second corruption
+      // line (Architect's Orb); it reads plain "Enhancement" once an Orb of
+      // Sacrifice boosts it. corruption:true marks the labelled variant.
       mod.kind = "enhancement";
+      mod.corruption = head === "Corruption Enhancement";
     } else {
       mod.kind = "unknown";
       mod.headRaw = head;

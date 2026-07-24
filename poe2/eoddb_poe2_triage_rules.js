@@ -32,13 +32,19 @@
     if (!state || !state.ok) { return null; }
 
     var f = state.flags || {};
-    var finishedReason =
-      f.twiceCorrupted ? "twice corrupted" :
-      f.corrupted ? "corrupted" :
+    /* sanctified/mirrored/unmodifiable: nothing can EVER change.
+       corrupted/twice corrupted: NORMAL crafting is closed, but the
+       corruption paths stay open (Orb of Sacrifice boosts a corruption
+       Enhancement line by consuming a random modifier — one boost per
+       line; Architect's Orb gambles a second corruption or destroys).
+       `finished` below means "normal crafting closed". */
+    var lockedReason =
       f.sanctified ? "sanctified" :
       f.mirrored ? "mirrored" :
       f.unmodifiable ? "unmodifiable" : null;
-    var finished = finishedReason !== null;
+    var corrupted = !!(f.corrupted || f.twiceCorrupted);
+    var finished = lockedReason !== null || corrupted;
+    var finishedReason = lockedReason || (f.twiceCorrupted ? "twice corruption" : "corruption");
 
     var explicit = state.mods || [];
     var prefixes = explicit.filter(function (m) { return m.kind === "prefix"; });
@@ -51,8 +57,12 @@
     var headline;
     if (isUnique) {
       headline = { tone: "unique", text: "Unique — fixed identity, rolls are what vary" };
-    } else if (finished) {
-      headline = { tone: "finished", text: "Finished — " + finishedReason + ", nothing can change. Value it as-is." };
+    } else if (lockedReason) {
+      headline = { tone: "finished", text: "Finished — " + lockedReason + ", nothing can change. Value it as-is." };
+    } else if (f.twiceCorrupted) {
+      headline = { tone: "finished", text: "Twice corrupted — normal crafting closed; only sacrifices remain." };
+    } else if (corrupted) {
+      headline = { tone: "finished", text: "Corrupted — normal crafting closed, but corruption gambles remain." };
     } else if (state.rarity === "Normal" && !explicit.length) {
       headline = { tone: "blank", text: "Blank base — every crafting door open" };
     } else {
@@ -60,6 +70,7 @@
     }
 
     /* ── Affix slots (rare/magic only; caps shift with slot-reducing implicits) ── */
+    var capTotal = null;
     if (!isUnique && Object.prototype.hasOwnProperty.call(AFFIX_CAPS, state.rarity) && state.rarity !== "Normal") {
       var capP = AFFIX_CAPS[state.rarity];
       var capS = AFFIX_CAPS[state.rarity];
@@ -72,6 +83,7 @@
           }
         });
       });
+      capTotal = capP + capS;
       var openP = Math.max(0, capP - prefixes.length);
       var openS = Math.max(0, capS - suffixes.length);
       var slotTxt = prefixes.length + "/" + capP + " prefixes, " + suffixes.length + "/" + capS + " suffixes.";
@@ -90,6 +102,23 @@
       }
       if (state.rarity === "Magic" && !finished) {
         rows.push({ label: "Magic item", tone: "info", text: "Capped at 1 prefix + 1 suffix while magic." });
+      }
+    }
+
+    /* ── Corruption paths (still open on corrupted items) ── */
+    if (corrupted && !lockedReason) {
+      var enh = state.enhancements || [];
+      var unboosted = enh.filter(function (m) { return m.corruption; }).length;
+      if (unboosted > 0) {
+        rows.push({ label: "Sacrifice", tone: "good", text: unboosted + " unboosted corruption line — an Orb of Sacrifice can push it beyond natural values by consuming a random modifier (one boost per line, ever)." });
+      } else if (enh.length) {
+        rows.push({ label: "Sacrifice", tone: "info", text: enh.length + " corruption line(s). If one is still unboosted, an Orb of Sacrifice can boost it (consumes a random modifier; one boost per line). Spotting an already-boosted line needs natural-range data — judgment layer, later." });
+      }
+      if (capTotal !== null && enh.length && explicit.length < capTotal) {
+        rows.push({ label: "Sacrificed?", tone: "info", text: explicit.length + " of " + capTotal + " affixes on a corrupted item — " + (capTotal - explicit.length) + " missing line(s) may already have been consumed by Orb(s) of Sacrifice." });
+      }
+      if (!f.twiceCorrupted) {
+        rows.push({ label: "Architect's", tone: "warn", text: "Architect's Orb can attempt a second corruption — unpredictable modification OR the item is destroyed. Success adds a second corruption line (boostable by its own sacrifice)." });
       }
     }
 

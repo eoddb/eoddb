@@ -283,6 +283,7 @@
   .badge.marker-desecrated { background: rgba(130,166,156,0.2);  color: var(--sage); }
   .badge.marker-fractured  { background: rgba(113,125,146,0.26); color: #a9b4c6; }
   .badge.marker-crafted    { background: rgba(158,156,147,0.18); color: var(--stone); }
+  .badge.marker-corruption { background: rgba(201,139,147,0.18); color: #c98b93; }
 
   /* Tier: just the number — the column header already says prefix/suffix. */
   .tier-chip {
@@ -295,7 +296,6 @@
     background: var(--surface);
     color: var(--header-text);
   }
-  .mod-name { font-size: 0.7rem; color: var(--text-muted); margin-left: auto; }
   .mod-note { font-size: 0.65rem; color: var(--text-muted); }
 
   .mod-line { font-size: 0.82rem; color: var(--text); line-height: 1.5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -549,6 +549,7 @@
     if (mod.desecrated) { badges.appendChild(badge("marker-desecrated", "Desecrated")); }
     if (mod.fractured)  { badges.appendChild(badge("marker-fractured", "Fractured")); }
     if (mod.crafted)    { badges.appendChild(badge("marker-crafted", "Crafted")); }
+    if (mod.corruption) { badges.appendChild(badge("marker-corruption", "Corruption")); }
     if (!inColumn) {
       var kindClass = ["prefix","suffix","implicit","enhancement","unique"].indexOf(mod.kind) !== -1 ? mod.kind : "unknown";
       badges.appendChild(badge(kindClass, mod.kind));
@@ -566,13 +567,8 @@
       badges.appendChild(tg);
     }
     if (mod.qualityBoost) { badges.appendChild(note("+" + mod.qualityBoost + "% quality")); }
-    if (mod.unscalable) { badges.appendChild(note("unscalable")); }
-    if (mod.name) {
-      var nm = document.createElement("span");
-      nm.className = "mod-name";
-      nm.textContent = "“" + mod.name + "”";
-      badges.appendChild(nm);
-    }
+    // Crafted mods are unscalable by definition — saying so adds nothing.
+    if (mod.unscalable && !mod.crafted) { badges.appendChild(note("unscalable")); }
     main.appendChild(badges);
 
     (mod.lines || []).forEach(function (line) {
