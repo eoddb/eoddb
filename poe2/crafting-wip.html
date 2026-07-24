@@ -259,6 +259,61 @@
   .triage-row.t-warn .triage-label { color: var(--khaki); }
   .triage-row.t-good .triage-label { color: var(--sage); }
   .triage-text { color: var(--text); }
+
+  /* ── Roll-quality bar ──
+     Fill = average position of every modifier inside its own printed range.
+     The track's quartile ticks are the reference the commentary uses, so the
+     claim and the picture can never disagree. */
+  .roll-bar { margin: 7px 0 5px; }
+  .roll-bar-track {
+    position: relative;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .roll-bar-fill {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    border-radius: 999px;
+    transition: width 0.28s ease, background 0.28s ease;
+  }
+  .roll-bar-fill.q-low  { background: #c98b93; }
+  .roll-bar-fill.q-mid  { background: var(--accent1); }
+  .roll-bar-fill.q-high { background: var(--sage); }
+  /* Quartile boundaries at 25% and 75%, drawn over the fill. */
+  .roll-bar-track::before,
+  .roll-bar-track::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .roll-bar-track::before { left: 25%; }
+  .roll-bar-track::after  { left: 75%; }
+  /* Sanctified rolls can sit outside the range entirely — the bar clamps, so
+     flag it rather than silently pinning at either end. */
+  .roll-bar-track.over  { border-color: var(--sage); }
+  .roll-bar-track.under { border-color: #c98b93; }
+
+  .roll-bar-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 3px;
+  }
+  .roll-bar-scale b { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .roll-bar-scale .q-low  { color: #c98b93; }
+  .roll-bar-scale .q-mid  { color: #a9b4c6; }
+  .roll-bar-scale .q-high { color: var(--sage); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roll-bar-fill { transition: none; }
+  }
   .triage-foot {
     margin-top: 10px;
     font-size: 0.68rem;
@@ -609,7 +664,7 @@
 </details>
 
 <script src="/poe2/eoddb_poe2_itemparse.js?v=1"></script>
-<script src="/poe2/eoddb_poe2_triage_rules.js?v=1"></script>
+<script src="/poe2/eoddb_poe2_triage_rules.js?v=2"></script>
 <script>
 (function () {
   "use strict";
@@ -800,11 +855,47 @@
       label.textContent = r.label;
       var text = document.createElement("div");
       text.className = "triage-text";
-      text.textContent = r.text;
+      if (r.bar) { text.appendChild(rollBar(r.bar)); }
+      text.appendChild(document.createTextNode(r.text));
       row.appendChild(label);
       row.appendChild(text);
       rowsEl.appendChild(row);
     });
+  }
+
+  /* Reader for the triage row's bar data — draws it, decides nothing. */
+  function rollBar(bar) {
+    var wrap = document.createElement("div");
+    wrap.className = "roll-bar";
+
+    var track = document.createElement("div");
+    track.className = "roll-bar-track";
+    if (bar.pct > 1) { track.classList.add("over"); }
+    if (bar.pct < 0) { track.classList.add("under"); }
+
+    var fill = document.createElement("div");
+    fill.className = "roll-bar-fill q-" + bar.quartile;
+    // Out-of-range averages clamp visually; the readout keeps the true value.
+    fill.style.width = Math.max(0, Math.min(1, bar.pct)) * 100 + "%";
+    track.appendChild(fill);
+    wrap.appendChild(track);
+
+    var scale = document.createElement("div");
+    scale.className = "roll-bar-scale";
+    var left = document.createElement("span");
+    left.textContent = "0% floor";
+    var mid = document.createElement("span");
+    mid.className = "q-" + bar.quartile;
+    var word = bar.quartile === "high" ? "upper quartile"
+             : bar.quartile === "low" ? "lower quartile" : "mid-range";
+    mid.innerHTML = "<b>" + Math.round(bar.pct * 100) + "%</b> · " + word;
+    var right = document.createElement("span");
+    right.textContent = "100% max";
+    scale.appendChild(left);
+    scale.appendChild(mid);
+    scale.appendChild(right);
+    wrap.appendChild(scale);
+    return wrap;
   }
 
   /* Market CTA panel — shown for any parsed item. The share block folded

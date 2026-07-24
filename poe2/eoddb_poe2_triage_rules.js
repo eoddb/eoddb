@@ -23,10 +23,39 @@
   var JEWELRY = ["Rings", "Amulets"];
   var AFFIX_CAPS = { "Rare": 3, "Magic": 1, "Normal": 0 };
 
+  /* Where a roll landed inside its own printed range: 0 = the floor of the
+     range, 1 = a max roll. Deliberately NOT value/max — that would score a
+     21(21-25) floor roll as 0.84 and call a worst-case roll good. Normalising
+     to the range is also what makes out-of-range values meaningful: a
+     sanctified roll above the range exceeds 1.0, and one below it goes
+     negative (20.3 in a 21-25 range = -0.17). */
   function rollPct(v) {
     if (v.max === v.min) { return null; }
     return (v.value - v.min) / (v.max - v.min);
   }
+
+  /* One score per modifier, each weighted equally regardless of how many
+     values it carries, so a two-value line does not count double. */
+  function modRollScore(mod) {
+    var ps = [];
+    (mod.lines || []).forEach(function (line) {
+      (line.values || []).forEach(function (v) {
+        var p = rollPct(v);
+        if (p !== null) { ps.push(p); }
+      });
+    });
+    if (!ps.length) { return null; }
+    var sum = ps.reduce(function (a, b) { return a + b; }, 0);
+    return sum / ps.length;
+  }
+
+  function modLabel(mod) {
+    var first = (mod.lines || [])[0];
+    var txt = first ? first.text : (mod.name || mod.kind || "line");
+    return txt.replace(/\s+/g, " ").trim();
+  }
+
+  function pctLabel(p) { return Math.round(p * 100) + "%"; }
 
   function computeTriage(state) {
     if (!state || !state.ok) { return null; }
@@ -45,6 +74,16 @@
     var corrupted = !!(f.corrupted || f.twiceCorrupted);
     var finished = lockedReason !== null || corrupted;
     var finishedReason = lockedReason || (f.twiceCorrupted ? "twice corruption" : "corruption");
+    /* Adjectival form, for sentences that name the blocker ("Because it is
+       twice corrupted…"). Mirrored and unmodifiable are included alongside
+       corrupted/sanctified because they block a Divine Orb just as hard —
+       telling someone to divine a mirrored item would be plain wrong. */
+    var divineBlockReason =
+      f.twiceCorrupted ? "twice corrupted" :
+      f.corrupted ? "corrupted" :
+      f.sanctified ? "sanctified" :
+      f.mirrored ? "mirrored" :
+      f.unmodifiable ? "unmodifiable" : null;
 
     var explicit = state.mods || [];
     var prefixes = explicit.filter(function (m) { return m.kind === "prefix"; });
@@ -155,32 +194,77 @@
       }
     }
 
-    /* ── Roll quality ── */
-    var pcts = [];
+    /* ── Roll quality ──
+       One equal-weighted score per modifier, averaged into a single bar.
+       Every statement here is arithmetic on the item's own printed ranges,
+       so it cannot go stale with a patch the way a rule of thumb would. */
+    var scored = [];
     var outside = 0;
     allMods.forEach(function (mod) {
+      var s = modRollScore(mod);
+      if (s === null) { return; }
+      scored.push({ label: modLabel(mod), pct: s });
       (mod.lines || []).forEach(function (line) {
         (line.values || []).forEach(function (v) {
           var p = rollPct(v);
-          if (p === null) { return; }
-          if (p < 0 || p > 1) { outside++; } else { pcts.push(p); }
+          if (p !== null && (p < 0 || p > 1)) { outside++; }
         });
       });
     });
-    if (pcts.length) {
-      var hi = pcts.filter(function (p) { return p >= 0.75; }).length;
-      var lo = pcts.filter(function (p) { return p <= 0.25; }).length;
-      var rollTxt = hi + " of " + pcts.length + " rolled values at 75%+ of range";
-      if (finished) {
-        rows.push({ label: "Rolls", tone: "info", text: rollTxt + " — locked." });
-      } else if (lo > 0) {
-        rows.push({ label: "Rolls", tone: "info", text: rollTxt + "; " + lo + " low. A Divine Orb rerolls ALL values at once — upside only if the low rolls sit on lines you're keeping." });
-      } else {
-        rows.push({ label: "Rolls", tone: "good", text: rollTxt + ". Little left for a Divine Orb to fix." });
+
+    if (scored.length) {
+      var sum = scored.reduce(function (a, m) { return a + m.pct; }, 0);
+      var avg = sum / scored.length;
+      var quartile = avg >= 0.75 ? "high" : (avg <= 0.25 ? "low" : "mid");
+      var byPct = scored.slice().sort(function (a, b) { return a.pct - b.pct; });
+
+      /* Call out the lines that actually drive the average either way. */
+      var lows = byPct.filter(function (m) { return m.pct <= 0.25; });
+      var maxes = byPct.filter(function (m) { return m.pct >= 1; });
+      var highs = byPct.filter(function (m) { return m.pct >= 0.75 && m.pct < 1; });
+      var notes = [];
+      if (maxes.length) {
+        notes.push("Max roll" + (maxes.length > 1 ? "s" : "") + ": " +
+          maxes.map(function (m) { return m.label + " (" + pctLabel(m.pct) + ")"; }).join("; ") + ".");
       }
+      if (lows.length) {
+        notes.push("Lowest: " +
+          lows.slice(0, 3).map(function (m) { return m.label + " (" + pctLabel(m.pct) + ")"; }).join("; ") + ".");
+      }
+
+      var verdict;
+      if (finished) {
+        /* Locked items get the measurement and nothing else — no currency
+           advice can apply, so none is offered. */
+        verdict = "Because it is " + divineBlockReason + ", these ranges can't be rerolled with a Divine Orb.";
+      } else if (quartile === "low") {
+        verdict = "Bottom quartile — a strong Divine Orb candidate, since it rerolls every value at once and there is little here to lose.";
+      } else if (quartile === "high") {
+        verdict = "Top quartile — a Divine Orb risks more than it gains overall; judge the individual lines instead.";
+      } else {
+        verdict = "Mid-range — a Divine Orb is a coin flip overall; it is only worth it if the low lines below are ones you're keeping.";
+      }
+
+      rows.push({
+        label: "Rolls",
+        tone: finished ? "info" : (quartile === "high" ? "good" : (quartile === "low" ? "warn" : "info")),
+        text: "Average roll quality " + pctLabel(avg) + " across " + scored.length +
+              " modifier" + (scored.length > 1 ? "s" : "") + ". " +
+              (notes.length ? notes.join(" ") + " " : "") + verdict,
+        bar: {
+          pct: avg,
+          quartile: quartile,
+          locked: finished,
+          count: scored.length,
+          lowest: byPct[0] || null,
+          highest: byPct[byPct.length - 1] || null,
+          highCount: highs.length + maxes.length,
+          lowCount: lows.length
+        }
+      });
     }
     if (outside > 0) {
-      rows.push({ label: "Sanctified rolls", tone: "info", text: outside + " value(s) outside the normal tier range — the sanctification signature." });
+      rows.push({ label: "Sanctified rolls", tone: "info", text: outside + " value(s) outside the normal tier range — the sanctification signature. Values above the range score over 100%, below it score negative." });
     }
 
     /* ── Quality / catalysts ── */
