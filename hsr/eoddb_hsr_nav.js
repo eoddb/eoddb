@@ -105,7 +105,7 @@ const EODDB_NAV_PAGES = [
     }
     .eoddb-nav-link.eoddb-nav-active {
       color: #e6edf3;
-      border-bottom-color: #6366f1;
+      border-bottom-color: #717D92;
     }
     .eoddb-nav-home {
       font-weight: 700;
