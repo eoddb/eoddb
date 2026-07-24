@@ -16,7 +16,7 @@ const EODDB_NAV_PAGES = [
   const brand = document.createElement('a');
   brand.href = '/';
   brand.className = 'eoddb-nav-brand';
-  brand.innerHTML = 'EOD<span style="text-transform:none">db.com</span>';
+  brand.innerHTML = 'EOD<span class="db">db.com</span>';
   inner.appendChild(brand);
 
   const sep = document.createElement('span');
@@ -70,6 +70,17 @@ const EODDB_NAV_PAGES = [
     }
     .eoddb-nav-brand:hover {
       color: #a9b4c6;
+    }
+    /* Two-tone lockup, site-wide standard: EOD stays off-white, db.com
+       carries the slate accent. Keeps the brand from reading as just
+       another bold nav link next to the home link. */
+    .eoddb-nav-brand .db {
+      text-transform: none;
+      color: #717D92;
+      transition: color 0.15s;
+    }
+    .eoddb-nav-brand:hover .db {
+      color: #8f9bb0;
     }
     .eoddb-nav-sep {
       width: 1px;
