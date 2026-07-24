@@ -47,6 +47,8 @@
        toggled on parse: the layout must not move under the user, so parsing
        only collapses the paste box. */
     --shell: 1040px;
+    /* Lets height transition to/from auto (the paste step's collapse). */
+    interpolate-size: allow-keywords;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -346,7 +348,25 @@
   /* ── Step 1: the paste box, collapsible once an item is on screen ── */
   #paste-step > summary { list-style: none; cursor: pointer; }
   #paste-step > summary::-webkit-details-marker { display: none; }
-  #paste-step[open] > summary { margin-bottom: 10px; }
+  /* Collapse/expand glides instead of teleporting. ::details-content is the
+     browser's wrapper around everything after <summary>; height can only
+     animate to/from auto because of interpolate-size on :root, and
+     allow-discrete keeps the content painted for the duration of the
+     transition instead of vanishing on frame one. Browsers without
+     ::details-content just snap, exactly as before — nothing to fall back. */
+  #paste-step::details-content {
+    block-size: 0;
+    overflow: hidden;
+    padding-block-start: 0;
+    transition:
+      block-size 0.28s ease,
+      padding-block-start 0.28s ease,
+      content-visibility 0.28s allow-discrete;
+  }
+  #paste-step[open]::details-content {
+    block-size: auto;
+    padding-block-start: 10px;
+  }
   .step-summary {
     display: flex;
     align-items: center;
@@ -444,6 +464,11 @@
   }
 
   .hidden { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #paste-step::details-content,
+    .step-summary .caret { transition: none; }
+  }
 
   /* Below this the two columns stop being readable — stack them and go back
      to the tight single-column shell. */
