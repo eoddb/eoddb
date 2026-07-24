@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0d1117"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#717D92" stroke-width="2"/>
+  <text x="32" y="29" font-family="'Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" fill="#c9d1d9" text-anchor="middle">EOD</text>
+  <text x="32" y="50" font-family="'Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" fill="#717D92" text-anchor="middle">db</text>
+</svg>
