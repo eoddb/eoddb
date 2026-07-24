@@ -14,7 +14,7 @@
      runes: [], enchants: [],
      grantsSkill: null | { level, name },
      implicits: [], enhancements: [], mods: [],  // mod = see parseModHead
-     flags: { corrupted, sanctified, fractured, mirrored, unmodifiable },
+     flags: { corrupted, twiceCorrupted, sanctified, fractured, mirrored, unmodifiable },
      flavour: [],
      unparsed: []                             // anything not recognised — the
    }                                          // UI surfaces these lines
@@ -29,6 +29,7 @@
 
   var FLAG_LINES = {
     "Corrupted": "corrupted",
+    "Twice Corrupted": "twiceCorrupted",
     "Sanctified": "sanctified",
     "Fractured Item": "fractured",
     "Mirrored": "mirrored",
@@ -106,7 +107,7 @@
       requires: null, properties: [],
       runes: [], enchants: [], grantsSkill: null,
       implicits: [], enhancements: [], mods: [],
-      flags: { corrupted: false, sanctified: false, fractured: false, mirrored: false, unmodifiable: false },
+      flags: { corrupted: false, twiceCorrupted: false, sanctified: false, fractured: false, mirrored: false, unmodifiable: false },
       flavour: [],
       unparsed: []
     };

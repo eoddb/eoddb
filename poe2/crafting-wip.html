@@ -184,6 +184,32 @@
   .meta-line { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; line-height: 1.6; }
   .meta-line b { color: var(--text); font-weight: 600; }
 
+  /* ── Permanence stamps (corrupted / mirrored / … — things you can't undo) ── */
+  #stamp-row { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+  #stamp-row:empty { display: none; }
+  .stamp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+  .stamp::before, .stamp::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .stamp.s-corrupted   { color: #c98b93; }
+  .stamp.s-mirrored    { color: #c4b998; }
+  .stamp.s-desecrated  { color: var(--sage); }
+  .stamp.s-sanctified  { color: #b3aec0; }
+  .stamp.s-fractured   { color: #a9b4c6; }
+  .stamp.s-unmodifiable{ color: var(--stone); }
+
   /* ── Mod list ── */
   .mod-row {
     border: 1px solid var(--border);
@@ -211,14 +237,27 @@
   .badge.enhancement{ background: rgba(122,110,105,0.22); color: #b0a49e; }
   .badge.unique     { background: rgba(166,156,125,0.18); color: #c4b998; }
   .badge.unknown    { background: rgba(166,91,95,0.18);   color: var(--danger-text); }
-  .badge.marker-desecrated { background: rgba(117,95,100,0.3); color: #b394a0; }
-  .badge.marker-fractured  { background: rgba(130,166,156,0.16); color: var(--sage); }
-  .badge.marker-boost      { background: rgba(166,156,125,0.15); color: var(--khaki); }
-  .badge.marker-unscalable { background: rgba(158,156,147,0.12); color: var(--text-muted); }
-  .mod-name { font-size: 0.7rem; color: var(--text-muted); }
+  /* The three that decide whether a mod can ever be changed — loudest badges. */
+  .badge.marker-desecrated { background: rgba(130,166,156,0.2);  color: var(--sage); }
+  .badge.marker-fractured  { background: rgba(113,125,146,0.26); color: #a9b4c6; }
+  .badge.marker-crafted    { background: rgba(158,156,147,0.18); color: var(--stone); }
+
+  /* Tier: just the number — the column header already says prefix/suffix. */
+  .tier-chip {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--header-text);
+  }
+  .mod-name { font-size: 0.7rem; color: var(--text-muted); margin-left: auto; }
+  .mod-note { font-size: 0.65rem; color: var(--text-muted); }
 
   .mod-line { font-size: 0.82rem; color: var(--text); line-height: 1.5; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .mod-tags { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.03em; }
+  .mod-tags { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.03em; }
 
   .mod-columns {
     display: grid;
@@ -344,6 +383,7 @@
     <label><input type="checkbox" id="flag-mirrored"> Mirrored</label>
   </div>
   <div class="meta-line" id="meta-line"></div>
+  <div id="stamp-row"></div>
 </div>
 
 <div class="panel">
@@ -406,7 +446,7 @@
       quality: null, itemLevel: null, sockets: null,
       requires: null, properties: [], runes: [], enchants: [], grantsSkill: null,
       implicits: [], enhancements: [], mods: [],
-      flags: { corrupted: false, sanctified: false, fractured: false, mirrored: false, unmodifiable: false },
+      flags: { corrupted: false, twiceCorrupted: false, sanctified: false, fractured: false, mirrored: false, unmodifiable: false },
       flavour: [], unparsed: []
     };
   }
@@ -437,7 +477,18 @@
     return b;
   }
 
-  function modRow(mod, listName, index) {
+  function note(text) {
+    var n = document.createElement("span");
+    n.className = "mod-note";
+    n.textContent = text;
+    return n;
+  }
+
+  /* inColumn: the row sits under a "Prefixes"/"Suffixes" header, so the kind
+     is already stated — show the tier alone. Header order is deliberate:
+     origin markers first (they decide if the mod can ever change), then the
+     tier chip, then the tag key beside it. */
+  function modRow(mod, listName, index, inColumn) {
     var row = document.createElement("div");
     row.className = "mod-row";
     var main = document.createElement("div");
@@ -445,12 +496,27 @@
 
     var badges = document.createElement("div");
     badges.className = "mod-badges";
-    var kindClass = ["prefix","suffix","implicit","enhancement","unique"].indexOf(mod.kind) !== -1 ? mod.kind : "unknown";
-    badges.appendChild(badge(kindClass, mod.kind + (mod.tier !== null && mod.tier !== undefined ? " T" + mod.tier : "")));
     if (mod.desecrated) { badges.appendChild(badge("marker-desecrated", "Desecrated")); }
     if (mod.fractured)  { badges.appendChild(badge("marker-fractured", "Fractured")); }
-    if (mod.qualityBoost) { badges.appendChild(badge("marker-boost", "+" + mod.qualityBoost + "% quality")); }
-    if (mod.unscalable) { badges.appendChild(badge("marker-unscalable", "Unscalable")); }
+    if (mod.crafted)    { badges.appendChild(badge("marker-crafted", "Crafted")); }
+    if (!inColumn) {
+      var kindClass = ["prefix","suffix","implicit","enhancement","unique"].indexOf(mod.kind) !== -1 ? mod.kind : "unknown";
+      badges.appendChild(badge(kindClass, mod.kind));
+    }
+    if (mod.tier !== null && mod.tier !== undefined) {
+      var tc = document.createElement("span");
+      tc.className = "tier-chip";
+      tc.textContent = "T" + mod.tier;
+      badges.appendChild(tc);
+    }
+    if (mod.tags && mod.tags.length) {
+      var tg = document.createElement("span");
+      tg.className = "mod-tags";
+      tg.textContent = mod.tags.join(", ");
+      badges.appendChild(tg);
+    }
+    if (mod.qualityBoost) { badges.appendChild(note("+" + mod.qualityBoost + "% quality")); }
+    if (mod.unscalable) { badges.appendChild(note("unscalable")); }
     if (mod.name) {
       var nm = document.createElement("span");
       nm.className = "mod-name";
@@ -473,13 +539,6 @@
       main.appendChild(l);
     });
 
-    if (mod.tags && mod.tags.length) {
-      var tg = document.createElement("div");
-      tg.className = "mod-tags";
-      tg.textContent = "tags: " + mod.tags.join(", ");
-      main.appendChild(tg);
-    }
-
     row.appendChild(main);
 
     var rm = document.createElement("button");
@@ -494,6 +553,31 @@
     return row;
   }
 
+  /* Item-wide states you usually can't undo — shown as banded stamps under the
+     meta line so they're impossible to miss. Read from state only. */
+  function renderStamps() {
+    var row = $("stamp-row");
+    row.innerHTML = "";
+    var f = state.flags;
+    var allMods = state.mods.concat(state.implicits, state.enhancements);
+    var stamps = [];
+
+    if (f.twiceCorrupted) { stamps.push(["corrupted", "Twice Corrupted"]); }
+    else if (f.corrupted) { stamps.push(["corrupted", "Corrupted"]); }
+    if (f.mirrored) { stamps.push(["mirrored", "Mirrored"]); }
+    if (f.sanctified) { stamps.push(["sanctified", "Sanctified"]); }
+    if (f.unmodifiable) { stamps.push(["unmodifiable", "Unmodifiable"]); }
+    if (allMods.some(function (m) { return m.desecrated; })) { stamps.push(["desecrated", "Desecrated"]); }
+    if (f.fractured || allMods.some(function (m) { return m.fractured; })) { stamps.push(["fractured", "Fractured"]); }
+
+    stamps.forEach(function (s) {
+      var el = document.createElement("div");
+      el.className = "stamp s-" + s[0];
+      el.appendChild(document.createTextNode(s[1]));
+      row.appendChild(el);
+    });
+  }
+
   function render() {
     // Overview controls
     if (state.itemClass) { ensureClassOption(state.itemClass); }
@@ -502,7 +586,7 @@
     $("inp-ilvl").value = state.itemLevel !== null && state.itemLevel !== undefined ? state.itemLevel : "";
     $("inp-quality").value = state.quality ? state.quality.value : "";
     $("inp-qgroup").value = state.quality && state.quality.group ? state.quality.group : "";
-    $("flag-corrupted").checked = !!state.flags.corrupted;
+    $("flag-corrupted").checked = !!(state.flags.corrupted || state.flags.twiceCorrupted);
     $("flag-sanctified").checked = !!state.flags.sanctified;
     $("flag-fractured").checked = !!state.flags.fractured;
     $("flag-mirrored").checked = !!state.flags.mirrored;
@@ -538,6 +622,8 @@
     (state.properties || []).forEach(function (p) { meta.push("<b>" + p.name + ":</b> " + p.value); });
     $("meta-line").innerHTML = meta.join(" &nbsp;·&nbsp; ");
 
+    renderStamps();
+
     // Mods: implicits/enhancements/uniques full-width, then Prefix | Suffix columns
     var list = $("mod-list");
     list.innerHTML = "";
@@ -565,7 +651,7 @@
           none.textContent = "none";
           col.appendChild(none);
         }
-        pair[1].forEach(function (m) { col.appendChild(modRow(m[0], m[1], m[2])); });
+        pair[1].forEach(function (m) { col.appendChild(modRow(m[0], m[1], m[2], true)); });
         cols.appendChild(col);
       });
       list.appendChild(cols);
@@ -635,7 +721,11 @@
   $("inp-quality").addEventListener("change", qualityWrite);
   $("inp-qgroup").addEventListener("change", qualityWrite);
   ["corrupted", "sanctified", "fractured", "mirrored"].forEach(function (f) {
-    $("flag-" + f).addEventListener("change", function () { state.flags[f] = this.checked; });
+    $("flag-" + f).addEventListener("change", function () {
+      state.flags[f] = this.checked;
+      if (f === "corrupted" && !this.checked) { state.flags.twiceCorrupted = false; }
+      render();  // flags now drive the stamps, so the reader has to re-run
+    });
   });
 
   $("btn-add-mod").addEventListener("click", function () {
