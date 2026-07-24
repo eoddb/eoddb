@@ -210,6 +210,48 @@
   .stamp.s-fractured   { color: #a9b4c6; }
   .stamp.s-unmodifiable{ color: var(--stone); }
 
+  /* ── Mechanical triage ── */
+  .triage-headline {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  .triage-headline.t-finished  { background: rgba(166,91,95,0.16);   color: var(--danger-text); }
+  .triage-headline.t-craftable { background: rgba(130,166,156,0.16); color: var(--sage); }
+  .triage-headline.t-blank     { background: var(--accent1-dim);     color: #a9b4c6; }
+  .triage-headline.t-unique    { background: rgba(166,156,125,0.16); color: #c4b998; }
+  .triage-row {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .triage-row:first-of-type { border-top: none; }
+  .triage-label {
+    flex-shrink: 0;
+    width: 88px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding-top: 2px;
+  }
+  .triage-row.t-warn .triage-label { color: var(--khaki); }
+  .triage-row.t-good .triage-label { color: var(--sage); }
+  .triage-text { color: var(--text); }
+  .triage-foot {
+    margin-top: 10px;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
   /* ── Mod list ── */
   .mod-row {
     border: 1px solid var(--border);
@@ -386,6 +428,13 @@
   <div id="stamp-row"></div>
 </div>
 
+<div class="panel hidden" id="triage-panel">
+  <h2>Mechanical triage</h2>
+  <div id="triage-headline" class="triage-headline"></div>
+  <div id="triage-rows"></div>
+  <div class="triage-foot">Facts and legal moves only, derived from the item itself. What it's worth comes later.</div>
+</div>
+
 <div class="panel">
   <h2>Modifiers</h2>
   <div id="mod-list"><div class="empty-note">No modifiers yet — paste an item above or add one manually.</div></div>
@@ -412,6 +461,7 @@
 </details>
 
 <script src="/poe2/eoddb_poe2_itemparse.js?v=1"></script>
+<script src="/poe2/eoddb_poe2_triage_rules.js?v=1"></script>
 <script>
 (function () {
   "use strict";
@@ -578,6 +628,32 @@
     });
   }
 
+  /* Mechanical triage panel: a pure read of state via the rules file. */
+  function renderTriage() {
+    var panel = $("triage-panel");
+    var triage = (window.eoddbTriageRules && state.ok) ? window.eoddbTriageRules.computeTriage(state) : null;
+    if (!triage) { panel.classList.add("hidden"); return; }
+    panel.classList.remove("hidden");
+    var head = $("triage-headline");
+    head.className = "triage-headline t-" + triage.headline.tone;
+    head.textContent = triage.headline.text;
+    var rowsEl = $("triage-rows");
+    rowsEl.innerHTML = "";
+    triage.rows.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "triage-row t-" + r.tone;
+      var label = document.createElement("div");
+      label.className = "triage-label";
+      label.textContent = r.label;
+      var text = document.createElement("div");
+      text.className = "triage-text";
+      text.textContent = r.text;
+      row.appendChild(label);
+      row.appendChild(text);
+      rowsEl.appendChild(row);
+    });
+  }
+
   function render() {
     // Overview controls
     if (state.itemClass) { ensureClassOption(state.itemClass); }
@@ -623,6 +699,7 @@
     $("meta-line").innerHTML = meta.join(" &nbsp;·&nbsp; ");
 
     renderStamps();
+    renderTriage();
 
     // Mods: implicits/enhancements/uniques full-width, then Prefix | Suffix columns
     var list = $("mod-list");
