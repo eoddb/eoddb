@@ -1157,8 +1157,10 @@ async function init() {
   // Build the video facades now that the detail blocks exist.
   EODDB_VIDEO.scan(gridPair);
 
-  // Sync first-column widths across both tables
-  const firstCols = gridPair.querySelectorAll('td:first-child, th:first-child');
+  // Sync first-column widths across both tables. Detail rows are excluded:
+  // their single cell spans every column, so it measures at full table width
+  // and would blow the shared column width out to the whole table.
+  const firstCols = gridPair.querySelectorAll('tr:not(.detail-row) > td:first-child, th:first-child');
   let maxW = 0;
   firstCols.forEach(c => { const w = c.getBoundingClientRect().width; if (w > maxW) maxW = w; });
   gridPair.style.setProperty('--aspect-col-w', maxW + 'px');
