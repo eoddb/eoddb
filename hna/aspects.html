@@ -326,14 +326,19 @@
     color: var(--text-muted);
   }
 
-  tr.detail-row { display: none; }
-  tr.detail-row.visible { display: table-row; }
+  /* The row stays laid out at zero height so it can glide open — display:none
+     cannot animate. Its border is dropped while closed, or every aspect row
+     would gain a stray 1px line from `tbody td`. */
+  tr.detail-row.visible > td > .rowfold { grid-template-rows: 1fr; }
 
   tr.detail-row td {
     padding: 0 !important;
+    border-bottom: 0;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     background: var(--bg) !important;
   }
+
+  tr.detail-row.visible td { border-bottom: 1px solid var(--border); }
 
   .detail-inner {
     padding: 14px 20px;
@@ -709,10 +714,11 @@ async function init() {
               <div class="tier-effect">${t.effect}</div>
             </div>`;
         });
-        detailTd.innerHTML = `<div class="detail-inner">
+        // Bare div between fold and content: a padded grid item cannot collapse.
+        detailTd.innerHTML = `<div class="rowfold"><div><div class="detail-inner">
           <div class="detail-desc">${descText}</div>
           <div class="detail-tiers">${tiersHTML}</div>
-        </div>`;
+        </div></div></div>`;
       }
 
       detailTr.appendChild(detailTd);

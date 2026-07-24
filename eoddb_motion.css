@@ -38,3 +38,46 @@ details[open]::details-content {
 @media (prefers-reduced-motion: reduce) {
   details::details-content { transition: none; }
 }
+
+/* ── .rowfold: the same glide for things that cannot be a <details> ──
+
+   Table rows are the main case: they collapse with display:none on <tr>,
+   and neither display nor a row's height can be animated. Instead the row
+   stays laid out and its cell content is wrapped:
+
+     <td>                        (needs padding 0)
+       <div class="rowfold">     grid container, animates 0fr -> 1fr
+         <div>                   bare clip child — MUST have no padding
+           <div class="…-inner"> the padded, visible content
+
+   The bare middle div is not optional. An `fr` track never shrinks below
+   its item's padding + border, and min-height:0 only zeroes the *content*
+   box — so a padded grid item stays stuck at its padding height and the row
+   never closes. Keep padding on the content inside the clip, never on the
+   clip itself.
+
+   The 0fr/1fr grid trick is what allows an unknown content height to
+   animate. overflow/min-height sit on the CHILD, never on .rowfold itself,
+   so a position:sticky element inside keeps sticking to the real scroll
+   container — an overflow:hidden ancestor would silently capture it.
+
+   Each page opens its own fold with whatever class it already toggles, e.g.
+     tr.skill-row.visible > td > .rowfold { grid-template-rows: 1fr; }
+   so no page has to restate the closed state or the timing. */
+
+.rowfold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+}
+
+.rowfold > * {
+  overflow: hidden;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowfold { transition: none; }
+}

@@ -325,14 +325,19 @@
     box-shadow: 0 0 6px rgba(113,125,146,0.5);
   }
 
-  tr.detail-row { display: none; }
-  tr.detail-row.visible { display: table-row; }
+  /* The row stays laid out at zero height so it can glide open — display:none
+     cannot animate. Its border is dropped while closed, or every aspect row
+     would gain a stray 1px line from `tbody td`. */
+  tr.detail-row.visible > td > .rowfold { grid-template-rows: 1fr; }
 
   tr.detail-row td {
     padding: 0 !important;
+    border-bottom: 0;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     background: var(--bg) !important;
   }
+
+  tr.detail-row.visible td { border-bottom: 1px solid var(--border); }
 
   .detail-inner {
     padding: 14px 20px;
@@ -1083,7 +1088,8 @@ async function init() {
       detailTr.style.setProperty('--aspect-color', acColor);
       const detailTd = document.createElement('td');
       detailTd.colSpan = 2;
-      let detailHTML = '<div class="detail-inner">';
+      // Bare div between fold and content: a padded grid item cannot collapse.
+      let detailHTML = '<div class="rowfold"><div><div class="detail-inner">';
       aspectEidos.forEach(e => {
         detailHTML += `<div class="eidos-detail-block" data-eidos-name="${e.Name}">
           <div class="eidos-detail-header">${e.Name} <span class="rarity-tag r${e.Rarity}">${e.Rarity}-Star</span></div>
@@ -1099,7 +1105,7 @@ async function init() {
           ${buildTracks(skillBy[e.Name])}
         </div>`;
       });
-      detailHTML += '</div>';
+      detailHTML += '</div></div></div>';
       detailTd.innerHTML = detailHTML;
       detailTr.appendChild(detailTd);
       tbody.appendChild(detailTr);

@@ -383,19 +383,24 @@
     content: '−';
   }
 
-  tr.type-desc-row { display: none; }
-  tr.type-desc-row.visible { display: table-row; }
+  /* Always laid out at zero height so it can glide; the cell padding moves
+     into .type-desc-inner so it collapses with the content instead of
+     holding the row open. */
+  tr.type-desc-row.visible > td > .rowfold { grid-template-rows: 1fr; }
 
   tr.type-desc-row td {
     background: var(--bg) !important;
-    border-bottom: 1px solid var(--border);
-    padding: 12px 14px !important;
+    border-bottom: 0;
+    padding: 0 !important;
     vertical-align: top;
     font-size: 0.78rem;
     line-height: 1.6;
     color: var(--text);
     min-width: 150px;
   }
+
+  tr.type-desc-row.visible td { border-bottom: 1px solid var(--border); }
+  .type-desc-inner { padding: 12px 14px; }
 
   tr.type-desc-row td:first-child {
     background: var(--bg) !important;
@@ -491,8 +496,12 @@
   }
 
   /* ── Skill / Rapport detail (opens under an aspect row) ── */
-  tr.skill-row { display: none; }
-  tr.skill-row.visible { display: table-row; }
+  /* The row stays laid out at zero height so its content can glide open —
+     display:none cannot animate. Its border is dropped while closed, or
+     every aspect row would gain a stray 1px line from `tbody td`. */
+  tr.skill-row td { border-bottom: 0; }
+  tr.skill-row.visible td { border-bottom: 1px solid var(--border); }
+  tr.skill-row.visible > td > .rowfold { grid-template-rows: 1fr; }
 
   /* This row's single cell is a td:first-child, so it picks up the sticky
      aspect-label styling (nowrap, bold, header background). Undo all of it. */
@@ -510,14 +519,21 @@
 
   /* The row spans the whole (scrollable) table, so pin the content to the left
      edge and cap its width instead of letting text run the full table width. */
+  /* .skill-inner is the fold's clip child, so it must carry no padding of its
+     own (a padded grid item cannot collapse) — .skill-pad holds it instead.
+     It also has to BE the clipper rather than sit inside one: an
+     overflow:hidden *ancestor* would capture this sticky and the content
+     would stop pinning to the left edge as the table scrolls sideways. */
   .skill-inner {
-    padding: 14px 18px;
+    padding: 0;
     max-width: min(980px, calc(100vw - 4rem));
     position: sticky;
     left: 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
+
+  .skill-pad { padding: 14px 18px; }
 
   .skill-block { display: none; margin-bottom: 18px; }
   .skill-block.show-block { display: block; }
@@ -619,7 +635,12 @@
   .disp-effect { font-size: 0.8rem; line-height: 1.5; color: var(--text); }
   .disp-qty { text-align: right; font-weight: 700; color: var(--header-text); width: 48px; }
 
-  .disp-detail > td { background: var(--bg); padding: 8px 12px 10px; }
+  /* Padding lives on the inner div so it collapses with the fold; the row
+     itself stays laid out at zero height. */
+  .disp-detail > td { background: var(--bg); padding: 0; border-bottom: 0; }
+  .disp-detail.open > td { border-bottom: 1px solid var(--border); }
+  .disp-detail.open > td > .rowfold { grid-template-rows: 1fr; }
+  .disp-detail-inner { padding: 8px 12px 10px; }
   .disp-detail .type-group { margin-top: 6px; }
   .disp-detail .type-group:first-child { margin-top: 0; }
   .disp-detail .type-label {
@@ -844,15 +865,17 @@ async function init() {
   // ── Type description row (hidden by default) ──
   const descRow = document.createElement('tr');
   descRow.className = 'type-desc-row';
+  // Every cell wraps its content in a .rowfold so the row can animate open.
+  const foldCell = html => `<div class="rowfold"><div><div class="type-desc-inner">${html}</div></div></div>`;
   const labelTd = document.createElement('td');
-  labelTd.textContent = 'Info';
+  labelTd.innerHTML = foldCell('Info');
   descRow.appendChild(labelTd);
   types.forEach(type => {
     const td = document.createElement('td');
     const count = units.filter(u => u.Type === type).length;
     const desc = typeMap[type] || '';
     const boldDesc = desc.replace(/^(\S+)/, '<strong>$1</strong>');
-    td.innerHTML = `<span class="type-desc-count">${count} Nexus Anima</span>${boldDesc}`;
+    td.innerHTML = foldCell(`<span class="type-desc-count">${count} Nexus Anima</span>${boldDesc}`);
     descRow.appendChild(td);
   });
   thead.appendChild(descRow);
@@ -936,10 +959,10 @@ async function init() {
     skillTr.style.setProperty('--aspect-color', acColor);
     const skillTd = document.createElement('td');
     skillTd.colSpan = types.length + 1;
-    skillTd.innerHTML = '<div class="skill-inner"></div>';
+    skillTd.innerHTML = '<div class="rowfold"><div class="skill-inner"><div class="skill-pad"></div></div></div>';
     skillTr.appendChild(skillTd);
     tbody.appendChild(skillTr);
-    skillRows[aspect] = { row: skillTr, inner: skillTd.firstElementChild };
+    skillRows[aspect] = { row: skillTr, inner: skillTd.querySelector('.skill-pad') };
   });
 
   function ac(name) {
@@ -1346,19 +1369,23 @@ async function buildDispositions(units, types) {
 
       const detail = document.createElement('tr');
       detail.className = 'disp-detail';
-      detail.hidden = true;
       const detailTd = document.createElement('td');
       detailTd.colSpan = 3;
+      // The row is always laid out (hidden/display:none cannot animate); the
+      // fold gives it height, so the panel is built into the fold's inner div.
+      detailTd.innerHTML = '<div class="rowfold"><div><div class="disp-detail-inner"></div></div></div>';
+      const detailInner = detailTd.querySelector('.disp-detail-inner');
       detail.appendChild(detailTd);
 
       // Portraits are built on first expand — building all 27 panels up front
       // would fire 328 image requests on page load.
       let built = false;
       tr.addEventListener('click', () => {
-        if (!built) { detailTd.appendChild(unitPanel(d.units)); built = true; }
-        detail.hidden = !detail.hidden;
-        tr.classList.toggle('open', !detail.hidden);
-        tr.querySelector('.caret').textContent = detail.hidden ? '▶' : '▼';
+        if (!built) { detailInner.appendChild(unitPanel(d.units)); built = true; }
+        const open = !detail.classList.contains('open');
+        detail.classList.toggle('open', open);
+        tr.classList.toggle('open', open);
+        tr.querySelector('.caret').textContent = open ? '▼' : '▶';
       });
 
       tbody.appendChild(tr);
