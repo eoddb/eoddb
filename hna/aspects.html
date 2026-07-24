@@ -16,7 +16,7 @@
 <meta property="og:description" content="All 16 Honkai: Nexus Anima aspects explained — descriptions, Nexus Anima thresholds, and scaling effects at every breakpoint.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://eoddb.com/hna/aspects">
-<meta property="og:image" content="https://eoddb.com/og/hna.png?v=0346bd00">
+<meta property="og:image" content="https://eoddb.com/og/hna-aspects.png?v=09240a03">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -331,11 +331,22 @@
      would gain a stray 1px line from `tbody td`. */
   tr.detail-row.visible > td > .rowfold { grid-template-rows: 1fr; }
 
+  /* This row's single spanning cell is a td:first-child, so it inherits the
+     sticky aspect-label styling. Undo all of it: now that the row is always
+     laid out, an inherited `white-space: nowrap` + `width: 1%` on a cell
+     spanning every column drags the table's column widths out of shape. */
   tr.detail-row td {
     padding: 0 !important;
     border-bottom: 0;
     border-left: var(--accent-stripe) solid var(--aspect-color, var(--border));
     background: var(--bg) !important;
+    position: static;
+    white-space: normal;
+    width: auto;
+    vertical-align: top;
+    font-weight: 400;
+    font-size: 0.82rem;
+    letter-spacing: normal;
   }
 
   tr.detail-row.visible td { border-bottom: 1px solid var(--border); }

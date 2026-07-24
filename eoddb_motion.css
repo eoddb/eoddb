@@ -68,6 +68,15 @@ details[open]::details-content {
 .rowfold {
   display: grid;
   grid-template-rows: 0fr;
+  /* A folded row is still laid out, so without this its text keeps voting in
+     the table's column-width algorithm and silently redistributes the columns
+     above it. contain:inline-size makes the fold's width independent of its
+     contents (block size still tracks content, so the height animation is
+     unaffected); minmax(0,…) additionally lets the track shrink below
+     min-content. Both are needed — min-width:0 alone does not stop a cell's
+     max-content from influencing the distribution. */
+  contain: inline-size;
+  grid-template-columns: minmax(0, 1fr);
   transition: grid-template-rows 0.28s ease;
 }
 
