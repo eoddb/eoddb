@@ -630,7 +630,7 @@ Promise.all([
     const sync = () => {
       boxEl.style.display = open ? '' : 'none';
       toggleEl.classList.toggle('open', open);
-      labelEl.textContent = (open ? 'Hide' : 'Show') + ' ' + g.label + ' (' + count + ')';
+      labelEl.textContent = (open ? 'Collapse' : 'Expand') + ' ' + g.label + ' (' + count + ')';
     };
     toggleEl.addEventListener('click', () => { open = !open; sync(); });
     sync();
