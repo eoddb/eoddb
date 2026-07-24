@@ -7,7 +7,9 @@
 
    computeTriage(state) -> null | {
      headline: { tone: "finished"|"craftable"|"blank"|"unique", text },
-     rows: [{ label, text, tone: "info"|"warn"|"good" }]
+     rows: [{ label, tone: "info"|"warn"|"good",
+              text | lines: [text],   // lines = one section, stacked
+              bar? }]                 // bar = Rolls summary (see below)
    }
 
    Every rule here is public game knowledge confirmed in
@@ -138,20 +140,31 @@
       }
     }
 
-    /* ── Corruption paths (still open on corrupted items) ── */
+    /* ── Corruption (one section — every corruption path in one place,
+       Gavin's 2026-07-24 regrouping; was three sibling rows: Sacrifice,
+       Sacrificed?, Architect's) ── */
     if (corrupted && !lockedReason) {
       var enh = state.enhancements || [];
       var unboosted = enh.filter(function (m) { return m.corruption; }).length;
+      var cLines = [];
       if (unboosted > 0) {
-        rows.push({ label: "Sacrifice", tone: "good", text: unboosted + " unboosted corruption line — an Orb of Sacrifice can push it beyond natural values by consuming a random modifier (one boost per line, ever)." });
+        cLines.push(unboosted + " unboosted corruption line — an Orb of Sacrifice can push it beyond natural values by consuming a random modifier (one boost per line, ever).");
       } else if (enh.length) {
-        rows.push({ label: "Sacrifice", tone: "info", text: enh.length + " corruption line(s). If one is still unboosted, an Orb of Sacrifice can boost it (consumes a random modifier; one boost per line). Spotting an already-boosted line needs natural-range data — judgment layer, later." });
+        cLines.push(enh.length + " corruption line(s). If one is still unboosted, an Orb of Sacrifice can boost it (consumes a random modifier; one boost per line). Spotting an already-boosted line needs natural-range data — judgment layer, later.");
       }
       if (capTotal !== null && enh.length && explicit.length < capTotal) {
-        rows.push({ label: "Sacrificed?", tone: "info", text: explicit.length + " of " + capTotal + " affixes on a corrupted item — " + (capTotal - explicit.length) + " missing line(s) may already have been consumed by Orb(s) of Sacrifice." });
+        cLines.push(explicit.length + " of " + capTotal + " affixes — " + (capTotal - explicit.length) + " missing line(s) may already have been consumed by Orb(s) of Sacrifice.");
       }
       if (!f.twiceCorrupted) {
-        rows.push({ label: "Architect's", tone: "warn", text: "Architect's Orb can attempt a second corruption — unpredictable modification OR the item is destroyed. Success adds a second corruption line (boostable by its own sacrifice)." });
+        cLines.push("Architect's Orb can attempt a second corruption — unpredictable modification OR the item is destroyed. Success adds a second corruption line (boostable by its own sacrifice).");
+      }
+      if (cLines.length) {
+        rows.push({
+          label: "Corruption",
+          /* Opportunity outranks the gamble warning outranks plain facts. */
+          tone: unboosted > 0 ? "good" : (!f.twiceCorrupted ? "warn" : "info"),
+          lines: cLines
+        });
       }
     }
 

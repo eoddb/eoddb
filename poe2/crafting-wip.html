@@ -348,6 +348,8 @@
   @media (prefers-reduced-motion: reduce) {
     .roll-bar-fill { transition: none; }
   }
+  /* Stacked lines of a grouped section (Corruption). */
+  .triage-line + .triage-line { margin-top: 5px; }
   .triage-foot {
     margin-top: 10px;
     font-size: 0.68rem;
@@ -576,7 +578,7 @@
 </style>
 </head>
 <body>
-<script src="/poe2/eoddb_poe2_nav.js?v=5"></script>
+<script src="/poe2/eoddb_poe2_nav.js?v=6"></script>
 
 <div class="page-header">
   <h1>Item Triage<span class="wip-tag">Work in progress</span></h1>
@@ -698,7 +700,7 @@
 </details>
 
 <script src="/poe2/eoddb_poe2_itemparse.js?v=1"></script>
-<script src="/poe2/eoddb_poe2_triage_rules.js?v=3"></script>
+<script src="/poe2/eoddb_poe2_triage_rules.js?v=4"></script>
 <script>
 (function () {
   "use strict";
@@ -901,7 +903,17 @@
       var text = document.createElement("div");
       text.className = "triage-text";
       if (r.bar) { text.appendChild(rollBar(r.bar)); }
-      text.appendChild(document.createTextNode(r.text));
+      if (r.lines) {
+        // Grouped section (e.g. Corruption): one label, stacked lines.
+        r.lines.forEach(function (lineText) {
+          var p = document.createElement("div");
+          p.className = "triage-line";
+          p.textContent = lineText;
+          text.appendChild(p);
+        });
+      } else {
+        text.appendChild(document.createTextNode(r.text));
+      }
       row.appendChild(label);
       row.appendChild(text);
       rowsEl.appendChild(row);
