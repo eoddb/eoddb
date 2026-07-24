@@ -64,9 +64,6 @@
   /* Two-tone lockup, matching the nav brand on every game page */
   .brand .db { font-weight: 800; text-transform: none; color: var(--accent1); }
 
-  /* the mark's tile is the same #0d1117 as the page, so what reads is the
-     slate outline and lettering — a badge rather than a pasted-on square */
-  .brand-mark { width: 2.4rem; height: 2.4rem; flex-shrink: 0; }
 
   .tagline {
     font-size: 0.9rem;
@@ -216,7 +213,6 @@
   @media (max-width: 500px) {
     .discord-cta { flex-direction: column; text-align: center; gap: 12px; }
     .brand { font-size: 1.6rem; }
-    .brand-mark { width: 1.9rem; height: 1.9rem; }
   }
 </style>
 <script type="application/ld+json">
@@ -238,7 +234,6 @@
 
 <div class="site-header">
   <div class="brand">
-    <img src="/favicon.svg" alt="" class="brand-mark" onerror="this.style.display='none'">
     <span>EOD<span class="db">db.com</span></span>
   </div>
   <p class="tagline">Your end-of-day game companion &mdash; guides, data, and analysis across multiple titles</p>
