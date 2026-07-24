@@ -232,8 +232,6 @@
   .bt-htag.nodupes { background: rgba(117,95,100,0.25); color: #b2989e; }
   .bt-htag.bp { background: rgba(122,110,105,0.2); color: #a5968f; }
 
-  .bt-meta-date { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; margin-left: auto; }
-
   .bt-tag {
     font-size: 0.65rem;
     font-weight: 600;
@@ -473,7 +471,6 @@ Promise.all([
       titleRow.appendChild(s);
     });
     if (team.cleared) addTag('bt-tag', team.cleared);
-    if (team.date) addTag('bt-meta-date', team.date);
     body.appendChild(titleRow);
 
     const infoLine = (label, items) => {
