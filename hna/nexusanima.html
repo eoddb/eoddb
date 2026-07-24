@@ -456,10 +456,24 @@
   .analysis .hl-r4 { color: var(--r4); font-weight: 600; }
   .analysis .hl-r5 { color: var(--r5); font-weight: 600; }
 
-  /* Commentary shown under the tag buttons while tags are active */
-  .tag-desc {
+  /* Commentary shown under the tag buttons while tags are active. The panel
+     sits in a .rowfold so it glides open/closed; its vertical margins live on
+     the fold and animate with it (inside the clip a negative top margin would
+     be cut off, and a closed fold must have zero footprint). */
+  .tag-desc-fold {
     max-width: 1400px;
+    margin: 0 auto;
+    transition: grid-template-rows 0.28s ease, margin 0.28s ease;
+  }
+  .tag-desc-fold.open {
+    grid-template-rows: 1fr;
     margin: -0.5rem auto 1.2rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tag-desc-fold { transition: none; }
+  }
+
+  .tag-desc {
     background: var(--surface);
     border: 1px solid var(--border);
     border-left: var(--accent-stripe) solid var(--accent1);
@@ -727,7 +741,7 @@
 </div>
 
 <div class="tag-filters" id="tagFilters"></div>
-<div class="tag-desc" id="tagDesc" hidden></div>
+<div class="rowfold tag-desc-fold" id="tagDesc"><div><div class="tag-desc" id="tagDescInner"></div></div></div>
 
 <div class="table-wrap">
   <table>
@@ -1114,17 +1128,20 @@ async function init() {
   });
 
   const tagDescEl = document.getElementById('tagDesc');
+  const tagDescInner = document.getElementById('tagDescInner');
 
   function renderTagDesc() {
-    if (activeTags.size === 0) { tagDescEl.hidden = true; tagDescEl.innerHTML = ''; return; }
+    // Closing leaves the old content in place so the fold glides shut over
+    // it instead of collapsing onto an empty panel; the next open re-renders.
+    if (activeTags.size === 0) { tagDescEl.classList.remove('open'); return; }
     const items = allTags.filter(t => activeTags.has(t)).map(tag => {
       const matches = tagsData.filter(t => (t.Tags || []).some(e => e.tag === tag)).length;
       return `<div class="tag-desc-item"><span class="tag-desc-name">${tag}</span> — ` +
              `${TAG_DEFS[tag] || 'No description yet.'} ` +
              `<span class="tag-desc-count">(${matches} Nexus Anima)</span></div>`;
     });
-    tagDescEl.innerHTML = items.join('') + `<div class="tag-desc-note">${TAG_NOTE}</div>`;
-    tagDescEl.hidden = false;
+    tagDescInner.innerHTML = items.join('') + `<div class="tag-desc-note">${TAG_NOTE}</div>`;
+    tagDescEl.classList.add('open');
   }
 
   function applyTagFilter() {
