@@ -20,6 +20,9 @@
 /hsr/:file
   Cache-Control: no-cache
 
+/fonts/*
+  Cache-Control: public, max-age=86400
+
 /hna/img/*
   Cache-Control: public, max-age=86400
 

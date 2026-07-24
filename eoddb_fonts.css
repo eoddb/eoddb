@@ -1,0 +1,17 @@
+/* EODdb site fonts — linked from every page's <head>, before the inline styles.
+   MOON GET! (display, single Heavy cut) drives h1/h2, the brand lockups, and
+   the whole nav bar. Body text stays on the system stack. */
+
+@font-face {
+  font-family: 'MOON GET!';
+  src: url('/fonts/moonget-heavy.woff2') format('woff2');
+  /* one heavy cut declared across the whole range so bold headings map to it
+     directly instead of getting a synthetic double-bold smear */
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1, h2, .brand, .eoddb-nav-brand, .eoddb-nav-link {
+  font-family: 'MOON GET!', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
