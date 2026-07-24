@@ -20,7 +20,17 @@
    }                                          // UI surfaces these lines
 
    Unrecognised input never throws: it lands in `unparsed` so a game-patch
-   format change degrades the prefill instead of breaking the page. */
+   format change degrades the prefill instead of breaking the page.
+
+   Also exported (share-link support):
+   - serializeItem(item) -> advanced-format text (round-trips through
+     parseItem; the canonical wire format for share links)
+   - encodeShare(text) -> Promise<code>  ("1."+deflated base64url, or
+     "0."+plain base64url when CompressionStream is unavailable)
+   - decodeShare(code) -> Promise<text|null>
+   Share URLs put the code in the fragment: /poe2/crafting-wip#i=<code>.
+   Node 18+ has all required globals, so offline tooling can decode links
+   with this same file. */
 (function (root, factory) {
   if (typeof module === "object" && module.exports) { module.exports = factory(); }
   else { root.eoddbItemParse = factory(); }
@@ -215,5 +225,127 @@
     return item;
   }
 
-  return { parseItem: parseItem };
+  /* ── Serialization: state -> advanced-format text (round-trips) ── */
+
+  function modBlockLines(mod) {
+    var head;
+    if (mod.kind === "enhancement") {
+      head = mod.corruption ? "Corruption Enhancement" : "Enhancement";
+    } else if (mod.kind === "unknown" && mod.headRaw) {
+      head = mod.headRaw;
+    } else {
+      head = (mod.desecrated ? "Desecrated " : mod.fractured ? "Fractured " : mod.crafted ? "Crafted " : "") +
+        mod.kind.charAt(0).toUpperCase() + mod.kind.slice(1) + " Modifier";
+      if (mod.name) { head += " \"" + mod.name + "\""; }
+      if (mod.tier !== null && mod.tier !== undefined) { head += " (Tier: " + mod.tier + ")"; }
+    }
+    var parts = [head];
+    if (mod.tags && mod.tags.length) { parts.push(mod.tags.join(", ")); }
+    if (mod.qualityBoost) { parts.push(mod.qualityBoost + "% Increased"); }
+    var lines = ["{ " + parts.join(" — ") + " }"];
+    (mod.lines || []).forEach(function (l, i) {
+      var suffix = (mod.unscalable && i === mod.lines.length - 1) ? " — Unscalable Value" : "";
+      lines.push(l.text + suffix);
+    });
+    return lines;
+  }
+
+  function serializeItem(item) {
+    var sections = [];
+    var head = [];
+    if (item.itemClass) { head.push("Item Class: " + item.itemClass); }
+    if (item.rarity) { head.push("Rarity: " + item.rarity); }
+    if (item.name) { head.push(item.name); }
+    if (item.base) { head.push(item.base); }
+    if (head.length) { sections.push(head); }
+    var props = [];
+    if (item.quality) {
+      props.push("Quality" + (item.quality.group ? " (" + item.quality.group + ")" : "") + ": +" + item.quality.value + "% (augmented)");
+    }
+    (item.properties || []).forEach(function (p) {
+      props.push(p.name + ": " + p.value + (p.notes || []).map(function (n) { return " (" + n + ")"; }).join(""));
+    });
+    if (props.length) { sections.push(props); }
+    if (item.requires && (item.requires.level || (item.requires.attributes || []).length)) {
+      var toks = [];
+      if (item.requires.level) { toks.push("Level " + item.requires.level); }
+      (item.requires.attributes || []).forEach(function (a) {
+        toks.push(a.value + (a.augmented ? " (augmented)" : "") + " " + a.attr);
+      });
+      sections.push(["Requires: " + toks.join(", ")]);
+    }
+    if (item.sockets) { sections.push(["Sockets: " + item.sockets]); }
+    if (item.itemLevel !== null && item.itemLevel !== undefined) { sections.push(["Item Level: " + item.itemLevel]); }
+    var runes = (item.runes || []).map(function (r) { return r + " (rune)"; });
+    if (runes.length) { sections.push(runes); }
+    var enchants = (item.enchants || []).map(function (e) { return e + " (enchant)"; });
+    if (enchants.length) { sections.push(enchants); }
+    if (item.grantsSkill) {
+      sections.push(["Grants Skill: " + (item.grantsSkill.level ? "Level " + item.grantsSkill.level + " " : "") + item.grantsSkill.name]);
+    }
+    [item.enhancements, item.implicits, item.mods].forEach(function (list) {
+      var lines = [];
+      (list || []).forEach(function (mod) { lines = lines.concat(modBlockLines(mod)); });
+      if (lines.length) { sections.push(lines); }
+    });
+    if ((item.flavour || []).length) { sections.push(item.flavour.slice()); }
+    var FLAG_TEXT = { corrupted: "Corrupted", twiceCorrupted: "Twice Corrupted", sanctified: "Sanctified", fractured: "Fractured Item", mirrored: "Mirrored", unmodifiable: "Unmodifiable" };
+    Object.keys(FLAG_TEXT).forEach(function (k) {
+      if (item.flags && item.flags[k]) { sections.push([FLAG_TEXT[k]]); }
+    });
+    if ((item.unparsed || []).length) { sections.push(item.unparsed.slice()); }
+    return sections.map(function (s) { return s.join("\n"); }).join("\n--------\n");
+  }
+
+  /* ── Share codes: text <-> "1."+deflate+base64url (or "0." uncompressed) ── */
+
+  function bytesToB64url(bytes) {
+    var bin = "";
+    for (var i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+
+  function b64urlToBytes(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) { s += "="; }
+    var bin = atob(s);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) { bytes[i] = bin.charCodeAt(i); }
+    return bytes;
+  }
+
+  function encodeShare(text) {
+    var data = new TextEncoder().encode(text);
+    if (typeof CompressionStream === "undefined") {
+      return Promise.resolve("0." + bytesToB64url(data));
+    }
+    var stream = new Blob([data]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+    return new Response(stream).arrayBuffer().then(function (buf) {
+      return "1." + bytesToB64url(new Uint8Array(buf));
+    });
+  }
+
+  function decodeShare(code) {
+    try {
+      var dot = code.indexOf(".");
+      if (dot === -1) { return Promise.resolve(null); }
+      var bytes = b64urlToBytes(code.slice(dot + 1));
+      if (code.slice(0, dot) === "0") {
+        return Promise.resolve(new TextDecoder().decode(bytes));
+      }
+      if (code.slice(0, dot) !== "1" || typeof DecompressionStream === "undefined") {
+        return Promise.resolve(null);
+      }
+      var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      return new Response(stream).arrayBuffer().then(function (buf) {
+        return new TextDecoder().decode(new Uint8Array(buf));
+      }).catch(function () { return null; });
+    } catch (e) {
+      return Promise.resolve(null);
+    }
+  }
+
+  return { parseItem: parseItem, serializeItem: serializeItem, encodeShare: encodeShare, decodeShare: decodeShare };
 });

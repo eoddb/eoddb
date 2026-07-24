@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="robots" content="noindex">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JXBZ3W4RBF"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JXBZ3W4RBF');</script>
@@ -332,6 +335,23 @@
 
   .empty-note { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
 
+  /* ── Share ── */
+  #share-out {
+    width: 100%;
+    min-height: 74px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    padding: 10px 12px;
+    resize: vertical;
+    word-break: break-all;
+  }
+  #share-out:focus { outline: none; border-color: var(--accent1); }
+
   /* ── Unparsed ── */
   #unparsed-panel { border-color: rgba(166,91,95,0.45); }
   #unparsed-panel h2 { color: var(--danger-text); }
@@ -446,6 +466,15 @@
     </select>
     <input type="text" id="add-text" placeholder="Type a modifier line, e.g. +38% to Lightning Resistance">
     <button class="btn" id="btn-add-mod">Add</button>
+  </div>
+</div>
+
+<div class="panel hidden" id="share-panel">
+  <h2>Share</h2>
+  <div class="paste-hint">Copy-paste block for Discord or YouTube comments — the link reopens this page with the item filled in exactly as it is now.</div>
+  <textarea id="share-out" readonly spellcheck="false"></textarea>
+  <div class="btn-row">
+    <button class="btn primary" id="btn-share-copy">Copy to clipboard</button>
   </div>
 </div>
 
@@ -650,6 +679,45 @@
     });
   }
 
+  /* Share block: serialize state -> compressed fragment link + paste-ready
+     text. Async (CompressionStream); the token guards stale renders. */
+  var shareToken = 0;
+  function renderShare() {
+    var token = ++shareToken;
+    var panel = $("share-panel");
+    if (!state.ok || !window.eoddbItemParse.serializeItem) { panel.classList.add("hidden"); return; }
+    var text = window.eoddbItemParse.serializeItem(state);
+    window.eoddbItemParse.encodeShare(text).then(function (code) {
+      if (token !== shareToken) { return; }
+      panel.classList.remove("hidden");
+      var url = location.origin + location.pathname.replace(/\.html$/, "") + "#i=" + code;
+      var title = state.name || state.itemClass || "Item";
+      if (state.base && state.base !== state.name) { title += " — " + state.base; }
+      var meta = (state.rarity || "?") + (state.itemLevel ? ", ilvl " + state.itemLevel : "");
+      var lines = [title + " (" + meta + ")"];
+      var triage = window.eoddbTriageRules ? window.eoddbTriageRules.computeTriage(state) : null;
+      if (triage) { lines.push(triage.headline.text); }
+      lines.push("Interactive breakdown: " + url);
+      $("share-out").value = lines.join("\n");
+    }).catch(function () { panel.classList.add("hidden"); });
+  }
+
+  $("btn-share-copy").addEventListener("click", function () {
+    var btn = this;
+    var val = $("share-out").value;
+    function done() {
+      btn.textContent = "Copied";
+      setTimeout(function () { btn.textContent = "Copy to clipboard"; }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(val).then(done);
+    } else {
+      $("share-out").select();
+      document.execCommand("copy");
+      done();
+    }
+  });
+
   function render() {
     // Overview controls
     if (state.itemClass) { ensureClassOption(state.itemClass); }
@@ -696,6 +764,7 @@
 
     renderStamps();
     renderTriage();
+    renderShare();
 
     // Mods: implicits/enhancements/uniques full-width, then Prefix | Suffix columns
     var list = $("mod-list");
@@ -820,6 +889,18 @@
   });
 
   render();
+
+  /* Share-link arrival: #i=<code> -> decode -> paste box -> normal
+     parse-to-prefill flow, exactly as if the visitor pasted it. */
+  (function () {
+    var m = (location.hash || "").match(/^#i=(.+)$/);
+    if (!m || !window.eoddbItemParse.decodeShare) { return; }
+    window.eoddbItemParse.decodeShare(m[1]).then(function (text) {
+      if (!text) { return; }
+      $("paste-box").value = text;
+      parseNow();
+    }).catch(function () {});
+  })();
 })();
 </script>
 
