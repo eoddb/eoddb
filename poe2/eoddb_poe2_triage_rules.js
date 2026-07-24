@@ -49,12 +49,6 @@
     return sum / ps.length;
   }
 
-  function modLabel(mod) {
-    var first = (mod.lines || [])[0];
-    var txt = first ? first.text : (mod.name || mod.kind || "line");
-    return txt.replace(/\s+/g, " ").trim();
-  }
-
   function pctLabel(p) { return Math.round(p * 100) + "%"; }
 
   function computeTriage(state) {
@@ -203,7 +197,7 @@
     allMods.forEach(function (mod) {
       var s = modRollScore(mod);
       if (s === null) { return; }
-      scored.push({ label: modLabel(mod), pct: s });
+      scored.push(s);
       (mod.lines || []).forEach(function (line) {
         (line.values || []).forEach(function (v) {
           var p = rollPct(v);
@@ -213,25 +207,12 @@
     });
 
     if (scored.length) {
-      var sum = scored.reduce(function (a, m) { return a + m.pct; }, 0);
+      var sum = scored.reduce(function (a, p) { return a + p; }, 0);
       var avg = sum / scored.length;
       var quartile = avg >= 0.75 ? "high" : (avg <= 0.25 ? "low" : "mid");
-      var byPct = scored.slice().sort(function (a, b) { return a.pct - b.pct; });
 
-      /* Call out the lines that actually drive the average either way. */
-      var lows = byPct.filter(function (m) { return m.pct <= 0.25; });
-      var maxes = byPct.filter(function (m) { return m.pct >= 1; });
-      var highs = byPct.filter(function (m) { return m.pct >= 0.75 && m.pct < 1; });
-      var notes = [];
-      if (maxes.length) {
-        notes.push("Max roll" + (maxes.length > 1 ? "s" : "") + ": " +
-          maxes.map(function (m) { return m.label + " (" + pctLabel(m.pct) + ")"; }).join("; ") + ".");
-      }
-      if (lows.length) {
-        notes.push("Lowest: " +
-          lows.slice(0, 3).map(function (m) { return m.label + " (" + pctLabel(m.pct) + ")"; }).join("; ") + ".");
-      }
-
+      /* No per-line callouts here: every modifier row carries its own bar,
+         which shows the same thing without repeating the line's text. */
       var verdict;
       if (finished) {
         /* Locked items get the measurement and nothing else — no currency
@@ -249,17 +230,12 @@
         label: "Rolls",
         tone: finished ? "info" : (quartile === "high" ? "good" : (quartile === "low" ? "warn" : "info")),
         text: "Average roll quality " + pctLabel(avg) + " across " + scored.length +
-              " modifier" + (scored.length > 1 ? "s" : "") + ". " +
-              (notes.length ? notes.join(" ") + " " : "") + verdict,
+              " modifier" + (scored.length > 1 ? "s" : "") + ". " + verdict,
         bar: {
           pct: avg,
           quartile: quartile,
           locked: finished,
-          count: scored.length,
-          lowest: byPct[0] || null,
-          highest: byPct[byPct.length - 1] || null,
-          highCount: highs.length + maxes.length,
-          lowCount: lows.length
+          count: scored.length
         }
       });
     }
