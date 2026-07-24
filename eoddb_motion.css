@@ -1,0 +1,40 @@
+/* eoddb_motion.css — shared open/close motion, linked on every page.
+
+   Anything that expands or collapses should glide rather than teleport.
+   Today that means every <details> on the site: ::details-content is the
+   browser's wrapper around everything after <summary>, and three things
+   make it animatable —
+
+     interpolate-size: allow-keywords   lets height transition to/from auto,
+                                        which is otherwise impossible
+     block-size 0 <-> auto              the actual collapse
+     allow-discrete                     keeps the content painted for the
+                                        whole transition instead of it
+                                        vanishing on frame one
+
+   Browsers without ::details-content ignore all of it and snap open exactly
+   as they did before — there is nothing to fall back to and nothing breaks.
+
+   Pages may override the timing or add their own properties to the
+   transition (poe2/crafting-wip.html animates padding alongside), but the
+   default belongs here so new pages get it for free. */
+
+:root {
+  interpolate-size: allow-keywords;
+}
+
+details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.28s ease,
+    content-visibility 0.28s allow-discrete;
+}
+
+details[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details::details-content { transition: none; }
+}
