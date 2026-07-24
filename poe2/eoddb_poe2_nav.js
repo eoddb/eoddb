@@ -61,12 +61,13 @@ const EODDB_NAV_PAGES = [
       gap: 0;
       overflow-x: auto;
     }
-    /* 15/9 rather than an even 12/12: the extra top padding puts the whole
-       text block back where it sat before, so MOON GET stays centred in the
-       bar rather than riding 3px high. */
+    /* 13/11 rather than an even 12/12: the padding split is what sets the
+       text block's height in the bar. Both groups carry the same split, so
+       changing it slides brand and links together without disturbing the
+       alignment between them. */
     .eoddb-nav-brand {
       display: block;
-      padding: 15px 0 9px;
+      padding: 13px 0 11px;
       margin-right: 6px;
       font-size: 0.8rem;
       font-weight: 800;
@@ -101,7 +102,7 @@ const EODDB_NAV_PAGES = [
     }
     .eoddb-nav-link {
       display: block;
-      padding: 15px 16px 9px;
+      padding: 13px 16px 11px;
       font-size: 0.8rem;
       font-weight: 500;
       color: #6e7a8a;
