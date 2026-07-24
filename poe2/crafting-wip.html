@@ -320,6 +320,22 @@
     gap: 8px;
     margin: 4px 0 0;
   }
+  /* The bar is the control that opens the ranges it was computed from. */
+  .roll-fold > summary { list-style: none; cursor: pointer; }
+  .roll-fold > summary::-webkit-details-marker { display: none; }
+  .roll-fold > summary:hover .roll-bar-scale { color: var(--header-text); }
+  .roll-fold > summary:hover .roll-bar-track { border-color: var(--text-muted); }
+  .roll-ranges {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 5px 0 1px;
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .roll-ranges b { color: var(--text); font-weight: 700; }
+
   .roll-bar.compact .roll-bar-track { flex: 1; height: 4px; }
   .roll-bar.compact .roll-bar-scale {
     display: block;
@@ -796,7 +812,10 @@
       var l = document.createElement("div");
       l.className = "mod-line";
       var t = document.createElement("span");
-      t.textContent = line.text;
+      /* The bracketed range is stripped from the visible stat — it lives in
+         the fold under the bar instead. state keeps line.text untouched, so
+         the parser, share links and triage all still see the real ranges. */
+      t.textContent = stripRanges(line.text);
       if (line.values && line.values.length) {
         t.title = line.values.map(function (v) {
           return "roll " + v.value + " (tier range " + v.min + "–" + v.max + ")";
@@ -811,10 +830,7 @@
     var score = window.eoddbTriageRules && window.eoddbTriageRules.modRollScore
       ? window.eoddbTriageRules.modRollScore(mod) : null;
     if (score !== null && score !== undefined) {
-      main.appendChild(rollBar({
-        pct: score,
-        quartile: score >= 0.75 ? "high" : (score <= 0.25 ? "low" : "mid")
-      }, true));
+      main.appendChild(rollFold(mod, score));
     }
 
     row.appendChild(main);
@@ -890,6 +906,46 @@
       row.appendChild(text);
       rowsEl.appendChild(row);
     });
+  }
+
+  /* "18(12-19)" -> "18". Mirrors the range pattern the parser collects, so
+     the two can't disagree about what counts as a range. Display only —
+     never applied to state. */
+  var RANGE_RE = /([+-]?\d+(?:\.\d+)?)\((-?\d+(?:\.\d+)?)\s*-\s*(-?\d+(?:\.\d+)?)\)/g;
+  function stripRanges(text) { return String(text).replace(RANGE_RE, "$1"); }
+
+  /* The bar doubles as the control that reveals the ranges it was computed
+     from. A <details> gets the site-wide open/close glide for free. */
+  function rollFold(mod, score) {
+    var d = document.createElement("details");
+    d.className = "roll-fold";
+
+    var sum = document.createElement("summary");
+    sum.appendChild(rollBar({
+      pct: score,
+      quartile: score >= 0.75 ? "high" : (score <= 0.25 ? "low" : "mid")
+    }, true));
+    d.appendChild(sum);
+
+    var body = document.createElement("div");
+    body.className = "roll-ranges";
+    (mod.lines || []).forEach(function (line) {
+      (line.values || []).forEach(function (v) {
+        var r = document.createElement("div");
+        var p = window.eoddbTriageRules && window.eoddbTriageRules.rollPct
+          ? window.eoddbTriageRules.rollPct(v) : null;
+        var rolled = document.createElement("b");
+        rolled.textContent = v.value;
+        r.appendChild(rolled);
+        r.appendChild(document.createTextNode(
+          " rolled in " + v.min + "–" + v.max +
+          (p === null ? "" : " · " + Math.round(p * 100) + "%")
+        ));
+        body.appendChild(r);
+      });
+    });
+    d.appendChild(body);
+    return d;
   }
 
   /* Reader for roll-bar data — draws it, decides nothing. Used both for the
