@@ -104,6 +104,22 @@
       headline = { tone: "craftable", text: "Craftable" };
     }
 
+    /* ── Item level (always first — judges the base itself before anything
+       on it). Only glossary-confirmed mechanics: ilvl caps which modifier
+       tiers can appear, and ilvl ≠ modifier level. No numeric breakpoints —
+       those are patch-dependent and would go stale. ── */
+    var reqTxt = state.requires && state.requires.level
+      ? " Requires level " + state.requires.level + " to equip." : "";
+    if (state.itemLevel !== null && state.itemLevel !== undefined) {
+      if (finished) {
+        rows.push({ label: "Item level", tone: "info", text: "Item level " + state.itemLevel + " — the tier ceiling everything here rolled under." + reqTxt });
+      } else {
+        rows.push({ label: "Item level", tone: "info", text: "Item level " + state.itemLevel + " — the tier ceiling: any new line rolls under it too. A higher-ilvl base can roll every tier this one can, plus any above its cap." + reqTxt });
+      }
+    } else {
+      rows.push({ label: "Item level", tone: "warn", text: "No item level parsed — ilvl caps which modifier tiers can appear, so it decides what this base can ever roll. Set it in the overview." + reqTxt });
+    }
+
     /* ── Affix slots (rare/magic only; caps shift with slot-reducing implicits) ── */
     var capTotal = null;
     if (!isUnique && Object.prototype.hasOwnProperty.call(AFFIX_CAPS, state.rarity) && state.rarity !== "Normal") {
@@ -201,7 +217,36 @@
       }
     }
 
-    /* ── Roll quality ──
+    /* ── Quality / catalysts ── */
+    var isJewelry = JEWELRY.indexOf(state.itemClass) !== -1;
+    var isMartial = MARTIAL_WEAPONS.indexOf(state.itemClass) !== -1;
+    if (isJewelry) {
+      if (state.quality && state.quality.group) {
+        var groupRoot = state.quality.group.replace(/\s*Modifiers?$/i, "");
+        var boosted = allMods.filter(function (m) {
+          return m.qualityBoost || (m.tags || []).indexOf(groupRoot) !== -1;
+        }).length;
+        var catTxt = state.quality.group + " +" + state.quality.value + "% boosts " + boosted + " of " + allMods.length + " lines.";
+        if (boosted === 0) {
+          rows.push({ label: "Catalyst", tone: "warn", text: catTxt + " Mismatched catalyst — it does nothing for this item" + (finished ? ", and it can't be changed now." : ".") });
+        } else {
+          rows.push({ label: "Catalyst", tone: "info", text: catTxt + (finished ? " Locked in." : "") });
+        }
+      } else if (!finished && !isUnique) {
+        rows.push({ label: "Catalyst", tone: "info", text: "No catalyst quality yet — the matching group multiplies its mods' values (base cap +20%)." });
+      }
+    } else if (state.quality && !isJewelry) {
+      var q = state.quality.value;
+      if (!finished && q < 20) {
+        rows.push({ label: "Quality", tone: "good", text: "Quality " + q + "/20 — cheap win, top it up before bigger currency." });
+      } else if (!finished && q >= 20 && isMartial) {
+        rows.push({ label: "Quality", tone: "info", text: "Quality " + q + "% — at base cap. A Blacksmith Infuser can push past it (chance of corrupting)." });
+      } else {
+        rows.push({ label: "Quality", tone: "info", text: "Quality " + q + "%." });
+      }
+    }
+
+    /* ── Roll quality (always the last section, per Gavin) ──
        One equal-weighted score per modifier, averaged into a single bar.
        Every statement here is arithmetic on the item's own printed ranges,
        so it cannot go stale with a patch the way a rule of thumb would. */
@@ -254,35 +299,6 @@
     }
     if (outside > 0) {
       rows.push({ label: "Sanctified rolls", tone: "info", text: outside + " value(s) outside the normal tier range — the sanctification signature. Values above the range score over 100%, below it score negative." });
-    }
-
-    /* ── Quality / catalysts ── */
-    var isJewelry = JEWELRY.indexOf(state.itemClass) !== -1;
-    var isMartial = MARTIAL_WEAPONS.indexOf(state.itemClass) !== -1;
-    if (isJewelry) {
-      if (state.quality && state.quality.group) {
-        var groupRoot = state.quality.group.replace(/\s*Modifiers?$/i, "");
-        var boosted = allMods.filter(function (m) {
-          return m.qualityBoost || (m.tags || []).indexOf(groupRoot) !== -1;
-        }).length;
-        var catTxt = state.quality.group + " +" + state.quality.value + "% boosts " + boosted + " of " + allMods.length + " lines.";
-        if (boosted === 0) {
-          rows.push({ label: "Catalyst", tone: "warn", text: catTxt + " Mismatched catalyst — it does nothing for this item" + (finished ? ", and it can't be changed now." : ".") });
-        } else {
-          rows.push({ label: "Catalyst", tone: "info", text: catTxt + (finished ? " Locked in." : "") });
-        }
-      } else if (!finished && !isUnique) {
-        rows.push({ label: "Catalyst", tone: "info", text: "No catalyst quality yet — the matching group multiplies its mods' values (base cap +20%)." });
-      }
-    } else if (state.quality && !isJewelry) {
-      var q = state.quality.value;
-      if (!finished && q < 20) {
-        rows.push({ label: "Quality", tone: "good", text: "Quality " + q + "/20 — cheap win, top it up before bigger currency." });
-      } else if (!finished && q >= 20 && isMartial) {
-        rows.push({ label: "Quality", tone: "info", text: "Quality " + q + "% — at base cap. A Blacksmith Infuser can push past it (chance of corrupting)." });
-      } else {
-        rows.push({ label: "Quality", tone: "info", text: "Quality " + q + "%." });
-      }
     }
 
     return { headline: headline, rows: rows };
