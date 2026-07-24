@@ -16,7 +16,10 @@
 <meta property="og:title" content="PoE2 Item Triage (WIP) | EODdb.com">
 <meta property="og:description" content="Paste a PoE2 item and see its modifiers, tiers, and rolls broken down.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://eoddb.com/og/poe2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PoE2 Item Triage (WIP) | EODdb.com">
 <meta name="twitter:description" content="Paste a PoE2 item and see its modifiers, tiers, and rolls broken down.">
 <link rel="stylesheet" href="/eoddb_fonts.css">
@@ -40,11 +43,11 @@
     --violet: #66606E;
     --danger: #a65b5f;
     --danger-text: #d4918f;
-    /* Page shell. Stays tight at 700 for the paste step; once an item is on
-       screen the shell widens so overview+mods and triage sit side by side. */
-    --shell: 700px;
+    /* Page shell — wide enough for overview+mods beside triage. Fixed, not
+       toggled on parse: the layout must not move under the user, so parsing
+       only collapses the paste box. */
+    --shell: 1040px;
   }
-  body.has-item { --shell: 1040px; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
@@ -445,7 +448,7 @@
   /* Below this the two columns stop being readable — stack them and go back
      to the tight single-column shell. */
   @media (max-width: 940px) {
-    body.has-item { --shell: 700px; }
+    :root { --shell: 700px; }
     .results-grid { grid-template-columns: 1fr; gap: 0; }
     .results-col.right { position: static; }
   }
@@ -540,7 +543,7 @@
 </div><!-- /results-col left -->
 
 <div class="results-col right">
-<div class="panel hidden" id="triage-panel">
+<div class="panel" id="triage-panel">
   <h2>Mechanical triage</h2>
   <div id="triage-headline" class="triage-headline"></div>
   <div id="triage-rows"></div>
@@ -549,7 +552,7 @@
 </div><!-- /results-col right -->
 </div><!-- /results-grid -->
 
-<div class="panel hidden" id="market-panel">
+<div class="panel" id="market-panel">
   <h2>What's it worth?</h2>
   <div class="cta-row">
     <div class="cta-copy">
@@ -743,16 +746,25 @@
     });
   }
 
-  /* Mechanical triage panel: a pure read of state via the rules file. */
+  /* Mechanical triage panel: a pure read of state via the rules file. The
+     panel stays mounted with an empty state — hiding it would move the
+     layout under the user the moment they paste. */
   function renderTriage() {
-    var panel = $("triage-panel");
-    var triage = (window.eoddbTriageRules && state.ok) ? window.eoddbTriageRules.computeTriage(state) : null;
-    if (!triage) { panel.classList.add("hidden"); return; }
-    panel.classList.remove("hidden");
     var head = $("triage-headline");
+    var rowsEl = $("triage-rows");
+    var triage = (window.eoddbTriageRules && state.ok) ? window.eoddbTriageRules.computeTriage(state) : null;
+    if (!triage) {
+      head.className = "triage-headline hidden";
+      head.textContent = "";
+      rowsEl.innerHTML = "";
+      var waiting = document.createElement("div");
+      waiting.className = "empty-note";
+      waiting.textContent = "Paste an item to see what can still be done to it.";
+      rowsEl.appendChild(waiting);
+      return;
+    }
     head.className = "triage-headline t-" + triage.headline.tone;
     head.textContent = triage.headline.text;
-    var rowsEl = $("triage-rows");
     rowsEl.innerHTML = "";
     triage.rows.forEach(function (r) {
       var row = document.createElement("div");
@@ -776,9 +788,7 @@
   var shareToken = 0;
   function renderShare() {
     var token = ++shareToken;
-    var panel = $("market-panel");
     var fold = $("share-fold");
-    panel.classList.toggle("hidden", !state.ok);
     if (!state.ok || !window.eoddbItemParse.serializeItem) { fold.classList.add("hidden"); return; }
     var text = window.eoddbItemParse.serializeItem(state);
     window.eoddbItemParse.encodeShare(text).then(function (code) {
@@ -797,10 +807,10 @@
   }
 
   /* Step 1 collapses once an item is on screen so the eye lands on the
-     overview + triage. Only parseNow()/clear drive open state — render()
-     must not fight a user who reopened the step by hand. */
+     overview + triage — the only thing that moves on parse. Only
+     parseNow()/clear drive open state; render() must not fight a user who
+     reopened the step by hand. */
   function renderStep() {
-    document.body.classList.toggle("has-item", !!state.ok);
     var title = "Paste your item";
     if (state.ok) {
       title = state.name || state.itemClass || "Your item";
