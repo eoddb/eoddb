@@ -19,6 +19,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PoE2 Item Triage (WIP) | EODdb.com">
 <meta name="twitter:description" content="Paste a PoE2 item and see its modifiers, tiers, and rolls broken down.">
+<link rel="stylesheet" href="/eoddb_fonts.css">
 <style>
   :root {
     --bg: #0d1117;
@@ -39,7 +40,11 @@
     --violet: #66606E;
     --danger: #a65b5f;
     --danger-text: #d4918f;
+    /* Page shell. Stays tight at 700 for the paste step; once an item is on
+       screen the shell widens so overview+mods and triage sit side by side. */
+    --shell: 700px;
   }
+  body.has-item { --shell: 1040px; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
@@ -52,7 +57,7 @@
   }
 
   .page-header {
-    max-width: 700px;
+    max-width: var(--shell);
     margin: 0 auto 1.2rem;
     display: flex;
     flex-direction: column;
@@ -84,7 +89,7 @@
   }
 
   .panel {
-    max-width: 700px;
+    max-width: var(--shell);
     margin: 0 auto 0.8rem;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -335,7 +340,62 @@
 
   .empty-note { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
 
-  /* ── Share ── */
+  /* ── Step 1: the paste box, collapsible once an item is on screen ── */
+  #paste-step > summary { list-style: none; cursor: pointer; }
+  #paste-step > summary::-webkit-details-marker { display: none; }
+  #paste-step[open] > summary { margin-bottom: 10px; }
+  .step-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+  #paste-step > summary:hover .step-summary { color: var(--text); }
+  .step-summary .caret { font-size: 0.6rem; transition: transform 0.15s; }
+  #paste-step[open] .step-summary .caret { transform: rotate(90deg); }
+  /* Closed after a parse, the summary is the "go back" affordance. */
+  .step-back { margin-left: auto; font-size: 0.7rem; color: var(--accent1); text-transform: none; letter-spacing: 0; }
+  #paste-step[open] .step-back { display: none; }
+
+  /* ── Results: overview + mods on the left, triage on the right ── */
+  .results-grid {
+    max-width: var(--shell);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 0 0.8rem;
+    align-items: start;
+  }
+  /* Panels inside a column must not keep the shell's max-width + auto
+     margins — auto side margins on a flex item shrink it to its content. */
+  .results-col > .panel { max-width: none; margin-left: 0; margin-right: 0; }
+  .results-col { display: flex; flex-direction: column; }
+  /* Triage sticks alongside the (taller) left column while scrolling. */
+  .results-col.right { position: sticky; top: 60px; }
+
+  /* ── Market CTA ── */
+  #market-panel { border-color: rgba(130,166,156,0.35); }
+  .cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .cta-copy { flex: 1; min-width: 220px; font-size: 0.8rem; color: var(--text); line-height: 1.5; }
+  .cta-copy .cta-sub { display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+  .btn.cta {
+    border-color: var(--sage);
+    background: rgba(130,166,156,0.12);
+    color: #a8c4bc;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn.cta:hover { background: rgba(130,166,156,0.2); border-color: var(--sage); }
+
+  /* ── Share (secondary, folded away under the CTA) ── */
+  #share-fold > summary { list-style: none; cursor: pointer; margin-top: 12px; }
+  #share-fold > summary::-webkit-details-marker { display: none; }
+  #share-fold .step-summary { font-size: 0.65rem; }
   #share-out {
     width: 100%;
     min-height: 74px;
@@ -363,7 +423,7 @@
     padding: 2px 0;
   }
 
-  details.debug { max-width: 700px; margin: 0 auto 0.8rem; }
+  details.debug { max-width: var(--shell); margin: 0 auto 0.8rem; }
   details.debug summary {
     font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--text-muted); cursor: pointer; user-select: none;
@@ -382,6 +442,14 @@
 
   .hidden { display: none; }
 
+  /* Below this the two columns stop being readable — stack them and go back
+     to the tight single-column shell. */
+  @media (max-width: 940px) {
+    body.has-item { --shell: 700px; }
+    .results-grid { grid-template-columns: 1fr; gap: 0; }
+    .results-col.right { position: static; }
+  }
+
   @media (max-width: 600px) {
     body { padding: 2rem 0.8rem; }
     .panel { padding: 14px 14px; }
@@ -390,15 +458,21 @@
 </style>
 </head>
 <body>
-<script src="/poe2/eoddb_poe2_nav.js?v=3"></script>
+<script src="/poe2/eoddb_poe2_nav.js?v=4"></script>
 
 <div class="page-header">
   <h1>Item Triage<span class="wip-tag">Work in progress</span></h1>
   <div class="subtitle">Paste a Path of Exile 2 item — the tool reads its modifiers, tiers, and rolls. Triage verdicts coming next.</div>
 </div>
 
-<div class="panel">
-  <h2>Paste your item</h2>
+<details class="panel" id="paste-step" open>
+  <summary>
+    <div class="step-summary">
+      <span class="caret">▶</span>
+      <span id="paste-step-title">Paste your item</span>
+      <span class="step-back">← paste a different item</span>
+    </div>
+  </summary>
   <div class="paste-hint">
     In game: hover the item and press <kbd>Ctrl</kbd>+<kbd>C</kbd>, then paste here.
     Everything runs in your browser — nothing is uploaded. If a line isn't recognised, it's shown below so you can adjust the controls yourself.
@@ -409,8 +483,10 @@
     <button class="btn" id="btn-example">Try an example</button>
     <button class="btn" id="btn-clear">Clear</button>
   </div>
-</div>
+</details>
 
+<div class="results-grid">
+<div class="results-col left">
 <div class="panel" id="overview-panel">
   <h2>Item overview</h2>
   <div id="item-name-line" class="hidden"></div>
@@ -448,13 +524,6 @@
   <div id="stamp-row"></div>
 </div>
 
-<div class="panel hidden" id="triage-panel">
-  <h2>Mechanical triage</h2>
-  <div id="triage-headline" class="triage-headline"></div>
-  <div id="triage-rows"></div>
-  <div class="triage-foot">Facts and legal moves only, derived from the item itself. What it's worth comes later.</div>
-</div>
-
 <div class="panel">
   <h2>Modifiers</h2>
   <div id="mod-list"><div class="empty-note">No modifiers yet — paste an item above or add one manually.</div></div>
@@ -468,14 +537,35 @@
     <button class="btn" id="btn-add-mod">Add</button>
   </div>
 </div>
+</div><!-- /results-col left -->
 
-<div class="panel hidden" id="share-panel">
-  <h2>Share</h2>
-  <div class="paste-hint">Copy-paste block for Discord or YouTube comments — the link reopens this page with the item filled in exactly as it is now.</div>
-  <textarea id="share-out" readonly spellcheck="false"></textarea>
-  <div class="btn-row">
-    <button class="btn primary" id="btn-share-copy">Copy to clipboard</button>
+<div class="results-col right">
+<div class="panel hidden" id="triage-panel">
+  <h2>Mechanical triage</h2>
+  <div id="triage-headline" class="triage-headline"></div>
+  <div id="triage-rows"></div>
+  <div class="triage-foot">Facts and legal moves only, derived from the item itself. What it's worth comes later.</div>
+</div>
+</div><!-- /results-col right -->
+</div><!-- /results-grid -->
+
+<div class="panel hidden" id="market-panel">
+  <h2>What's it worth?</h2>
+  <div class="cta-row">
+    <div class="cta-copy">
+      Triage tells you what the item <em>is</em> — not what it sells for. Prices move league to league.
+      <span class="cta-sub">Check EOD's current market conditions before you buy, sell, or slam it.</span>
+    </div>
+    <a class="btn cta" href="/poe2/economy">PoE2 market conditions →</a>
   </div>
+  <details id="share-fold">
+    <summary><div class="step-summary"><span class="caret">▶</span><span>Share this item</span></div></summary>
+    <div class="paste-hint" style="margin-top:10px">Copy-paste block for Discord or YouTube comments — the link reopens this page with the item filled in exactly as it is now.</div>
+    <textarea id="share-out" readonly spellcheck="false"></textarea>
+    <div class="btn-row">
+      <button class="btn" id="btn-share-copy">Copy to clipboard</button>
+    </div>
+  </details>
 </div>
 
 <div class="panel hidden" id="unparsed-panel">
@@ -679,17 +769,21 @@
     });
   }
 
-  /* Share block: serialize state -> compressed fragment link + paste-ready
-     text. Async (CompressionStream); the token guards stale renders. */
+  /* Market CTA panel — shown for any parsed item. The share block folded
+     inside it serializes state -> compressed fragment link + paste-ready
+     text; async (CompressionStream), so the token guards stale renders and
+     an encode failure hides only the fold, never the CTA. */
   var shareToken = 0;
   function renderShare() {
     var token = ++shareToken;
-    var panel = $("share-panel");
-    if (!state.ok || !window.eoddbItemParse.serializeItem) { panel.classList.add("hidden"); return; }
+    var panel = $("market-panel");
+    var fold = $("share-fold");
+    panel.classList.toggle("hidden", !state.ok);
+    if (!state.ok || !window.eoddbItemParse.serializeItem) { fold.classList.add("hidden"); return; }
     var text = window.eoddbItemParse.serializeItem(state);
     window.eoddbItemParse.encodeShare(text).then(function (code) {
       if (token !== shareToken) { return; }
-      panel.classList.remove("hidden");
+      fold.classList.remove("hidden");
       var url = location.origin + location.pathname.replace(/\.html$/, "") + "#i=" + code;
       var title = state.name || state.itemClass || "Item";
       if (state.base && state.base !== state.name) { title += " — " + state.base; }
@@ -699,7 +793,20 @@
       if (triage) { lines.push(triage.headline.text); }
       lines.push("Interactive breakdown: " + url);
       $("share-out").value = lines.join("\n");
-    }).catch(function () { panel.classList.add("hidden"); });
+    }).catch(function () { if (token === shareToken) { fold.classList.add("hidden"); } });
+  }
+
+  /* Step 1 collapses once an item is on screen so the eye lands on the
+     overview + triage. Only parseNow()/clear drive open state — render()
+     must not fight a user who reopened the step by hand. */
+  function renderStep() {
+    document.body.classList.toggle("has-item", !!state.ok);
+    var title = "Paste your item";
+    if (state.ok) {
+      title = state.name || state.itemClass || "Your item";
+      if (state.base && state.base !== state.name) { title += " — " + state.base; }
+    }
+    $("paste-step-title").textContent = title;
   }
 
   $("btn-share-copy").addEventListener("click", function () {
@@ -765,6 +872,7 @@
     renderStamps();
     renderTriage();
     renderShare();
+    renderStep();
 
     // Mods: implicits/enhancements/uniques full-width, then Prefix | Suffix columns
     var list = $("mod-list");
@@ -836,6 +944,8 @@
       state.unparsed = res.unparsed.length ? res.unparsed : ["(nothing recognisable — was that a PoE2 item copy?)"];
     }
     render();
+    // A good parse advances the flow; a bad one keeps the box open to fix.
+    $("paste-step").open = !state.ok;
   }
 
   $("btn-parse").addEventListener("click", parseNow);
@@ -848,6 +958,8 @@
     $("paste-box").value = "";
     state = emptyState();
     render();
+    $("paste-step").open = true;
+    $("paste-box").focus();
   });
 
   /* ── Manual control writes (the user confirming/correcting the automation) ── */
