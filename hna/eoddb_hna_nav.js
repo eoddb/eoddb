@@ -67,13 +67,12 @@ const EODDB_NAV_PAGES = [
       gap: 0;
       overflow-x: auto;
     }
-    /* 13/11 rather than an even 12/12: the padding split is what sets the
-       text block's height in the bar. Both groups carry the same split, so
-       changing it slides brand and links together without disturbing the
-       alignment between them. */
+    /* Vertical padding is what sets the text block's height in the bar, and
+       brand and links carry the same split — change it on both together or
+       the two fonts stop sharing a baseline. */
     .eoddb-nav-brand {
       display: block;
-      padding: 13px 0 11px;
+      padding: 12px 0;
       margin-right: 6px;
       font-size: 0.8rem;
       font-weight: 800;
@@ -108,7 +107,7 @@ const EODDB_NAV_PAGES = [
     }
     .eoddb-nav-link {
       display: block;
-      padding: 13px 16px 11px;
+      padding: 12px 16px;
       font-size: 0.8rem;
       font-weight: 500;
       color: #6e7a8a;
